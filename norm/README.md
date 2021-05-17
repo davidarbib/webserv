@@ -79,10 +79,8 @@ comments must not repeat the code
 comments can specify inputs and outputs of your components
 comments can serve to explain your implementation choices
 one line comment is just // and the line must be dedicated for comment
-`/**
-  * multi line
-  * comment
-  */`
+
+for multiline see doxygen doc syntax
 
 https://developer.lsst.io/cpp/api-docs.html
 
