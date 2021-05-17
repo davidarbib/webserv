@@ -3,10 +3,13 @@
 ## general
 
 templates is .hpp
+
 class declarations is .hpp
+
 class implementation is .cpp
 
 empty line end of file
+
 tab indentation 4-space ofc
 
 comparisons and math operators are blank-isolated
@@ -16,16 +19,21 @@ no parentheses if not necessary in return
 ## class declaration
 
 template line above ClassName line
+
 ClassName
+
 permission order: private / protected / public 
 
 member declaration : `_member_name` (snake_case)
-this->member
+
+use this->member always
 
 ## methods and variables qualifiers
 
 use const by default
+
 const is placed after the constant object name
+
 const is place between type and name
 
 ref and pointer signs is placed before name and attached
@@ -34,9 +42,11 @@ explicit "void" if void arguments
 
 
 in method declaration or implementation:
-first line for type specification
-second for function name and arguments
-third if throws specification
+
+- optionnal line for template specification
+- first line for type specification
+- second for function name and arguments
+- third if throws specification
 
 
 
