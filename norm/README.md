@@ -80,7 +80,7 @@ comments can specify inputs and outputs of your components
 comments can serve to explain your implementation choices
 one line comment is just // and the line must be dedicated for comment
 
-for multiline see doxygen doc syntax
+for multiline check doxygen doc syntax at
 
 https://developer.lsst.io/cpp/api-docs.html
 
