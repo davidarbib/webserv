@@ -4,7 +4,6 @@
 #include <string>
 #include <iostream>
 #include <map>
-#include <unordered_map>
 
 struct request_line
 {
@@ -18,8 +17,8 @@ class Request
 	private:
 
 		request_line _start_line;
-		std::unordered_map<std::string, std::string> _headers;
-		std::string _body = nullptr;
+		std::map<std::string, std::string> _headers;
+		std::string _body;
 
 	public:
 		Request();
