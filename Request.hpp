@@ -21,8 +21,18 @@ class Request
 		std::string _body;
 
 	public:
-		Request();
-		~Request();
+		Request(std::string raw_request);
+		~Request(void);
+
+		void
+		set_method_token(std::string const &method_token);
+		void
+		set_request_URI(std::string const &request_URI);
+		void
+		set_http_version(std::string const &http_version);
+		void
+		set_body(std::string const &body);
+
 };
 
 #endif
