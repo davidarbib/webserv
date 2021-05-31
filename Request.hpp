@@ -21,7 +21,10 @@ class Request
 		std::string _body;
 
 	public:
-		Request(std::string raw_request);
+		Request(void);
+		Request(Request &cpy);
+		Request &
+		operator=(Request const &src);
 		~Request(void);
 
 		void
@@ -33,6 +36,8 @@ class Request
 		void
 		set_body(std::string const &body);
 
+		void
+		add_header(std::string const &key, std::string const &value);
 };
 
 #endif
