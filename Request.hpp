@@ -5,6 +5,8 @@
 #include <iostream>
 #include <map>
 
+#define METHOD_NB 4
+
 struct request_line
 {
 	std::string method_token;
@@ -16,9 +18,16 @@ class Request
 {
 	private:
 
+		std::string _method_list[METHOD_NB];
 		request_line _start_line;
 		std::map<std::string, std::string> _headers;
 		std::string _body;
+
+		void
+		init_method_list(void);
+
+		bool
+		is_valid_method(std::string const &method);
 
 	public:
 		Request(void);

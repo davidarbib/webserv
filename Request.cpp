@@ -1,6 +1,9 @@
 #include "Request.hpp"
 
-Request::Request(void) {}
+Request::Request(void)
+{
+	this->init_method_list();
+}
 
 Request::Request(Request & src)
 {
@@ -21,7 +24,8 @@ Request::~Request(void) {}
 void
 Request::set_method_token(std::string const &method_token)
 {
-	this->_start_line.method_token = method_token;
+	if (this->is_valid_method(method_token) == true)
+		this->_start_line.method_token = method_token;
 }
 
 void
@@ -46,4 +50,24 @@ void
 Request::add_header(std::string const &key, std::string const &value)
 {
 	this->_headers[key] = value;
+}
+
+void
+Request::init_method_list(void)
+{
+	this->_method_list[0] = "GET";
+	this->_method_list[1] = "POST";
+	this->_method_list[2] = "DELETE";
+	this->_method_list[3] = "PUT";
+}
+
+bool
+Request::is_valid_method(std::string const &method)
+{
+	for (int i = 0; i < METHOD_NB; i++)
+	{
+		if (method == this->_method_list[i])
+			return true;
+	}
+	return false;
 }

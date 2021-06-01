@@ -3,8 +3,11 @@
 int main(void)
 {
 	Request truc;
-	Request machin = truc;
 	truc.set_method_token("PROUT");
-	truc.add_header("bidule", "truc");
+	truc.set_method_token("PUT");
+	truc.set_method_token("POST");
+	truc.set_method_token("GET");
+	truc.set_method_token("CLEAR");
+	truc.set_method_token("DELETE");
 	return 0;
 }
