@@ -5,9 +5,9 @@ Request::Request(void)
 	this->init_method_list();
 }
 
-Request::Request(Request & src)
+Request::Request(Request & cpy)
 {
-	*this = src;
+	*this = cpy;
 }
 
 Request &

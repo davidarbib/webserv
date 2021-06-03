@@ -8,7 +8,29 @@ class Response : public AHttpMessage
 {
 	private:
 
-		status_line	start_line;
+		status_line	_start_line;
+
+	public:
+		Response(void);
+		Response(Response &cpy);
+		Response &
+		operator=(Response const &src);
+		~Response(void);
+
+		void
+		set_protocol_version(std::string const &protocol_version);
+
+		void
+		set_status_code(int status_code);
+
+		void
+		set_reason_phrase(std::string const &reason_phrase);
+
+		void
+		set_body(char *body);
+
+		void
+		add_header(std::string const &key, std::string const &value);
 };
 
 #endif

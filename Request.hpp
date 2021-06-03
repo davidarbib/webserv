@@ -3,6 +3,7 @@
 
 #include <iostream>
 #include "AHttpMessage.hpp"
+#include "Response.hpp"
 
 #define METHOD_NB 4
 
