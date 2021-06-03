@@ -47,7 +47,7 @@ Request::set_body(char *body)
 }
 
 void
-Request::add_header(std::string const &key, std::string const &value)
+Request::set_header(std::string const &key, std::string const &value)
 {
 	this->_headers[key] = value;
 }

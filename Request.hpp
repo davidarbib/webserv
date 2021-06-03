@@ -41,7 +41,7 @@ class Request : public AHttpMessage
 		set_body(char *body);
 
 		void
-		add_header(std::string const &key, std::string const &value);
+		set_header(std::string const &key, std::string const &value);
 
 		Response
 		get_response(void);

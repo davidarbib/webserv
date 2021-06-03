@@ -31,7 +31,7 @@ class AHttpMessage
 		set_body(char *body) = 0;
 
 		virtual void
-		add_header(std::string const &key, std::string const &value) = 0;
+		set_header(std::string const &key, std::string const &value) = 0;
 };
 
 #endif

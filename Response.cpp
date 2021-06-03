@@ -40,3 +40,15 @@ Response::set_reason_phrase(std::string const &reason_phrase)
 {
 	this->_start_line.reason_phrase = reason_phrase;
 }
+
+void
+Response::set_body(char *body)
+{
+	this->_body = body;
+}
+
+void
+Response::set_header(std::string const &key, std::string const &value)
+{
+	this->_headers[key] = value;
+}
