@@ -2,6 +2,8 @@
 #include <iostream>
 #include <fstream>
 
+// int		get_start_line(char *raw_request, Request *request);
+
 std::string parse_raw_request(char *source)
 {
 	std::ifstream 	raw_request(source);
@@ -22,6 +24,8 @@ std::string parse_raw_request(char *source)
 
 int main(int ac, char **av)
 {
+	Request request;
+	// int		parsing_cursor = 0;
 	if (ac == 2)
 	{
 		std::string raw_request = parse_raw_request(av[1]);
@@ -31,6 +35,8 @@ int main(int ac, char **av)
 			return 1;
 		}
 		std::cout << raw_request;
+		// char *s_request = const_cast<char *>(raw_request.c_str());
+		// parsing_cursor = get_start_line(s_request, &request);
 		return 0;
 	}
 	else
