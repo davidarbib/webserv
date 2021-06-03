@@ -1,27 +1,17 @@
 #ifndef REQUEST_HPP
 #define REQUEST_HPP
 
-#include <string>
 #include <iostream>
-#include <map>
+#include "AHttpMessage.hpp"
 
 #define METHOD_NB 4
 
-struct request_line
-{
-	std::string method_token;
-	std::string request_URI;
-	std::string http_version;
-};
-
-class Request
+class Request : public AHttpMessage
 {
 	private:
 
 		std::string _method_list[METHOD_NB];
 		request_line _start_line;
-		std::map<std::string, std::string> _headers;
-		std::string _body;
 
 		void
 		init_method_list(void);
@@ -46,7 +36,7 @@ class Request
 		set_http_version(std::string const &http_version);
 
 		void
-		set_body(std::string const &body);
+		set_body(char *body);
 
 		void
 		add_header(std::string const &key, std::string const &value);
