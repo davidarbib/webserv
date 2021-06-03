@@ -15,7 +15,7 @@ struct status_line
 {
 	std::string protocol_version;
 	int 		status_code;
-	std::string	reason_phrase;		
+	std::string	reason_phrase;
 };
 
 class AHttpMessage
@@ -23,7 +23,15 @@ class AHttpMessage
 	protected:
 
 		std::map<std::string, std::string> 	_headers;
-		char								*_body;		
+		char								*_body;
+
+	public:
+
+		virtual void
+		set_body(char *body) = 0;
+
+		virtual void
+		add_header(std::string const &key, std::string const &value) = 0;
 };
 
 #endif
