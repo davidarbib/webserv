@@ -1,6 +1,6 @@
 #include "Request.hpp"
 
-Request::Request(void)
+Request::Request(void) : _response()
 {
 	this->init_method_list();
 }
@@ -70,4 +70,10 @@ Request::is_valid_method(std::string const &method)
 			return true;
 	}
 	return false;
+}
+
+Response
+Request::get_response(void)
+{
+	return this->_response;
 }

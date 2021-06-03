@@ -13,6 +13,7 @@ class Request : public AHttpMessage
 
 		std::string _method_list[METHOD_NB];
 		request_line _start_line;
+		Response _response;
 
 		void
 		init_method_list(void);
@@ -41,6 +42,9 @@ class Request : public AHttpMessage
 
 		void
 		add_header(std::string const &key, std::string const &value);
+
+		Response
+		get_response(void);
 };
 
 #endif
