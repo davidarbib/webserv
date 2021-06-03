@@ -1,13 +1,36 @@
 #include "Request.hpp"
+#include <iostream>
+#include <fstream>
 
-int main(void)
+std::string parse_raw_request(char *source)
 {
-	Request truc;
-	truc.set_method_token("PROUT");
-	truc.set_method_token("PUT");
-	truc.set_method_token("POST");
-	truc.set_method_token("GET");
-	truc.set_method_token("CLEAR");
-	truc.set_method_token("DELETE");
-	return 0;
+	std::ifstream 	raw_request(source);
+	std::string		s_request;
+	std::string		line;
+	if (raw_request)
+	{
+		while (getline(raw_request, line))
+		{
+			s_request += line;
+			s_request += '\n';
+		}
+	}
+	else
+		return "";
+	return s_request;
+}
+
+int main(int ac, char **av)
+{
+	if (ac == 2)
+	{
+		std::string raw_request = parse_raw_request(av[1]);
+		std::cout << raw_request;
+		return 0;
+	}
+	else
+	{
+		std::cerr << "Error : bad argument numbers" << std::endl;
+		return 1;
+	}
 }
