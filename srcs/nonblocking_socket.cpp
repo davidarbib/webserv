@@ -10,7 +10,7 @@
 #include <fcntl.h>
 #include <sys/select.h>
 
-#define PORT	8002
+#define PORT	8003
 #define BUFSIZE 2000
 #define DELAY	5
 
@@ -59,10 +59,14 @@ int main(int ac, char **av)
 	listen(sock_fd, 1);
 	FD_SET(sock_fd, &read_fds);
 	int connection = 0;
+	int writeyet = 0;
 	while (1)
 	{	
 		if (connection)
+		{
 			FD_SET(fds[0], &read_fds);
+			FD_SET(fds[0], &write_fds);
+		}
 		int ret = select(maxfd + 1, &read_fds, &write_fds, NULL, &tv);
 		if (FD_ISSET(sock_fd, &read_fds))
 		{
@@ -78,12 +82,20 @@ int main(int ac, char **av)
 		{
 			if (FD_ISSET(fds[0], &read_fds))
 			{
-				printf("read socket : %d\n", fds[0]);
+				//printf("read socket : %d\n", fds[0]);
 				char buf[BUFSIZE];
 				bzero(buf, BUFSIZE);
-				read(fds[0], buf, BUFSIZE);
+				int readret = read(fds[0], buf, BUFSIZE);
+				printf("readret : %d\n", readret);
 				printf("%s\n", buf);
 				FD_CLR(fds[0], &read_fds);
+			}
+			if (FD_ISSET(fds[0], &write_fds) && !writeyet)
+			{
+				printf("write in socket : %d\n", fds[0]);
+				write(fds[0], "coucou\n", 7);
+				FD_CLR(fds[0], &write_fds);
+				writeyet = 1;
 			}
 		}
 	}
