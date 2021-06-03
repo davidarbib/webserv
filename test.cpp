@@ -12,7 +12,7 @@ std::string parse_raw_request(char *source)
 		while (getline(raw_request, line))
 		{
 			s_request += line;
-			s_request += '\n';
+			s_request += "\r\n";
 		}
 	}
 	else
@@ -25,6 +25,11 @@ int main(int ac, char **av)
 	if (ac == 2)
 	{
 		std::string raw_request = parse_raw_request(av[1]);
+		if (raw_request.empty())
+		{
+			std::cerr << "Error: can't open the request file" << std::endl;
+			return 1;
+		}
 		std::cout << raw_request;
 		return 0;
 	}
