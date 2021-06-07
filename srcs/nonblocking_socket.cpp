@@ -57,12 +57,12 @@ int main(int ac, char **av)
 
 	bind(sock_fd, reinterpret_cast<sockaddr*>(&sin), sizeof(sin));
 	listen(sock_fd, 1);
-	FD_SET(sock_fd, &read_fds);
-	int connection = 0;
 	int writeyet = 0;
 	while (1)
 	{	
-		if (connection)
+		FD_SET(sock_fd, &read_fds);
+		printf("%ld\n", read_fds.fds_bits[0]);
+		if (fds.size() > 0)
 		{
 			FD_SET(fds[0], &read_fds);
 			FD_SET(fds[0], &write_fds);
@@ -72,13 +72,12 @@ int main(int ac, char **av)
 		{
 			std::cout << "connection" << std::endl;
 			fds.push_back(create_connection(sock_fd, &origin_fds, &maxfd));	
-			connection = 1;
 		}
 		/*
 		if (ret)
 			// reads / writes
 		*/
-		if (ret > 0)
+		if (fds.size() > 0 && ret > 0)
 		{
 			if (FD_ISSET(fds[0], &read_fds))
 			{
@@ -87,6 +86,11 @@ int main(int ac, char **av)
 				bzero(buf, BUFSIZE);
 				int readret = read(fds[0], buf, BUFSIZE);
 				printf("readret : %d\n", readret);
+				if (readret == 0)
+				{
+					close(fds[0]);
+					fds.pop_back();
+				}
 				printf("%s\n", buf);
 				FD_CLR(fds[0], &read_fds);
 			}

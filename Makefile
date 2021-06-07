@@ -6,7 +6,7 @@
 #    By: darbib <darbib@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/11/06 14:53:36 by darbib            #+#    #+#              #
-#    Updated: 2021/05/31 12:54:51 by darbib           ###   ########.fr        #
+#    Updated: 2021/06/04 14:33:21 by darbib           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 SHELL = /bin/zsh
@@ -24,6 +24,14 @@ CHECK =		'\xE2\x9C\x94'
 NAME = webserv
 CFLAGS = -std=c++98 -Wall -Wextra -Werror
 CC = clang++
+
+ifeq (DEBUG, 1)
+	CFLAGS += -g3
+endif
+
+ifeq (SANITIZE, 1)
+	CFLAGS += -fsanitize=address
+endif
 
 # ------------------------------------------------------------------------------
 
