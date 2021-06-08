@@ -12,7 +12,7 @@ is_end_line(const char *line, int index)
 }
 
 bool
-is_end_section(char *line, int index)
+is_end_section(const char *line, int index)
 {
 	if (is_end_line(line, index))
 	{
@@ -78,10 +78,43 @@ parse_start_line(const char *raw_request, Request *request)
 	return request_position;
 }
 
+int
+get_one_header(const char *raw_request, Request *request, int position)
+{
+	int index = position;
+	std::string key;
+	std::string value;
+
+	while (raw_request[index] && raw_request[index] != ':')
+	{
+		key += raw_request[index];
+		index++;
+	}
+	index += 2;
+	while (raw_request[index] && !is_end_line(raw_request, index))
+	{
+		value += raw_request[index];
+		index++;
+	}
+	request->set_header(key, value);
+	return index + 2;
+}
+
+int
+parse_headers(const char *raw_request, Request *request, int position)
+{
+	int index = position;
+
+	while (raw_request[index] && !is_end_section(raw_request, index))
+		index = get_one_header(raw_request, request, index);
+	return index + 4;
+}
+
 void
 parse_request(const char *raw_request, Request *request)
 {
 	int raw_request_index = 0;
 
 	raw_request_index = parse_start_line(raw_request, request);
+	raw_request_index = parse_headers(raw_request, request, raw_request_index);
 }
