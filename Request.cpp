@@ -73,30 +73,6 @@ Request::is_valid_method(std::string const &method)
 	return false;
 }
 
-request_line
-Request::get_start_line(void)
-{
-	return this->_start_line;
-}
-
-std::map<std::string, std::string>
-Request::get_header(void)
-{
-	return this->_headers;
-}
-
-char *
-Request::get_body(void)
-{
-	return this->_body;
-}
-
-Response
-Request::get_response(void)
-{
-	return this->_response;
-}
-
 void
 Request::print_request(std::ostream &flux) const
 {

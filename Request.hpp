@@ -46,15 +46,6 @@ class Request : public AHttpMessage
 		void
 		print_request(std::ostream &flux) const;
 
-		request_line
-		get_start_line(void);
-
-		std::map<std::string, std::string>
-		get_header(void);
-
-		char *
-		get_body(void);
-
 		Response
 		get_response(void);
 };
