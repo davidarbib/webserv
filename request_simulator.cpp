@@ -2,7 +2,7 @@
 #include <iostream>
 #include <fstream>
 
-void	parse_request(char *raw_request, Request *request);
+void	parse_request(const char *raw_request, Request *request);
 
 std::string parse_raw_request(char *source)
 {

@@ -1,7 +1,7 @@
 #include "Request.hpp"
 
 bool
-is_end_line(char *line, int index)
+is_end_line(const char *line, int index)
 {
 	if (line[index] == '\r')
 	{
@@ -52,11 +52,36 @@ parse_request_URI(const char *raw_request, Request *request, int position)
 	return index + 1;
 }
 
-void
-parse_request(char *raw_request, Request *request)
+int
+parse_http_version(const char *raw_request, Request *request, int position)
+{
+	int index = position;
+	std::string http_version;
+
+	while (raw_request[index] && !is_end_line(raw_request, index))
+	{
+		http_version += raw_request[index];
+		index++;
+	}
+	request->set_http_version(http_version);
+	return index + 2;
+}
+
+int
+parse_start_line(const char *raw_request, Request *request)
 {
 	int request_position = 0;
 
 	request_position = parse_method_token(raw_request, request);
 	request_position = parse_request_URI(raw_request, request, request_position);
+	request_position = parse_http_version(raw_request, request, request_position);
+	return request_position;
+}
+
+void
+parse_request(const char *raw_request, Request *request)
+{
+	int raw_request_index = 0;
+
+	raw_request_index = parse_start_line(raw_request, request);
 }
