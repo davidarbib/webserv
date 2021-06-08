@@ -89,6 +89,8 @@ int main(int ac, char **av)
 		int ret = select(maxfd + 1, &read_fds, &write_fds, NULL, &tv);
 		if (FD_ISSET(sock_fd, &read_fds) && !g_close_flag)
 		{
+			if (recv(sock_fd, buf, BUFSIZE, NULL) > 0)
+				std::cout << "on listen socket" << std::endl;
 			std::cout << "connection" << std::endl;
 			fds.push_back(create_connection(sock_fd, &origin_fds, &maxfd));	
 			FD_CLR(sock_fd, &read_fds);
