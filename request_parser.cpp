@@ -1,3 +1,5 @@
+#include "Request.hpp"
+
 bool	is_end_line(char *line, int index)
 {
 	if (line[index] == '\r')
@@ -8,7 +10,7 @@ bool	is_end_line(char *line, int index)
 	return false;
 }
 
-bool is_end_section(char *line, int index)
+bool	is_end_section(char *line, int index)
 {
 	if (is_end_line(line, index))
 	{
@@ -18,9 +20,23 @@ bool is_end_section(char *line, int index)
 	return false;
 }
 
-// int		get_start_line(char *raw_request, Request &request)
-// {
-	
+int		parse_method_token(const char *raw_request, Request *request)
+{
+	int index = 0;
+	std::string method_token;
 
-// 	return i;
-// }
+	while (raw_request[index] && raw_request[index] != ' ')
+	{
+		method_token += raw_request[index];
+		index++;
+	}
+	request->set_method_token(method_token);
+	return index;
+}
+
+void	parse_request(char *raw_request, Request *request)
+{
+	int request_position = 0;
+
+	request_position = parse_method_token(raw_request, request);
+}
