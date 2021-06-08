@@ -43,6 +43,9 @@ class Request : public AHttpMessage
 		void
 		set_header(std::string const &key, std::string const &value);
 
+		void
+		print_request(std::ostream &flux) const;
+
 		request_line
 		get_start_line(void);
 
@@ -55,5 +58,7 @@ class Request : public AHttpMessage
 		Response
 		get_response(void);
 };
+
+std::ostream& operator<<(std::ostream &flux, Request const &request);
 
 #endif

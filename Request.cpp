@@ -2,6 +2,7 @@
 
 Request::Request(void) : _response()
 {
+	this->_body = NULL;
 	this->init_method_list();
 }
 
@@ -94,4 +95,29 @@ Response
 Request::get_response(void)
 {
 	return this->_response;
+}
+
+void
+Request::print_request(std::ostream &flux) const
+{
+	std::map<std::string, std::string>::const_iterator it;
+	flux << "---------------------" << "Start line :" << "---------------------" << std::endl;
+	flux << this->_start_line.method_token << " " << this->_start_line.request_URI << " " << this->_start_line.http_version << std::endl;
+	flux << "---------------------" << "Headers :" << "---------------------" << std::endl;
+	for (it = this->_headers.begin(); it != this->_headers.end(); it++)
+	{
+		flux << it->first << ": " << it->second << std::endl;
+	}
+	flux << "---------------------" << "Body :" << "---------------------" << std::endl;
+	if (this->_body)
+	{
+		for (int i = 0; this->_body[i]; i++)
+		flux << this->_body[i];
+	}
+}
+
+std::ostream& operator<<(std::ostream &flux, Request const &request)
+{
+	request.print_request(flux);
+	return flux;
 }
