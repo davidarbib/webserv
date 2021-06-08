@@ -43,6 +43,15 @@ class Request : public AHttpMessage
 		void
 		set_header(std::string const &key, std::string const &value);
 
+		request_line
+		get_start_line(void);
+
+		std::map<std::string, std::string>
+		get_header(void);
+
+		char *
+		get_body(void);
+
 		Response
 		get_response(void);
 };
