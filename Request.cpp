@@ -2,6 +2,8 @@
 
 Request::Request(void) : _response()
 {
+	this->set_header("Content-Length", "0");
+	this->set_header("Transfer-Encoding", "");
 	this->_body = NULL;
 	this->init_method_list();
 }
@@ -90,6 +92,14 @@ Request::print_request(std::ostream &flux) const
 		for (int i = 0; this->_body[i]; i++)
 		flux << this->_body[i];
 	}
+}
+
+bool
+Request::has_body(void)
+{
+	if (this->_headers["Content-Length"] == "0" || this->_headers["Transfer-Encoding"].empty())
+		return false;
+	return true;
 }
 
 std::ostream& operator<<(std::ostream &flux, Request const &request)

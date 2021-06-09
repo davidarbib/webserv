@@ -46,6 +46,9 @@ class Request : public AHttpMessage
 		void
 		print_request(std::ostream &flux) const;
 
+		bool
+		has_body(void);
+
 		Response
 		get_response(void);
 };
