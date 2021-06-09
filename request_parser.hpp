@@ -5,8 +5,8 @@
 #include <string>
 
 #define NEXT_SPACE_TOKEN 1
-#define NEXT_LINE_TOKEN 2
-#define NEXT_SESSION_TOKEN 4
+#define CRLF 2
+#define CRLFCRLF 4
 
 bool
 is_end_line(const char *line, int index);

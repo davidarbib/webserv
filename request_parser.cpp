@@ -64,7 +64,7 @@ parse_http_version(const char *raw_request, Request *request, int position)
 		index++;
 	}
 	request->set_http_version(http_version);
-	return index + NEXT_LINE_TOKEN;
+	return index + CRLF;
 }
 
 int
@@ -90,14 +90,14 @@ get_one_header(const char *raw_request, Request *request, int position)
 		key += raw_request[index];
 		index++;
 	}
-	index += NEXT_LINE_TOKEN;
+	index += CRLF;
 	while (raw_request[index] && !is_end_line(raw_request, index))
 	{
 		value += raw_request[index];
 		index++;
 	}
 	request->set_header(key, value);
-	return index + NEXT_LINE_TOKEN;
+	return index + CRLF;
 }
 
 int
@@ -107,7 +107,7 @@ parse_headers(const char *raw_request, Request *request, int position)
 
 	while (raw_request[index] && !is_end_section(raw_request, index))
 		index = get_one_header(raw_request, request, index);
-	return index + NEXT_SESSION_TOKEN;
+	return index + CRLFCRLF;
 }
 
 void
