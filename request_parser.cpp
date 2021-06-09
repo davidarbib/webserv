@@ -34,7 +34,7 @@ parse_method_token(const char *raw_request, Request *request)
 		index++;
 	}
 	request->set_method_token(method_token);
-	return index + 1;
+	return index + NEXT_SPACE_TOKEN;
 }
 
 int
@@ -49,7 +49,7 @@ parse_request_URI(const char *raw_request, Request *request, int position)
 		index++;
 	}
 	request->set_request_URI(request_URI);
-	return index + 1;
+	return index + NEXT_SPACE_TOKEN;
 }
 
 int
@@ -64,7 +64,7 @@ parse_http_version(const char *raw_request, Request *request, int position)
 		index++;
 	}
 	request->set_http_version(http_version);
-	return index + 2;
+	return index + NEXT_LINE_TOKEN;
 }
 
 int
@@ -90,14 +90,14 @@ get_one_header(const char *raw_request, Request *request, int position)
 		key += raw_request[index];
 		index++;
 	}
-	index += 2;
+	index += NEXT_LINE_TOKEN;
 	while (raw_request[index] && !is_end_line(raw_request, index))
 	{
 		value += raw_request[index];
 		index++;
 	}
 	request->set_header(key, value);
-	return index + 2;
+	return index + NEXT_LINE_TOKEN;
 }
 
 int
@@ -107,7 +107,7 @@ parse_headers(const char *raw_request, Request *request, int position)
 
 	while (raw_request[index] && !is_end_section(raw_request, index))
 		index = get_one_header(raw_request, request, index);
-	return index + 4;
+	return index + NEXT_SESSION_TOKEN;
 }
 
 void
