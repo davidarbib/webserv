@@ -65,7 +65,7 @@ Request::init_method_list(void)
 }
 
 bool
-Request::is_valid_method(std::string const &method)
+Request::is_valid_method(std::string const &method) const
 {
 	for (int i = 0; i < METHOD_NB; i++)
 	{
@@ -78,7 +78,7 @@ Request::is_valid_method(std::string const &method)
 void
 Request::print_request(std::ostream &flux) const
 {
-	std::map<std::string, std::string>::const_iterator it;
+	hash_map::const_iterator it;
 	flux << "---------------------" << "Start line :" << "---------------------" << std::endl;
 	flux << this->_start_line.method_token << " " << this->_start_line.request_URI << " " << this->_start_line.http_version << std::endl;
 	flux << "---------------------" << "Headers :" << "---------------------" << std::endl;
@@ -95,11 +95,24 @@ Request::print_request(std::ostream &flux) const
 }
 
 bool
-Request::has_body(void)
+Request::has_body(void) const
 {
-	if (this->_headers["Content-Length"] == "0" || this->_headers["Transfer-Encoding"].empty())
+	if (this->_headers.find("Content-Length")->second == "0" || this->_headers.find("Transfer-Encoding")->second.empty())
 		return false;
 	return true;
+}
+
+std::string
+Request::get_header_value(std::string const &header_name) const
+{
+	hash_map::const_iterator it;
+
+	it = this->_headers.find(header_name);
+	if (it != this->_headers.end())
+		return it->second;
+	return "";
+
+	
 }
 
 std::ostream& operator<<(std::ostream &flux, Request const &request)

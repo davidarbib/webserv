@@ -22,8 +22,10 @@ class AHttpMessage
 {
 	protected:
 
-		std::map<std::string, std::string> 	_headers;
-		char								*_body;
+		typedef std::map<std::string, std::string> hash_map;
+
+		hash_map 	_headers;
+		char		*_body;
 
 	public:
 

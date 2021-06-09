@@ -19,7 +19,7 @@ class Request : public AHttpMessage
 		init_method_list(void);
 
 		bool
-		is_valid_method(std::string const &method);
+		is_valid_method(std::string const &method) const;
 
 	public:
 		Request(void);
@@ -47,7 +47,10 @@ class Request : public AHttpMessage
 		print_request(std::ostream &flux) const;
 
 		bool
-		has_body(void);
+		has_body(void) const;
+
+		std::string
+		get_header_value(std::string const &header_name) const;
 
 		Response
 		get_response(void);
