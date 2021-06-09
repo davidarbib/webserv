@@ -1,8 +1,7 @@
 #include "Request.hpp"
 #include <iostream>
 #include <fstream>
-
-void	parse_request(const char *raw_request, Request *request);
+#include "request_parser.hpp"
 
 std::string parse_raw_request(char *source)
 {
