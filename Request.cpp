@@ -110,7 +110,7 @@ Request::get_header_value(std::string const &header_name) const
 	it = this->_headers.find(header_name);
 	if (it != this->_headers.end())
 		return it->second;
-	return "";	
+	return EMPTY_STRING;
 }
 
 std::ostream& operator<<(std::ostream &flux, Request const &request)

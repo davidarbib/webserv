@@ -6,6 +6,7 @@
 #include "Response.hpp"
 
 #define METHOD_NB 4
+#define EMPTY_STRING ""
 
 class Request : public AHttpMessage
 {
