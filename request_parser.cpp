@@ -115,6 +115,9 @@ parse_request(const char *raw_request, Request *request)
 {
 	int raw_request_index = 0;
 
-	raw_request_index = parse_start_line(raw_request, request);
-	raw_request_index = parse_headers(raw_request, request, raw_request_index);
+	if (request->get_header_value("Transfer-Encoding") != "chunked")
+	{
+		raw_request_index = parse_start_line(raw_request, request);
+		raw_request_index = parse_headers(raw_request, request, raw_request_index);
+	}
 }

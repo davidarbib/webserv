@@ -57,6 +57,7 @@ class Request : public AHttpMessage
 		get_response(void);
 };
 
-std::ostream& operator<<(std::ostream &flux, Request const &request);
+std::ostream & 
+operator<<(std::ostream &flux, Request const &request);
 
 #endif
