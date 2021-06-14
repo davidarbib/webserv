@@ -68,6 +68,6 @@ Response::bad_request_response(void)
 	this->_headers["Content-type"] = "text/html";
 	this->_headers["Content-Length"] = "42";
 	this->_headers["Server"] = "webserv/1.0.0";
-	this->_headers["Date"] = "NOW (TMP)";
+	this->_headers["Date"] = get_date();
 	this->_headers["Connection"] = "close";
 }

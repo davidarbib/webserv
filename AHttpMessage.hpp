@@ -4,6 +4,9 @@
 #include <iostream>
 #include <string>
 #include <map>
+#include <ctime>
+
+#define DATE_BUFFER 80
 
 struct request_line
 {
@@ -38,6 +41,10 @@ class AHttpMessage
 
 		void
 		print_message(std::ostream &flux) const;
+
+		std::string
+		get_date(void) const;
+
 };
 
 #endif

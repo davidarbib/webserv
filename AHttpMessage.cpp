@@ -16,3 +16,19 @@ AHttpMessage::print_message(std::ostream &flux) const
 			flux << this->_body[i];
 	}
 }
+
+std::string
+AHttpMessage::get_date(void) const
+{
+	time_t 		raw_time;
+	struct 		tm *ptm;
+	char		buffer[DATE_BUFFER];
+	std::string date;
+
+	time(&raw_time);
+	ptm = gmtime(&raw_time);
+	std::strftime(buffer, DATE_BUFFER ,"%a, %d %b %g %T GMT", ptm);
+	date = buffer;
+	std::cout << date << "DEBUG DEBUG DEBUG" << std::endl;
+	return date;
+}
