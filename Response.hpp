@@ -35,6 +35,9 @@ class Response : public AHttpMessage
 		set_header(std::string const &key, std::string const &value);
 
 		void
+		print_message(std::ostream &flux) const;
+
+		void
 		bad_request_response(void);
 };
 

@@ -53,6 +53,14 @@ Response::set_header(std::string const &key, std::string const &value)
 }
 
 void
+Response::print_message(std::ostream &flux) const
+{
+	flux << "---------------------" << "Start line :" << "---------------------" << std::endl;
+	flux << this->_start_line.protocol_version << " " << this->_start_line.status_code << " " << this->_start_line.reason_phrase << std::endl;
+	AHttpMessage::print_message(flux);
+}
+
+void
 Response::bad_request_response(void)
 {
 	this->_start_line.status_code = 400;
