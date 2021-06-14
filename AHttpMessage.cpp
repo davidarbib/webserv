@@ -17,7 +17,7 @@ AHttpMessage::print_message(std::ostream &flux) const
 	}
 }
 
-std::string
+std::string const
 AHttpMessage::get_date(void) const
 {
 	time_t 		raw_time;
@@ -29,6 +29,5 @@ AHttpMessage::get_date(void) const
 	ptm = gmtime(&raw_time);
 	std::strftime(buffer, DATE_BUFFER ,"%a, %d %b %g %T GMT", ptm);
 	date = buffer;
-	std::cout << date << "DEBUG DEBUG DEBUG" << std::endl;
 	return date;
 }

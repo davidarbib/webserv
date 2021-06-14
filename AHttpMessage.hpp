@@ -42,7 +42,7 @@ class AHttpMessage
 		void
 		print_message(std::ostream &flux) const;
 
-		std::string
+		std::string const
 		get_date(void) const;
 
 };
