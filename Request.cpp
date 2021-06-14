@@ -76,22 +76,11 @@ Request::is_valid_method(std::string const &method) const
 }
 
 void
-Request::print_request(std::ostream &flux) const
+Request::print_message(std::ostream &flux) const
 {
-	hash_map::const_iterator it;
 	flux << "---------------------" << "Start line :" << "---------------------" << std::endl;
 	flux << this->_start_line.method_token << " " << this->_start_line.request_URI << " " << this->_start_line.http_version << std::endl;
-	flux << "---------------------" << "Headers :" << "---------------------" << std::endl;
-	for (it = this->_headers.begin(); it != this->_headers.end(); it++)
-	{
-		flux << it->first << ": " << it->second << std::endl;
-	}
-	flux << "---------------------" << "Body :" << "---------------------" << std::endl;
-	if (this->_body)
-	{
-		for (int i = 0; this->_body[i]; i++)
-		flux << this->_body[i];
-	}
+	AHttpMessage::print_message(flux);
 }
 
 bool
@@ -115,6 +104,6 @@ Request::get_header_value(std::string const &header_name) const
 
 std::ostream& operator<<(std::ostream &flux, Request const &request)
 {
-	request.print_request(flux);
+	request.print_message(flux);
 	return flux;
 }

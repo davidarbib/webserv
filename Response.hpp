@@ -4,6 +4,8 @@
 #include <iostream>
 #include "AHttpMessage.hpp"
 
+#define HTTP_VERSION "HTTP/1.1"
+
 class Response : public AHttpMessage
 {
 	private:
@@ -31,6 +33,9 @@ class Response : public AHttpMessage
 
 		void
 		set_header(std::string const &key, std::string const &value);
+
+		void
+		bad_request_response(void);
 };
 
 #endif

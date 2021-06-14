@@ -45,7 +45,7 @@ class Request : public AHttpMessage
 		set_header(std::string const &key, std::string const &value);
 
 		void
-		print_request(std::ostream &flux) const;
+		print_message(std::ostream &flux) const;
 
 		bool
 		has_body(void) const;

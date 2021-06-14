@@ -1,6 +1,7 @@
 #ifndef AHTTP_MESSAGE_HPP
 #define AHTTP_MESSAGE_HPP
 
+#include <iostream>
 #include <string>
 #include <map>
 
@@ -34,6 +35,9 @@ class AHttpMessage
 
 		virtual void
 		set_header(std::string const &key, std::string const &value) = 0;
+
+		void
+		print_message(std::ostream &flux) const;
 };
 
 #endif

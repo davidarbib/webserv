@@ -2,8 +2,7 @@
 
 Response::Response(void)
 {
-	this->_start_line.status_code = 200;
-	this->_start_line.reason_phrase = "";
+	this->_start_line.protocol_version = HTTP_VERSION;
 }
 
 Response::Response(Response &cpy)
@@ -51,4 +50,16 @@ void
 Response::set_header(std::string const &key, std::string const &value)
 {
 	this->_headers[key] = value;
+}
+
+void
+Response::bad_request_response(void)
+{
+	this->_start_line.status_code = 400;
+	this->_start_line.reason_phrase = "Bad request";
+	this->_headers["Content-type"] = "text/html";
+	this->_headers["Content-Length"] = "42";
+	this->_headers["Server"] = "webserv/1.0.0";
+	this->_headers["Date"] = "NOW (TMP)";
+	this->_headers["Connection"] = "close";
 }
