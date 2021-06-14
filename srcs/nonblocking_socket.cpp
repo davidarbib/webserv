@@ -74,13 +74,12 @@ int main(int ac, char **av)
 	}
 	listen(sock_fd, 1);
 	int writeyet = 0;
-	FD_ZERO(&read_fds);
-	FD_ZERO(&write_fds);
 	signal(SIGINT, signalHandler);
 	while (1)
 	{
+		FD_ZERO(&read_fds);
+		FD_ZERO(&write_fds);
 		FD_SET(sock_fd, &read_fds);
-		//std::cout << read_fds.fds_bits[0] << std::endl;
 		if (fds.size() > 0)
 		{
 			FD_SET(fds[0], &read_fds);
@@ -89,8 +88,6 @@ int main(int ac, char **av)
 		int ret = select(maxfd + 1, &read_fds, &write_fds, NULL, &tv);
 		if (FD_ISSET(sock_fd, &read_fds) && !g_close_flag)
 		{
-			if (recv(sock_fd, buf, BUFSIZE, NULL) > 0)
-				std::cout << "on listen socket" << std::endl;
 			std::cout << "connection" << std::endl;
 			fds.push_back(create_connection(sock_fd, &origin_fds, &maxfd));	
 			FD_CLR(sock_fd, &read_fds);
