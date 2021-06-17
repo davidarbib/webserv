@@ -83,3 +83,10 @@ Response::method_not_allowed(void)
 	this->_headers["Content-Length"] = "42";
 	this->_headers["Connection"] = "keep-alive";
 }
+
+std::ostream &
+operator<<(std::ostream &flux, Response const &response)
+{
+	response.print_message(flux);
+	return flux;
+}

@@ -44,4 +44,7 @@ class Response : public AHttpMessage
 		method_not_allowed(void);
 };
 
+std::ostream &
+operator<<(std::ostream &flux, Response const &response);
+
 #endif

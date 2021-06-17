@@ -78,9 +78,9 @@ Request::is_allowed_method(std::string const &method) const
 bool
 Request::is_valid_method(std::string const &method) const
 {
-	for (int i = 0; i < method.length(); i++)
+	for (size_t i = 0; i < method.length(); i++)
 	{
-		if (std::is_upper(method[i]) == 0)
+		if (std::isupper(method[i]) == 0)
 			return false;
 	}
 	return true;
@@ -113,14 +113,16 @@ Request::get_header_value(std::string const &header_name) const
 	return EMPTY_STRING;
 }
 
-std::ostream& operator<<(std::ostream &flux, Request const &request)
+Response
+Request::get_response(void)
+{
+	Response response(this->_response);
+	return response;
+}
+
+std::ostream&
+operator<<(std::ostream &flux, Request const &request)
 {
 	request.print_message(flux);
 	return flux;
-}
-
-Response
-Request::get_response(void) const
-{
-	return this->_response;
 }

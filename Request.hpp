@@ -59,10 +59,10 @@ class Request : public AHttpMessage
 		get_header_value(std::string const &header_name) const;
 
 		Response
-		get_response(void) const;
+		get_response(void);
 };
 
-std::ostream & 
+std::ostream &
 operator<<(std::ostream &flux, Request const &request);
 
 #endif
