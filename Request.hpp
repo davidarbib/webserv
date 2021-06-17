@@ -27,6 +27,7 @@ class Request : public AHttpMessage
 		is_valid_method(std::string const &method) const;
 
 	public:
+
 		Request(void);
 		Request(Request &cpy);
 		Request &
@@ -58,7 +59,7 @@ class Request : public AHttpMessage
 		get_header_value(std::string const &header_name) const;
 
 		Response
-		get_response(void);
+		get_response(void) const;
 };
 
 std::ostream & 

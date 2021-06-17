@@ -118,3 +118,9 @@ std::ostream& operator<<(std::ostream &flux, Request const &request)
 	request.print_message(flux);
 	return flux;
 }
+
+Response
+Request::get_response(void) const
+{
+	return this->_response;
+}
