@@ -38,7 +38,10 @@ class Response : public AHttpMessage
 		print_message(std::ostream &flux) const;
 
 		void
-		bad_request_response(void);
+		bad_request(void);
+
+		void
+		method_not_allowed(void);
 };
 
 #endif
