@@ -2,6 +2,7 @@
 #define REQUEST_HPP
 
 #include <iostream>
+#include <cctype>
 #include "AHttpMessage.hpp"
 #include "Response.hpp"
 
@@ -18,6 +19,9 @@ class Request : public AHttpMessage
 
 		void
 		init_method_list(void);
+
+		bool
+		is_allowed_method(std::string const &method) const;
 
 		bool
 		is_valid_method(std::string const &method) const;

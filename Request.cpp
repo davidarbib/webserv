@@ -27,7 +27,7 @@ Request::~Request(void) {}
 void
 Request::set_method_token(std::string const &method_token)
 {
-	if (this->is_valid_method(method_token) == true)
+	if (this->is_allowed_method(method_token) == true)
 		this->_start_line.method_token = method_token;
 }
 
@@ -65,7 +65,7 @@ Request::init_method_list(void)
 }
 
 bool
-Request::is_valid_method(std::string const &method) const
+Request::is_allowed_method(std::string const &method) const
 {
 	for (int i = 0; i < METHOD_NB; i++)
 	{
@@ -73,6 +73,17 @@ Request::is_valid_method(std::string const &method) const
 			return true;
 	}
 	return false;
+}
+
+bool
+Request::is_valid_method(std::string const &method) const
+{
+	for (int i = 0; i < method.length(); i++)
+	{
+		if (std::is_upper(method[i]) == 0)
+			return false;
+	}
+	return true;
 }
 
 void
