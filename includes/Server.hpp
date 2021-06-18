@@ -5,12 +5,29 @@
 # include <iostream>
 # include <fcntl.h>
 # include <vector>
+# include <cstring>
 
 # define DELAY	5
-
+# define BUFSIZE 2000
 
 class Server
 {
+	class ListenException : public std::exception
+	{
+		public :
+			virtual const char*
+			what() const
+			{ return "Error while listening socket creation\n"; }
+	}
+
+	class ConnectionException : public std::exception
+	{
+		public :
+			virtual const char*
+			what() const
+			{ return "Error while connection creation\n"; }
+	}
+
 	public:
 		Server(void);
 		Server(Server const &src);
@@ -29,7 +46,16 @@ class Server
 		std::string 		_error_logs_path;
 		std::vector<int>	_connections_fd;
 
-		void				listen();
+		void				listen()
+							throw ListenException();
+
+		void				recvSend();
+		int					createConnection();
+		bool				theresConnectionRequest();
+		bool				theresSomethingToRead(int);
+		void				addWatchedFd(int);
+		void				delWatchedFd(int);
+		void				watchInput();
 };
 
 #endif
