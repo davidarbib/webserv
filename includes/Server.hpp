@@ -7,8 +7,11 @@
 # include <vector>
 # include <cstring>
 
-# define DELAY	5
-# define BUFSIZE 2000
+# define DELAY		5
+# define BUFSIZE	2000
+# define PORT		8003
+
+typedef int fd_t;
 
 class Server
 {
@@ -32,15 +35,18 @@ class Server
 		Server(void);
 		Server(Server const &src);
 		virtual ~Server(void);
-		Server	&operator=(Server const &rhs);
+		Server				&operator=(Server const &rhs);
+		static void			setFdset();
+		static void			initFdset();
+
+		static fd_t			max_fd;
+		static fd_set		read_fds;
+		static fd_set 		write_fds;
+		static fd_set 		origin_fds;
 
 	private:
-		fd_set				_read_fds;
-		fd_set 				_write_fds;
-		fd_set 				_origin_fds;
 		int					_listen_port;
-		int					_listen_fd;
-		int					_maxfd;
+		fd_t				_listen_fd;
 		std::string			_name;
 		std::string 		_access_logs_path;
 		std::string 		_error_logs_path;
@@ -52,9 +58,9 @@ class Server
 		void				recvSend();
 		int					createConnection();
 		bool				theresConnectionRequest();
-		bool				theresSomethingToRead(int);
-		void				addWatchedFd(int);
-		void				delWatchedFd(int);
+		bool				theresSomethingToRead(fd_t);
+		void				addWatchedFd(fd_t);
+		void				delWatchedFd(fd_t);
 		void				watchInput();
 };
 
