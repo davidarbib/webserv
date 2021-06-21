@@ -6,12 +6,15 @@
 # include <fcntl.h>
 # include <vector>
 # include <cstring>
+# include <sys/socket.h>
+# include <netinet/in.h>
+# include <unistd.h>
 
 # define DELAY		5
 # define BUFSIZE	2000
 # define PORT		8003
 
-typedef int fd_t;
+typedef long fd_t;
 
 class Server
 {
@@ -20,22 +23,29 @@ class Server
 		public :
 			virtual const char*
 			what() const
+			throw()
 			{ return "Error while listening socket creation\n"; }
-	}
+	};
 
 	class ConnectionException : public std::exception
 	{
 		public :
 			virtual const char*
 			what() const
+			throw()
 			{ return "Error while connection creation\n"; }
-	}
+	};
 
 	public:
-		Server(void);
-		Server(Server const &src);
+		Server(std::string, int, std::string, std::string);
 		virtual ~Server(void);
-		Server				&operator=(Server const &rhs);
+
+		fd_t				listenSocket()
+							throw(Server::ListenException);
+		bool				isThereConnectionRequest();
+		void				createConnection();
+		void				watchInput();
+
 		static void			setFdset();
 		static void			initFdset();
 
@@ -45,23 +55,22 @@ class Server
 		static fd_set 		origin_fds;
 
 	private:
-		int					_listen_port;
-		fd_t				_listen_fd;
 		std::string			_name;
+		int					_port;
 		std::string 		_access_logs_path;
 		std::string 		_error_logs_path;
-		std::vector<int>	_connections_fd;
+		fd_t				_listen_fd;
+		std::vector<long>	_connections_fd;
 
-		void				listen()
-							throw ListenException();
 
 		void				recvSend();
-		int					createConnection();
-		bool				theresConnectionRequest();
-		bool				theresSomethingToRead(fd_t);
+		bool				isThereSomethingToRead(fd_t);
 		void				addWatchedFd(fd_t);
 		void				delWatchedFd(fd_t);
-		void				watchInput();
+
+		Server(void);
+		Server(Server const &src);
+		Server				&operator=(Server const &rhs);
 };
 
 #endif

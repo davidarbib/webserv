@@ -1,10 +1,6 @@
 #include "Server.hpp"
 
-Server::Server(void):
-{
-}
-
-Server::Server(std::string name, int port, std::string _access_logs_path, std::string _error_logs_path)
+Server::Server(std::string name, int port, std::string access_logs_path, std::string error_logs_path)
 :	_name(name),
 	_port(port),
 	_access_logs_path(access_logs_path),
@@ -12,20 +8,13 @@ Server::Server(std::string name, int port, std::string _access_logs_path, std::s
 {
 }
 
-Server::Server(Server const &src)
-{
-}
-
 Server::~Server(void)
 {
 }
 
-Server	&Server::operator=(Server const &rhs)
-{
-}
-
 fd_t
-Server::listen()
+Server::listenSocket()
+throw(Server::ListenException)
 {
 	sockaddr_in sin;
 
@@ -61,8 +50,8 @@ void
 Server::addWatchedFd(fd_t fd)
 {
 	FD_SET(fd, &Server::origin_fds);
-	if (fd > this->_maxfd)
-		this->_maxfd = fd;
+	if (fd > Server::max_fd)
+		Server::max_fd = fd;
 }
 
 void
@@ -95,72 +84,56 @@ Server::watchInput()
 	char buf[BUFSIZE];
 	bzero(buf, BUFSIZE);
 
-	std::vector<int>::iterator fd_ptr;
-	for (fd_ptr = this->_connections_fd.begin(); fd_ptr != this->_connections_fd.end(); fd_ptr++)
+	std::vector<long>::iterator fd_ptr;
+	fd_ptr = this->_connections_fd.begin();
+	while (fd_ptr != this->_connections_fd.end())
 	{
 		if (!isThereSomethingToRead(*fd_ptr))
-			continue ;
-		int recvret = recv(*fd_ptr, buf, BUFSIZE, NULL);	
-		if (!recvret)
 		{
-			delWatchedFd(*fd_ptr);
-			close(*fd_ptr);	
-			this->_connections_fd.erase(fd_ptr);
+			fd_ptr++;
 			continue ;
 		}
+		int recvret = recv(*fd_ptr, buf, BUFSIZE, 0);
+		if (recvret == 0)
+		{
+			delWatchedFd(*fd_ptr);
+			close(*fd_ptr);
+			this->_connections_fd.erase(fd_ptr);
+			fd_ptr = this->_connections_fd.begin();
+			continue ;
+		}
+		std::cout << "fds size : " << this->_connections_fd.size() << std::endl;
 		printf("%s\n", buf);
-		FD_CLR(*fd_ptr, &this->_read_fds);
+		FD_CLR(*fd_ptr, &Server::read_fds);
+		fd_ptr++;
 	}
 }
 
 bool
-Server::isThereSomethingToRead(int fd)
+Server::isThereSomethingToRead(fd_t fd)
 {
-	if (FD_ISSET(fd, &this->_read_fds))
+	if (FD_ISSET(fd, &Server::read_fds))
 		return 1;
 	return 0;
 }
 
 void
-Server::recvSend()
-{
-	struct timeval tv;
-
-	tv.tv_sec = DELAY;
-	tv.tv_usec = 0;
-
-	FD_ZERO(&this->_origin_fds);
-	FD_SET(sock_fd, &this->_origin_fds);
-
-	while (1)
-	{
-		this->_read_fds = this->_origin_fds; 
-		this->_write_fds = this->_origin_fds; 
-		select(maxfd + 1, &this->_read_fds, &this->_write_fds, NULL, &tv);
-		if (theresConnectionRequest())
-			createConnection();	
-		watchInput();
-		if (FD_ISSET(fds[0], &write_fds) && !writeyet)
-		{
-			printf("write in socket : %d\n", fds[0]);
-			write(fds[0], "coucou\n", 7);
-			FD_CLR(fds[0], &write_fds);
-			writeyet = 1;
-		}
-	}
-}
-
-static void
 Server::setFdset()
 {
 	Server::read_fds = Server::origin_fds; 
 	Server::write_fds = Server::origin_fds; 
 }
 
-static void
+void
 Server::initFdset()
 {
-	FD_ZERO(Server::read_fds);
-	FD_ZERO(Server::write_fds);
-	FD_ZERO(Server::origin_fds);
+	FD_ZERO(&Server::read_fds);
+	FD_ZERO(&Server::write_fds);
+	FD_ZERO(&Server::origin_fds);
 }
+
+fd_t		Server::max_fd = 0;
+
+fd_set		Server::read_fds;
+fd_set 		Server::write_fds;
+fd_set 		Server::origin_fds;

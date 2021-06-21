@@ -6,7 +6,7 @@
 #    By: darbib <darbib@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/11/06 14:53:36 by darbib            #+#    #+#              #
-#    Updated: 2021/06/04 14:33:21 by darbib           ###   ########.fr        #
+#    Updated: 2021/06/21 21:19:43 by darbib           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 SHELL = /bin/zsh
@@ -25,11 +25,11 @@ NAME = webserv
 CFLAGS = -std=c++98 -Wall -Wextra -Werror
 CC = clang++
 
-ifeq (DEBUG, 1)
+ifeq ($(DEBUG), 1)
 	CFLAGS += -g3
 endif
 
-ifeq (SANITIZE, 1)
+ifeq ($(SANITIZE), 1)
 	CFLAGS += -fsanitize=address
 endif
 
@@ -42,7 +42,12 @@ SRC_DIR = ./srcs/
 
 OBJ = $(SRC:%.cpp=$(OBJ_DIR)%.o)
 
-SRC = nonblocking_socket.cpp
+INC_DIRS = ./includes
+
+INC = $(addprefix -I, $(INC_DIRS))
+
+SRC = Server.cpp \
+	  webserv.cpp
 
 #TEST_SRC = main_test.cpp
 #TEST_FILES_DIR = test_files
@@ -58,13 +63,13 @@ vpath %.cpp $(SRC_DIR)
 all : $(NAME)
 
 $(NAME): $(OBJ)
-	@$(CC) -o $@ $(OBJ)
+	$(CC) $(INC) $(CFLAGS) -o $@ $(OBJ)
 	@echo $(GREEN) "binary $@ is successfully builded !" $(RESET)
 
 $(OBJ_DIR)%.o : %.cpp
 	@mkdir -p objs
 	@echo $(BLUE) "compiling" $< $(RESET)
-	@$(CC) $(CFLAGS) -c $< -o $@ 
+	@$(CC) $(INC) $(CFLAGS) -c $< -o $@ 
 
 clean :
 	@echo $(MAGENTA) "Cleaning objs..." $(RESET)
