@@ -8,6 +8,7 @@
 # include <cstring>
 # include <sys/socket.h>
 # include <netinet/in.h>
+# include <arpa/inet.h>
 # include <unistd.h>
 
 # define DELAY		5
@@ -61,7 +62,6 @@ class Server
 		std::string 		_error_logs_path;
 		fd_t				_listen_fd;
 		std::vector<long>	_connections_fd;
-
 
 		void				recvSend();
 		bool				isThereSomethingToRead(fd_t);
