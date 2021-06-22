@@ -5,6 +5,7 @@
 #include "AHttpMessage.hpp"
 
 #define HTTP_VERSION "HTTP/1.1"
+#define SERVER_VERSION "webserv/1.0.0"
 
 class Response : public AHttpMessage
 {
@@ -43,6 +44,9 @@ class Response : public AHttpMessage
 
 		void
 		method_not_allowed(void);
+
+		void
+		not_found(void);
 };
 
 std::ostream &

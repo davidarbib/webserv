@@ -67,9 +67,9 @@ Response::bad_request(void)
 	{
 		this->_start_line.status_code = 400;
 		this->_start_line.reason_phrase = "Bad request";
-		this->_headers["Content-type"] = "text/html";
+		this->_headers["Content-Type"] = "text/html";
 		this->_headers["Content-Length"] = "42";
-		this->_headers["Server"] = "webserv/1.0.0";
+		this->_headers["Server"] = SERVER_VERSION;
 		this->_headers["Date"] = get_date();
 		this->_headers["Connection"] = "close";
 		this->_error_lock = true;
@@ -83,9 +83,25 @@ Response::method_not_allowed(void)
 	{
 		this->_start_line.status_code = 405;
 		this->_start_line.reason_phrase = "Not Allowed";
-		this->_headers["Server"] = "webserv/1.0.0";
+		this->_headers["Server"] = SERVER_VERSION;
 		this->_headers["Date"] = get_date();
-		this->_headers["Content-type"] = "text/html";
+		this->_headers["Content-Type"] = "text/html";
+		this->_headers["Content-Length"] = "42";
+		this->_headers["Connection"] = "keep-alive";
+		this->_error_lock = true;
+	}
+}
+
+void
+Response::not_found(void)
+{
+	if (this->_error_lock == false)
+	{
+		this->_start_line.status_code = 404;
+		this->_start_line.reason_phrase = "Not Found";
+		this->_headers["Server"] = SERVER_VERSION;
+		this->_headers["Date"] = get_date();
+		this->_headers["Content-Type"] = "text/html";
 		this->_headers["Content-Length"] = "42";
 		this->_headers["Connection"] = "keep-alive";
 		this->_error_lock = true;
