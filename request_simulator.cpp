@@ -33,8 +33,7 @@ int main(int ac, char **av)
 			return 1;
 		}
 		std::cout << raw_request;
-		char *s_request = const_cast<char *>(raw_request.c_str());
-		parse_request(s_request, &request);
+		parse_request(raw_request, &request);
 		std::cout << request << std::endl;
 		return 0;
 	}

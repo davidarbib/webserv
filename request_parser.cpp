@@ -1,7 +1,7 @@
 #include "request_parser.hpp"
 
 bool
-is_end_line(const char *line, int index)
+is_end_line(std::string &line, int index)
 {
 	if (line[index] == '\r')
 	{
@@ -12,7 +12,7 @@ is_end_line(const char *line, int index)
 }
 
 bool
-is_end_section(const char *line, int index)
+is_end_section(std::string &line, int index)
 {
 	if (is_end_line(line, index))
 	{
@@ -23,7 +23,7 @@ is_end_section(const char *line, int index)
 }
 
 int
-parse_method_token(const char *raw_request, Request *request)
+parse_method_token(std::string &raw_request, Request *request)
 {
 	int index = 0;
 	std::string method_token;
@@ -38,7 +38,7 @@ parse_method_token(const char *raw_request, Request *request)
 }
 
 int
-parse_request_URI(const char *raw_request, Request *request, int position)
+parse_request_URI(std::string &raw_request, Request *request, int position)
 {
 	int index = position;
 	std::string request_URI;
@@ -53,7 +53,7 @@ parse_request_URI(const char *raw_request, Request *request, int position)
 }
 
 int
-parse_http_version(const char *raw_request, Request *request, int position)
+parse_http_version(std::string &raw_request, Request *request, int position)
 {
 	int index = position;
 	std::string http_version;
@@ -68,7 +68,7 @@ parse_http_version(const char *raw_request, Request *request, int position)
 }
 
 int
-parse_start_line(const char *raw_request, Request *request)
+parse_start_line(std::string &raw_request, Request *request)
 {
 	int request_position = 0;
 
@@ -79,7 +79,7 @@ parse_start_line(const char *raw_request, Request *request)
 }
 
 int
-get_one_header(const char *raw_request, Request *request, int position)
+get_one_header(std::string &raw_request, Request *request, int position)
 {
 	int index = position;
 	std::string key;
@@ -101,7 +101,7 @@ get_one_header(const char *raw_request, Request *request, int position)
 }
 
 int
-parse_headers(const char *raw_request, Request *request, int position)
+parse_headers(std::string &raw_request, Request *request, int position)
 {
 	int index = position;
 
@@ -111,7 +111,7 @@ parse_headers(const char *raw_request, Request *request, int position)
 }
 
 void
-parse_request(const char *raw_request, Request *request)
+parse_request(std::string &raw_request, Request *request)
 {
 	int raw_request_index = 0;
 
