@@ -1,6 +1,9 @@
 #include "Request.hpp"
 
-Request::Request(void) : _response()
+Request::Request(void) : _response(), 
+						 _start_line_initialized(false),
+						 _headers_initialized(false),
+						 _request_finalized(false) 
 {
 	this->set_header("Content-Length", "0");
 	this->set_header("Transfer-Encoding", "");
@@ -41,6 +44,7 @@ void
 Request::set_http_version(std::string const &http_version)
 {
 	this->_start_line.http_version = http_version;
+	this->_start_line_initialized = true;
 }
 
 void
@@ -118,6 +122,30 @@ Request::get_response(void)
 {
 	Response response(this->_response);
 	return response;
+}
+
+void
+Request::set_header_initialized(bool value)
+{
+	this->_headers_initialized = value;
+}
+
+bool
+Request::is_start_line_initialized(void) const
+{
+	return this->_start_line_initialized;
+}
+
+bool
+Request::is_headers_initialized(void) const
+{
+	return this->_headers_initialized;
+}
+
+bool
+Request::is_request_finalized(void) const
+{
+	return this->_request_finalized;
 }
 
 std::ostream&

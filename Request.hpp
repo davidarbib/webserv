@@ -13,9 +13,12 @@ class Request : public AHttpMessage
 {
 	private:
 
-		std::string _method_list[METHOD_NB];
-		request_line _start_line;
-		Response _response;
+		std::string 	_method_list[METHOD_NB];
+		request_line 	_start_line;
+		Response 		_response;
+		bool			_start_line_initialized;
+		bool			_headers_initialized;
+		bool			_request_finalized;
 
 		void
 		init_method_list(void);
@@ -51,6 +54,18 @@ class Request : public AHttpMessage
 
 		void
 		print_message(std::ostream &flux) const;
+
+		void
+		set_header_initialized(bool value);
+
+		bool
+		is_start_line_initialized(void) const;
+
+		bool
+		is_headers_initialized(void) const;
+
+		bool
+		is_request_finalized(void) const;
 
 		bool
 		has_body(void) const;
