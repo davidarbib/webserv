@@ -33,7 +33,7 @@ int main(int ac, char **av)
 			return 1;
 		}
 		std::cout << raw_request;
-		parse_request(raw_request, &request);
+		parse_request(raw_request, &request, 0);
 		std::cout << request << std::endl;
 		return 0;
 	}

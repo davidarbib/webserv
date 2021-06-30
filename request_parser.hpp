@@ -32,7 +32,7 @@ get_one_header(std::string &raw_request, Request *request, int position);
 int
 parse_headers(std::string &raw_request, Request *request, int position);
 
-void
-parse_request(std::string &raw_request, Request *request);
+int
+parse_request(std::string &raw_request, Request *request, int raw_request_index);
 
 #endif

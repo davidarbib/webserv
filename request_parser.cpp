@@ -110,14 +110,14 @@ parse_headers(std::string &raw_request, Request *request, int position)
 	return index + CRLFCRLF;
 }
 
-void
-parse_request(std::string &raw_request, Request *request)
+int
+parse_request(std::string &raw_request, Request *request, int raw_request_index)
 {
-	int raw_request_index = 0;
 
 	if (request->get_header_value("Transfer-Encoding") != "chunked")
 	{
 		raw_request_index = parse_start_line(raw_request, request);
 		raw_request_index = parse_headers(raw_request, request, raw_request_index);
 	}
+	return raw_request_index;
 }
