@@ -1,6 +1,14 @@
 #include "Server.hpp"
 
-#define _LIBCPP_DEBUG 1
+int parseRequest(Server &server)
+{
+	std::map<fd_t, std::string>::iterator it;
+	for (it = server.getRequestBuffers().begin();
+			it != server.getRequestBuffers().end();
+			it++)
+	{
+	}
+}
 
 int main(int ac, char **av)
 {
@@ -25,6 +33,16 @@ int main(int ac, char **av)
 		if (servers[0]->isThereConnectionRequest())
 			servers[0]->createConnection();
 		servers[0]->watchInput();
+		parseRequest(servers[0]);
+		//Maxime's stuff
+		//writes
 	}
 	return 0;
 }
+
+/*
+typedef struct s_bool
+{
+	int b : 1;
+}				t_bool;
+*/

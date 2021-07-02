@@ -10,6 +10,7 @@
 # include <netinet/in.h>
 # include <arpa/inet.h>
 # include <unistd.h>
+# include <map>
 
 # define DELAY		5
 # define BUFSIZE	2000
@@ -41,6 +42,8 @@ class Server
 		Server(std::string, int, std::string, std::string);
 		virtual ~Server(void);
 
+		std::map<fd_t, std::string>		getRequestBuffers() const;
+
 		fd_t				listenSocket()
 							throw(Server::ListenException);
 		bool				isThereConnectionRequest();
@@ -56,13 +59,15 @@ class Server
 		static fd_set 		origin_fds;
 
 	private:
-		std::string			_name;
-		int					_port;
-		std::string 		_access_logs_path;
-		std::string 		_error_logs_path;
-		fd_t				_listen_fd;
-		std::vector<long>	_connections_fd;
+		std::string						_name;
+		int								_port;
+		std::string 					_access_logs_path;
+		std::string 					_error_logs_path;
+		fd_t							_listen_fd;
+		std::vector<long>				_connections_fd;
+		std::map<fd_t, std::string>		_request_buffers;
 
+		void				transferToBuffer(fd_t connection_fd, char *buf);
 		void				recvSend();
 		bool				isThereSomethingToRead(fd_t);
 		void				addWatchedFd(fd_t);

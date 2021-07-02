@@ -12,6 +12,12 @@ Server::~Server(void)
 {
 }
 
+std::map<fd_t, std::string>
+Server::getRequestBuffers() const
+{
+	return this->_request_buffers;
+}
+
 fd_t
 Server::listenSocket()
 throw(Server::ListenException)
@@ -81,7 +87,14 @@ Server::createConnection()
 		throw ConnectionException();
 	addWatchedFd(new_sock_fd);
 	this->_connections_fd.push_back(new_sock_fd);
+	this->_request_buffers[new_sock_fd] = std::string();
 	FD_CLR(this->_listen_fd, &read_fds);
+}
+
+void
+Server::transferToBuffer(fd_t connection_fd, char *buf)
+{
+	this->_request_buffers[connection_fd] = std::string(const_cast<char*>(buf));
 }
 
 void
@@ -109,7 +122,7 @@ Server::watchInput()
 			continue ;
 		}
 		std::cout << "fds size : " << this->_connections_fd.size() << std::endl;
-		printf("%s\n", buf);
+		//printf("%s\n", buf);
 		FD_CLR(*fd_ptr, &Server::read_fds);
 		fd_ptr++;
 	}
