@@ -12,7 +12,7 @@
 # include <unistd.h>
 # include <map>
 
-# define DELAY		5
+# define DELAY		1
 # define BUFSIZE	2000
 # define PORT		8003
 

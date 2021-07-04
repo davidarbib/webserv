@@ -1,13 +1,20 @@
 #include "Server.hpp"
 
-int parseRequest(Server &server)
+int handleRequestBuffers(Server *server)
 {
+//	int ret;
+
+	if (server->getRequestBuffers().size() == 0)
+		return 0;
+	std::cout << "handle request buffers" << std::endl;
 	std::map<fd_t, std::string>::iterator it;
-	for (it = server.getRequestBuffers().begin();
-			it != server.getRequestBuffers().end();
+	for (it = server->getRequestBuffers().begin();
+			it != server->getRequestBuffers().end();
 			it++)
-	{
-	}
+	//ret = parseRequest(it, *server);
+		std::cout << it->second << std::endl;
+	return 0;
+	//return ret;
 }
 
 int main(int ac, char **av)
@@ -28,13 +35,13 @@ int main(int ac, char **av)
 
 	while (1)
 	{
+		//std::cout << "cc" << std::endl;
 		Server::setFdset();
 		select(Server::max_fd + 1, &Server::read_fds, &Server::write_fds, NULL, &tv);
 		if (servers[0]->isThereConnectionRequest())
 			servers[0]->createConnection();
 		servers[0]->watchInput();
-		parseRequest(servers[0]);
-		//Maxime's stuff
+		handleRequestBuffers(servers[0]);
 		//writes
 	}
 	return 0;

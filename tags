@@ -1,0 +1,127 @@
+!_TAG_FILE_FORMAT	2	/extended format; --format=1 will not append ;" to lines/
+!_TAG_FILE_SORTED	1	/0=unsorted, 1=sorted, 2=foldcase/
+!_TAG_PROGRAM_AUTHOR	Darren Hiebert	/dhiebert@users.sourceforge.net/
+!_TAG_PROGRAM_NAME	Exuberant Ctags	//
+!_TAG_PROGRAM_URL	http://ctags.sourceforge.net	/official site/
+!_TAG_PROGRAM_VERSION	5.9~svn20110310	//
+BUFSIZE	includes/Server.hpp	16;"	d
+BUFSIZE	srcs/nonblocking_socket.cpp	15;"	d	file:
+BUFSIZE	srcs/socket.cpp	9;"	d	file:
+ClassName	norm/example.hpp	/^class ClassName$/;"	c
+ClassName::_first_name	norm/example.hpp	/^		std::string		_first_name;$/;"	m	class:ClassName	access:private
+ClassName::_number	norm/example.hpp	/^		int				_number;$/;"	m	class:ClassName	access:private
+ConnectionException	includes/Server.hpp	/^	class ConnectionException : public std::exception$/;"	c	class:Server	inherits:std::exception	access:private
+DELAY	includes/Server.hpp	15;"	d
+DELAY	srcs/nonblocking_socket.cpp	16;"	d	file:
+ListenException	includes/Server.hpp	/^	class ListenException : public std::exception$/;"	c	class:Server	inherits:std::exception	access:private
+PORT	includes/Server.hpp	17;"	d
+PORT	srcs/nonblocking_socket.cpp	14;"	d	file:
+PORT	srcs/socket.cpp	8;"	d	file:
+SERVER_HPP	includes/Server.hpp	2;"	d
+Server	includes/Server.hpp	/^		Server(Server const &src);$/;"	p	class:Server	access:private	signature:(Server const &src)
+Server	includes/Server.hpp	/^		Server(std::string, int, std::string, std::string);$/;"	p	class:Server	access:public	signature:(std::string, int, std::string, std::string)
+Server	includes/Server.hpp	/^		Server(void);$/;"	p	class:Server	access:private	signature:(void)
+Server	includes/Server.hpp	/^class Server$/;"	c
+Server	srcs/Server.cpp	/^Server::Server(std::string name, int port, std::string access_logs_path, std::string error_logs_path)$/;"	f	class:Server	signature:(std::string name, int port, std::string access_logs_path, std::string error_logs_path)
+Server::ConnectionException	includes/Server.hpp	/^	class ConnectionException : public std::exception$/;"	c	class:Server	inherits:std::exception	access:private
+Server::ConnectionException::what	includes/Server.hpp	/^			what() const$/;"	f	class:Server::ConnectionException	access:public	signature:() const
+Server::ListenException	includes/Server.hpp	/^	class ListenException : public std::exception$/;"	c	class:Server	inherits:std::exception	access:private
+Server::ListenException::what	includes/Server.hpp	/^			what() const$/;"	f	class:Server::ListenException	access:public	signature:() const
+Server::Server	includes/Server.hpp	/^		Server(Server const &src);$/;"	p	class:Server	access:private	signature:(Server const &src)
+Server::Server	includes/Server.hpp	/^		Server(std::string, int, std::string, std::string);$/;"	p	class:Server	access:public	signature:(std::string, int, std::string, std::string)
+Server::Server	includes/Server.hpp	/^		Server(void);$/;"	p	class:Server	access:private	signature:(void)
+Server::Server	srcs/Server.cpp	/^Server::Server(std::string name, int port, std::string access_logs_path, std::string error_logs_path)$/;"	f	class:Server	signature:(std::string name, int port, std::string access_logs_path, std::string error_logs_path)
+Server::_access_logs_path	includes/Server.hpp	/^		std::string 					_access_logs_path;$/;"	m	class:Server	access:private
+Server::_connections_fd	includes/Server.hpp	/^		std::vector<long>				_connections_fd;$/;"	m	class:Server	access:private
+Server::_error_logs_path	includes/Server.hpp	/^		std::string 					_error_logs_path;$/;"	m	class:Server	access:private
+Server::_listen_fd	includes/Server.hpp	/^		fd_t							_listen_fd;$/;"	m	class:Server	access:private
+Server::_name	includes/Server.hpp	/^		std::string						_name;$/;"	m	class:Server	access:private
+Server::_port	includes/Server.hpp	/^		int								_port;$/;"	m	class:Server	access:private
+Server::_request_buffers	includes/Server.hpp	/^		std::map<fd_t, std::string>		_request_buffers;$/;"	m	class:Server	access:private
+Server::addWatchedFd	includes/Server.hpp	/^		void				addWatchedFd(fd_t);$/;"	p	class:Server	access:private	signature:(fd_t)
+Server::addWatchedFd	srcs/Server.cpp	/^Server::addWatchedFd(fd_t fd)$/;"	f	class:Server	signature:(fd_t fd)
+Server::createConnection	includes/Server.hpp	/^		void				createConnection();$/;"	p	class:Server	access:public	signature:()
+Server::createConnection	srcs/Server.cpp	/^Server::createConnection()$/;"	f	class:Server	signature:()
+Server::delWatchedFd	includes/Server.hpp	/^		void				delWatchedFd(fd_t);$/;"	p	class:Server	access:private	signature:(fd_t)
+Server::delWatchedFd	srcs/Server.cpp	/^Server::delWatchedFd(fd_t fd)$/;"	f	class:Server	signature:(fd_t fd)
+Server::getRequestBuffers	includes/Server.hpp	/^		std::map<fd_t, std::string>		getRequestBuffers() const;$/;"	p	class:Server	access:public	signature:() const
+Server::getRequestBuffers	srcs/Server.cpp	/^Server::getRequestBuffers() const$/;"	f	class:Server	signature:() const
+Server::initFdset	includes/Server.hpp	/^		static void			initFdset();$/;"	p	class:Server	access:public	signature:()
+Server::initFdset	srcs/Server.cpp	/^Server::initFdset()$/;"	f	class:Server	signature:()
+Server::isThereConnectionRequest	includes/Server.hpp	/^		bool				isThereConnectionRequest();$/;"	p	class:Server	access:public	signature:()
+Server::isThereConnectionRequest	srcs/Server.cpp	/^Server::isThereConnectionRequest()$/;"	f	class:Server	signature:()
+Server::isThereSomethingToRead	includes/Server.hpp	/^		bool				isThereSomethingToRead(fd_t);$/;"	p	class:Server	access:private	signature:(fd_t)
+Server::isThereSomethingToRead	srcs/Server.cpp	/^Server::isThereSomethingToRead(fd_t fd)$/;"	f	class:Server	signature:(fd_t fd)
+Server::listenSocket	includes/Server.hpp	/^		fd_t				listenSocket()$/;"	p	class:Server	access:public	signature:()
+Server::listenSocket	srcs/Server.cpp	/^Server::listenSocket()$/;"	f	class:Server	signature:()
+Server::max_fd	includes/Server.hpp	/^		static fd_t			max_fd;$/;"	m	class:Server	access:public
+Server::max_fd	srcs/Server.cpp	/^fd_t		Server::max_fd = 0;$/;"	m	class:Server	file:
+Server::operator =	includes/Server.hpp	/^		Server				&operator=(Server const &rhs);$/;"	p	class:Server	access:private	signature:(Server const &rhs)
+Server::origin_fds	includes/Server.hpp	/^		static fd_set 		origin_fds;$/;"	m	class:Server	access:public
+Server::origin_fds	srcs/Server.cpp	/^fd_set 		Server::origin_fds;$/;"	m	class:Server	file:
+Server::read_fds	includes/Server.hpp	/^		static fd_set		read_fds;$/;"	m	class:Server	access:public
+Server::read_fds	srcs/Server.cpp	/^fd_set		Server::read_fds;$/;"	m	class:Server	file:
+Server::recvSend	includes/Server.hpp	/^		void				recvSend();$/;"	p	class:Server	access:private	signature:()
+Server::setFdset	includes/Server.hpp	/^		static void			setFdset();$/;"	p	class:Server	access:public	signature:()
+Server::setFdset	srcs/Server.cpp	/^Server::setFdset()$/;"	f	class:Server	signature:()
+Server::transferToBuffer	includes/Server.hpp	/^		void				transferToBuffer(fd_t connection_fd, char *buf);$/;"	p	class:Server	access:private	signature:(fd_t connection_fd, char *buf)
+Server::transferToBuffer	srcs/Server.cpp	/^Server::transferToBuffer(fd_t connection_fd, char *buf)$/;"	f	class:Server	signature:(fd_t connection_fd, char *buf)
+Server::watchInput	includes/Server.hpp	/^		void				watchInput();$/;"	p	class:Server	access:public	signature:()
+Server::watchInput	srcs/Server.cpp	/^Server::watchInput()$/;"	f	class:Server	signature:()
+Server::write_fds	includes/Server.hpp	/^		static fd_set 		write_fds;$/;"	m	class:Server	access:public
+Server::write_fds	srcs/Server.cpp	/^fd_set 		Server::write_fds;$/;"	m	class:Server	file:
+Server::~Server	includes/Server.hpp	/^		virtual ~Server(void);$/;"	p	class:Server	access:public	signature:(void)
+Server::~Server	srcs/Server.cpp	/^Server::~Server(void)$/;"	f	class:Server	signature:(void)
+_access_logs_path	includes/Server.hpp	/^		std::string 					_access_logs_path;$/;"	m	class:Server	access:private
+_connections_fd	includes/Server.hpp	/^		std::vector<long>				_connections_fd;$/;"	m	class:Server	access:private
+_error_logs_path	includes/Server.hpp	/^		std::string 					_error_logs_path;$/;"	m	class:Server	access:private
+_first_name	norm/example.hpp	/^		std::string		_first_name;$/;"	m	class:ClassName	access:private
+_listen_fd	includes/Server.hpp	/^		fd_t							_listen_fd;$/;"	m	class:Server	access:private
+_name	includes/Server.hpp	/^		std::string						_name;$/;"	m	class:Server	access:private
+_number	norm/example.hpp	/^		int				_number;$/;"	m	class:ClassName	access:private
+_port	includes/Server.hpp	/^		int								_port;$/;"	m	class:Server	access:private
+_request_buffers	includes/Server.hpp	/^		std::map<fd_t, std::string>		_request_buffers;$/;"	m	class:Server	access:private
+addWatchedFd	includes/Server.hpp	/^		void				addWatchedFd(fd_t);$/;"	p	class:Server	access:private	signature:(fd_t)
+addWatchedFd	srcs/Server.cpp	/^Server::addWatchedFd(fd_t fd)$/;"	f	class:Server	signature:(fd_t fd)
+createConnection	includes/Server.hpp	/^		void				createConnection();$/;"	p	class:Server	access:public	signature:()
+createConnection	srcs/Server.cpp	/^Server::createConnection()$/;"	f	class:Server	signature:()
+create_connection	srcs/nonblocking_socket.cpp	/^int	create_connection(int sock_fd, fd_set *origin_fds, int *maxfd)$/;"	f	signature:(int sock_fd, fd_set *origin_fds, int *maxfd)
+delWatchedFd	includes/Server.hpp	/^		void				delWatchedFd(fd_t);$/;"	p	class:Server	access:private	signature:(fd_t)
+delWatchedFd	srcs/Server.cpp	/^Server::delWatchedFd(fd_t fd)$/;"	f	class:Server	signature:(fd_t fd)
+fd_t	includes/Server.hpp	/^typedef long fd_t;$/;"	t
+g_close_flag	srcs/nonblocking_socket.cpp	/^int g_close_flag = 0;$/;"	v
+getRequestBuffers	includes/Server.hpp	/^		std::map<fd_t, std::string>		getRequestBuffers() const;$/;"	p	class:Server	access:public	signature:() const
+getRequestBuffers	srcs/Server.cpp	/^Server::getRequestBuffers() const$/;"	f	class:Server	signature:() const
+initFdset	includes/Server.hpp	/^		static void			initFdset();$/;"	p	class:Server	access:public	signature:()
+initFdset	srcs/Server.cpp	/^Server::initFdset()$/;"	f	class:Server	signature:()
+isThereConnectionRequest	includes/Server.hpp	/^		bool				isThereConnectionRequest();$/;"	p	class:Server	access:public	signature:()
+isThereConnectionRequest	srcs/Server.cpp	/^Server::isThereConnectionRequest()$/;"	f	class:Server	signature:()
+isThereSomethingToRead	includes/Server.hpp	/^		bool				isThereSomethingToRead(fd_t);$/;"	p	class:Server	access:private	signature:(fd_t)
+isThereSomethingToRead	srcs/Server.cpp	/^Server::isThereSomethingToRead(fd_t fd)$/;"	f	class:Server	signature:(fd_t fd)
+listenSocket	includes/Server.hpp	/^		fd_t				listenSocket()$/;"	p	class:Server	access:public	signature:()
+listenSocket	srcs/Server.cpp	/^Server::listenSocket()$/;"	f	class:Server	signature:()
+main	srcs/nonblocking_socket.cpp	/^int main(int ac, char **av)$/;"	f	signature:(int ac, char **av)
+main	srcs/socket.cpp	/^int main(int ac, char **av)$/;"	f	signature:(int ac, char **av)
+main	srcs/webserv.cpp	/^int main(int ac, char **av)$/;"	f	signature:(int ac, char **av)
+max_fd	includes/Server.hpp	/^		static fd_t			max_fd;$/;"	m	class:Server	access:public
+max_fd	srcs/Server.cpp	/^fd_t		Server::max_fd = 0;$/;"	m	class:Server	file:
+operator =	includes/Server.hpp	/^		Server				&operator=(Server const &rhs);$/;"	p	class:Server	access:private	signature:(Server const &rhs)
+origin_fds	includes/Server.hpp	/^		static fd_set 		origin_fds;$/;"	m	class:Server	access:public
+origin_fds	srcs/Server.cpp	/^fd_set 		Server::origin_fds;$/;"	m	class:Server	file:
+parseRequest	srcs/webserv.cpp	/^int parseRequest(Server &server)$/;"	f	signature:(Server &server)
+read_fds	includes/Server.hpp	/^		static fd_set		read_fds;$/;"	m	class:Server	access:public
+read_fds	srcs/Server.cpp	/^fd_set		Server::read_fds;$/;"	m	class:Server	file:
+recvSend	includes/Server.hpp	/^		void				recvSend();$/;"	p	class:Server	access:private	signature:()
+setFdset	includes/Server.hpp	/^		static void			setFdset();$/;"	p	class:Server	access:public	signature:()
+setFdset	srcs/Server.cpp	/^Server::setFdset()$/;"	f	class:Server	signature:()
+signalHandler	srcs/nonblocking_socket.cpp	/^void signalHandler(int signum)$/;"	f	signature:(int signum)
+transferToBuffer	includes/Server.hpp	/^		void				transferToBuffer(fd_t connection_fd, char *buf);$/;"	p	class:Server	access:private	signature:(fd_t connection_fd, char *buf)
+transferToBuffer	srcs/Server.cpp	/^Server::transferToBuffer(fd_t connection_fd, char *buf)$/;"	f	class:Server	signature:(fd_t connection_fd, char *buf)
+watchInput	includes/Server.hpp	/^		void				watchInput();$/;"	p	class:Server	access:public	signature:()
+watchInput	srcs/Server.cpp	/^Server::watchInput()$/;"	f	class:Server	signature:()
+what	includes/Server.hpp	/^			what() const$/;"	f	class:Server::ConnectionException	access:public	signature:() const
+what	includes/Server.hpp	/^			what() const$/;"	f	class:Server::ListenException	access:public	signature:() const
+write_fds	includes/Server.hpp	/^		static fd_set 		write_fds;$/;"	m	class:Server	access:public
+write_fds	srcs/Server.cpp	/^fd_set 		Server::write_fds;$/;"	m	class:Server	file:
+~Server	includes/Server.hpp	/^		virtual ~Server(void);$/;"	p	class:Server	access:public	signature:(void)
+~Server	srcs/Server.cpp	/^Server::~Server(void)$/;"	f	class:Server	signature:(void)

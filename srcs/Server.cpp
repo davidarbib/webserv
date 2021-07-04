@@ -94,14 +94,14 @@ Server::createConnection()
 void
 Server::transferToBuffer(fd_t connection_fd, char *buf)
 {
-	this->_request_buffers[connection_fd] = std::string(const_cast<char*>(buf));
+	this->_request_buffers[connection_fd] += const_cast<char*>(buf);
 }
 
 void
 Server::watchInput()
 {
 	char buf[BUFSIZE];
-	bzero(buf, BUFSIZE);
+	bzero(buf, BUFSIZE); //TODO
 
 	std::vector<long>::iterator fd_ptr;
 	fd_ptr = this->_connections_fd.begin();
@@ -118,9 +118,11 @@ Server::watchInput()
 			delWatchedFd(*fd_ptr);
 			close(*fd_ptr);
 			this->_connections_fd.erase(fd_ptr);
+			this->_request_buffers.erase(*fd_ptr);
 			fd_ptr = this->_connections_fd.begin();
 			continue ;
 		}
+		transferToBuffer(*fd_ptr, buf);
 		std::cout << "fds size : " << this->_connections_fd.size() << std::endl;
 		//printf("%s\n", buf);
 		FD_CLR(*fd_ptr, &Server::read_fds);
