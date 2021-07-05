@@ -42,6 +42,7 @@ class Server
 		Server(std::string, int, std::string, std::string);
 		virtual ~Server(void);
 
+		std::map<fd_t, std::string>		&getRefRequestBuffers();
 		std::map<fd_t, std::string>		getRequestBuffers() const;
 
 		fd_t				listenSocket()

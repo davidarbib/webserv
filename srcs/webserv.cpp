@@ -3,13 +3,12 @@
 int handleRequestBuffers(Server *server)
 {
 //	int ret;
-
-	if (server->getRequestBuffers().size() == 0)
+	if (server->getRefRequestBuffers().size() == 0)
 		return 0;
 	std::cout << "handle request buffers" << std::endl;
 	std::map<fd_t, std::string>::iterator it;
-	for (it = server->getRequestBuffers().begin();
-			it != server->getRequestBuffers().end();
+	for (it = server->getRefRequestBuffers().begin();
+			it != server->getRefRequestBuffers().end();
 			it++)
 	//ret = parseRequest(it, *server);
 		std::cout << it->second << std::endl;

@@ -12,6 +12,12 @@ Server::~Server(void)
 {
 }
 
+std::map<fd_t, std::string> &
+Server::getRefRequestBuffers()
+{
+	return this->_request_buffers;
+}
+
 std::map<fd_t, std::string>
 Server::getRequestBuffers() const
 {
