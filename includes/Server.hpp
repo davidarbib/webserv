@@ -11,6 +11,8 @@
 # include <arpa/inet.h>
 # include <unistd.h>
 # include <map>
+# include "RequestHandler.hpp"
+# include "typedefs.hpp"
 
 # define DELAY		1
 # define BUFSIZE	2000
@@ -42,8 +44,8 @@ class Server
 		Server(std::string, int, std::string, std::string);
 		virtual ~Server(void);
 
-		std::map<fd_t, std::string>		&getRefRequestBuffers();
-		std::map<fd_t, std::string>		getRequestBuffers() const;
+		std::map<fd_t, RequestHandler*>	&getRefRequestHandlers();
+		std::map<fd_t, RequestHandler*>	getRequestHandlers() const;
 
 		fd_t				listenSocket()
 							throw(Server::ListenException);
@@ -66,13 +68,14 @@ class Server
 		std::string 					_error_logs_path;
 		fd_t							_listen_fd;
 		std::vector<long>				_connections_fd;
-		std::map<fd_t, std::string>		_request_buffers;
+		std::map<fd_t, RequestHandler*>	_request_handlers;
 
 		void				transferToBuffer(fd_t connection_fd, char *buf);
 		void				recvSend();
 		bool				isThereSomethingToRead(fd_t);
 		void				addWatchedFd(fd_t);
 		void				delWatchedFd(fd_t);
+		void				delConnection(void);
 
 		Server(void);
 		Server(Server const &src);

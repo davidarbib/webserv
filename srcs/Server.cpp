@@ -12,16 +12,16 @@ Server::~Server(void)
 {
 }
 
-std::map<fd_t, std::string> &
-Server::getRefRequestBuffers()
+std::map<fd_t, RequestHandler*> &
+Server::getRefRequestHandlers(void)
 {
-	return this->_request_buffers;
+	return this->_request_handlers;
 }
 
-std::map<fd_t, std::string>
-Server::getRequestBuffers() const
+std::map<fd_t, RequestHandler*>
+Server::getRequestHandlers(void) const
 {
-	return this->_request_buffers;
+	return this->_request_handlers;
 }
 
 fd_t
@@ -51,7 +51,7 @@ throw(Server::ListenException)
 }
 
 bool				
-Server::isThereConnectionRequest()
+Server::isThereConnectionRequest(void)
 {
 	if (FD_ISSET(this->_listen_fd, &Server::read_fds))
 		return 1;
@@ -73,7 +73,12 @@ Server::delWatchedFd(fd_t fd)
 }
 
 void
-Server::createConnection()
+Server::delConnection(void)
+{
+}
+
+void
+Server::createConnection(void)
 {
 	sockaddr_in		new_sin;
 	fd_t			new_sock_fd;
@@ -93,14 +98,15 @@ Server::createConnection()
 		throw ConnectionException();
 	addWatchedFd(new_sock_fd);
 	this->_connections_fd.push_back(new_sock_fd);
-	this->_request_buffers[new_sock_fd] = std::string();
+	this->_request_handlers[new_sock_fd]
+		= new RequestHandler(std::string());
 	FD_CLR(this->_listen_fd, &read_fds);
 }
 
 void
 Server::transferToBuffer(fd_t connection_fd, char *buf)
 {
-	this->_request_buffers[connection_fd] += const_cast<char*>(buf);
+	this->_request_handlers[connection_fd] += const_cast<char*>(buf);
 }
 
 void
@@ -124,7 +130,7 @@ Server::watchInput()
 			delWatchedFd(*fd_ptr);
 			close(*fd_ptr);
 			this->_connections_fd.erase(fd_ptr);
-			this->_request_buffers.erase(*fd_ptr);
+			this->_request_handlers.erase(*fd_ptr);
 			fd_ptr = this->_connections_fd.begin();
 			continue ;
 		}
