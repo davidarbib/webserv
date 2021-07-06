@@ -1,8 +1,9 @@
 #include "Server.hpp"
+#include "request_parser.hpp"
 
 int handleRequestBuffers(Server *server)
 {
-//	int ret;
+	int ret;
 	if (server->getRefRequestBuffers().size() == 0)
 		return 0;
 	std::cout << "handle request buffers" << std::endl;
@@ -10,10 +11,8 @@ int handleRequestBuffers(Server *server)
 	for (it = server->getRefRequestBuffers().begin();
 			it != server->getRefRequestBuffers().end();
 			it++)
-	//ret = parseRequest(it, *server);
-		std::cout << it->second << std::endl;
-	return 0;
-	//return ret;
+	ret = parseRequest(it, server);
+	return ret;
 }
 
 int main(int ac, char **av)

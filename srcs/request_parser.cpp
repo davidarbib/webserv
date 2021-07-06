@@ -1,4 +1,5 @@
 #include "request_parser.hpp"
+#include "Server.hpp"
 
 bool
 is_end_line(std::string &line, int index)
@@ -120,4 +121,28 @@ parse_request(std::string &raw_request, Request *request, int raw_request_index)
 		raw_request_index = parse_headers(raw_request, request, raw_request_index);
 	}
 	return raw_request_index;
+}
+
+bool
+is_complete_line(std::string &line)
+{
+	for (size_t i = 0; i < line.length(); i++)
+	{
+		if (is_end_line(line, i))
+			return true;
+	}
+	return false;
+}
+
+int
+parseRequest(std::map<fd_t, std::string>::iterator raw_request, Server *server)
+{
+	(void)raw_request;
+	(void)server;
+	if (is_complete_line(raw_request->second))
+		std::cout << "C'EST COMPLEEEEEEET ! 🥱🧑‍🍳" << std::endl;
+	else
+		std::cout << "LA SUITE STP" << std::endl;
+	std::cout << it->second << std::endl;
+	return 0;
 }
