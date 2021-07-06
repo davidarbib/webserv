@@ -46,7 +46,11 @@ INC_DIRS = ./includes
 
 INC = $(addprefix -I, $(INC_DIRS))
 
-SRC = Server.cpp \
+SRC = AHttpMessage.cpp \
+	  Request.cpp \
+	  Response.cpp \
+	  Server.cpp \
+	  request_parser.cpp \
 	  webserv.cpp
 
 #TEST_SRC = main_test.cpp
