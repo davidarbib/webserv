@@ -143,6 +143,6 @@ parseRequest(std::map<fd_t, std::string>::iterator raw_request, Server *server)
 		std::cout << "C'EST COMPLEEEEEEET ! 🥱🧑‍🍳" << std::endl;
 	else
 		std::cout << "LA SUITE STP" << std::endl;
-	std::cout << it->second << std::endl;
+	std::cout << raw_request->second << std::endl;
 	return 0;
 }

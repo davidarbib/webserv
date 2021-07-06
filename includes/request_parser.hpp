@@ -2,6 +2,7 @@
 #define REQUEST_PARSER_HPP
 
 #include "Request.hpp"
+#include "Server.hpp"
 #include <string>
 
 #define NEXT_SPACE_TOKEN 1
