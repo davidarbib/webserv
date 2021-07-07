@@ -19,3 +19,9 @@ RequestHandler::RequestHandler(RequestHandler const &src):
 RequestHandler::~RequestHandler(void)
 {
 }
+
+void
+fillBuffer(char *raw_buffer)
+{
+	this->_in_buffer += const_cast<char*>(raw_buffer);
+}

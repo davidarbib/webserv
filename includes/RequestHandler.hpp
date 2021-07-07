@@ -37,6 +37,9 @@ class RequestHandler
 		RequestHandler(RequestHandler const &src);
 
 		virtual	~RequestHandler(void);
+
+		void
+		fillBuffer(char *raw_buffer);
 };
 
 #endif

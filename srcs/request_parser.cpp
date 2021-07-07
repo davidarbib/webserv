@@ -142,7 +142,10 @@ parseRequest(std::map<fd_t, std::string>::iterator raw_request, Server *server)
 	if (is_complete_line(raw_request->second))
 		std::cout << "C'EST COMPLEEEEEEET ! 🥱🧑‍🍳" << std::endl;
 	else
+	{
 		std::cout << "LA SUITE STP" << std::endl;
+		return 0;
+	}
 	std::cout << raw_request->second << std::endl;
 	return 0;
 }

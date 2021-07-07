@@ -98,15 +98,16 @@ Server::createConnection(void)
 		throw ConnectionException();
 	addWatchedFd(new_sock_fd);
 	this->_connections_fd.push_back(new_sock_fd);
-	this->_request_handlers[new_sock_fd]
-		= new RequestHandler(std::string());
+	// tmp fix
+	std::string tmp = "";
+	this->_request_handlers[new_sock_fd] = new RequestHandler(tmp);
 	FD_CLR(this->_listen_fd, &read_fds);
 }
 
 void
 Server::transferToBuffer(fd_t connection_fd, char *buf)
 {
-	this->_request_handlers[connection_fd] += const_cast<char*>(buf);
+	this->_request_handlers[connection_fd]->fillBuffer(buf);
 }
 
 void
