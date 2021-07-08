@@ -6,7 +6,7 @@
 #    By: darbib <darbib@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/11/06 14:53:36 by darbib            #+#    #+#              #
-#    Updated: 2021/06/21 21:19:43 by darbib           ###   ########.fr        #
+#    Updated: 2021/07/08 16:48:07 by darbib           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 SHELL = /bin/zsh
@@ -48,6 +48,7 @@ INC = $(addprefix -I, $(INC_DIRS))
 
 SRC = AHttpMessage.cpp \
 	  Request.cpp \
+	  RequestHandler.cpp \
 	  Response.cpp \
 	  Server.cpp \
 	  request_parser.cpp \

@@ -37,6 +37,6 @@ int
 parse_request(std::string &raw_request, Request *request, int raw_request_index);
 
 int
-parseRequest(std::map<fd_t, std::string>::iterator raw_request, Server *server);
+parseRequest(std::map<fd_t, RequestHandler*>::iterator raw_request, Server *server);
 
 #endif

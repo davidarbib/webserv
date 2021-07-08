@@ -4,12 +4,12 @@
 int handleRequestBuffers(Server *server)
 {
 	int ret;
-	if (server->getRefRequestBuffers().size() == 0)
+	if (server->getRefRequestHandlers().size() == 0)
 		return 0;
 	std::cout << "handle request buffers" << std::endl;
-	std::map<fd_t, std::string>::iterator it;
-	for (it = server->getRefRequestBuffers().begin();
-			it != server->getRefRequestBuffers().end();
+	std::map<fd_t, RequestHandler*>::iterator it;
+	for (it = server->getRefRequestHandlers().begin();
+			it != server->getRefRequestHandlers().end();
 			it++)
 	ret = parseRequest(it, server);
 	return ret;
@@ -33,7 +33,6 @@ int main(int ac, char **av)
 
 	while (1)
 	{
-		//std::cout << "cc" << std::endl;
 		Server::setFdset();
 		select(Server::max_fd + 1, &Server::read_fds, &Server::write_fds, NULL, &tv);
 		if (servers[0]->isThereConnectionRequest())

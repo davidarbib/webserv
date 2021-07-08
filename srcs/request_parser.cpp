@@ -135,17 +135,19 @@ is_complete_line(std::string &line)
 }
 
 int
-parseRequest(std::map<fd_t, std::string>::iterator raw_request, Server *server)
+parseRequest(std::map<fd_t, RequestHandler*>::iterator requesthandler, Server *server)
 {
-	(void)raw_request;
+	(void)requesthandler;
 	(void)server;
-	if (is_complete_line(raw_request->second))
+/*
+	if (is_complete_line(requesthandler->second->))
 		std::cout << "C'EST COMPLEEEEEEET ! 🥱🧑‍🍳" << std::endl;
 	else
 	{
 		std::cout << "LA SUITE STP" << std::endl;
 		return 0;
 	}
-	std::cout << raw_request->second << std::endl;
+	std::cout << requesthandler->second << std::endl;
+*/
 	return 0;
 }
