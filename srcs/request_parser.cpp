@@ -139,15 +139,8 @@ parseRequest(std::map<fd_t, RequestHandler*>::iterator requesthandler, Server *s
 {
 	(void)requesthandler;
 	(void)server;
-/*
-	if (is_complete_line(requesthandler->second->))
-		std::cout << "C'EST COMPLEEEEEEET ! 🥱🧑‍🍳" << std::endl;
-	else
-	{
-		std::cout << "LA SUITE STP" << std::endl;
-		return 0;
-	}
-	std::cout << requesthandler->second << std::endl;
-*/
+
+	
+
 	return 0;
 }

@@ -25,3 +25,28 @@ RequestHandler::fillBuffer(char *raw_buffer)
 {
 	this->_in_buffer += const_cast<char*>(raw_buffer);
 }
+
+void
+RequestHandler::incIdx(int value)
+{
+	this->_idx += value;
+}
+
+int
+RequestHandler::getIdx(void) const
+{
+	return this->_idx;
+}
+
+std::string &
+RequestHandler::getBuffer(void) const
+{
+	return this->_in_buffer;
+}
+
+
+Request *
+RequestHandler::getRequest(void) const
+{
+	return this->_request;
+}

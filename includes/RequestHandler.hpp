@@ -39,7 +39,19 @@ class RequestHandler
 		virtual	~RequestHandler(void);
 
 		void
+		incIdx(int);
+
+		int
+		getIdx(void) const;
+
+		void
 		fillBuffer(char *raw_buffer);
+
+		std::string &
+		getBuffer(void) const;
+
+		Request *
+		getRequest(void) const;
 };
 
 #endif
