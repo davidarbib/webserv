@@ -6,7 +6,7 @@ int handleRequestBuffers(Server *server)
 	int ret;
 	if (server->getRefRequestHandlers().size() == 0)
 		return 0;
-	std::cout << "handle request buffers" << std::endl;
+	// std::cout << "handle request buffers" << std::endl;
 	std::map<fd_t, RequestHandler*>::iterator it;
 	for (it = server->getRefRequestHandlers().begin();
 			it != server->getRefRequestHandlers().end();

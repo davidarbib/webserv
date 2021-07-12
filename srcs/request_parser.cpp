@@ -124,9 +124,9 @@ parse_request(std::string &raw_request, Request *request, int raw_request_index)
 }
 
 bool
-is_complete_line(std::string &line)
+is_complete_line(std::string &line, int idx)
 {
-	for (size_t i = 0; i < line.length(); i++)
+	for (size_t i = idx; i < line.length(); i++)
 	{
 		if (is_end_line(line, i))
 			return true;
@@ -137,10 +137,15 @@ is_complete_line(std::string &line)
 int
 parseRequest(std::map<fd_t, RequestHandler*>::iterator requesthandler, Server *server)
 {
-	(void)requesthandler;
 	(void)server;
 
-	
-
+	std::cout << "Buffer :" << std::endl << requesthandler->second->getBuffer() << std::endl;
+	if (is_complete_line(requesthandler->second->getBuffer(), requesthandler->second->getIdx()))
+		std::cout << "Parsing the line tututuuuuu...." << std::endl;
+	else
+	{
+		std::cout << "0 complete line founded in buffer waiting for next chunk..." << std::endl;
+		return 0;
+	}
 	return 0;
 }
