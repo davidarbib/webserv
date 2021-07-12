@@ -34,9 +34,6 @@ int
 parseHeaders(std::string &raw_request, Request *request, int position);
 
 int
-getRequest(std::string &raw_request, Request *request, int raw_request_index);
-
-int
 parseRequest(std::map<fd_t, RequestHandler*>::iterator raw_request, Server *server);
 
 #endif

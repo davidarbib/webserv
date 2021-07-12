@@ -39,6 +39,9 @@ class RequestHandler
 		virtual	~RequestHandler(void);
 
 		void
+		setIdx(int);
+
+		void
 		incIdx(int);
 
 		int

@@ -111,18 +111,6 @@ parseHeaders(std::string &raw_request, Request *request, int position)
 	return index + CRLFCRLF;
 }
 
-int
-getRequest(std::string &raw_request, Request *request, int raw_request_index)
-{
-
-	if (request->get_header_value("Transfer-Encoding") != "chunked")
-	{
-		raw_request_index = parseStartLine(raw_request, request);
-		raw_request_index = parseHeaders(raw_request, request, raw_request_index);
-	}
-	return raw_request_index;
-}
-
 bool
 is_complete_line(std::string &line, int idx)
 {
@@ -140,7 +128,11 @@ parseRequest(std::map<fd_t, RequestHandler*>::iterator requesthandler, Server *s
 	(void)server;
 
 	if (is_complete_line(requesthandler->second->getBuffer(), requesthandler->second->getIdx()))
+	{
+		requesthandler->second->setIdx(parseStartLine(requesthandler->second->getBuffer(), requesthandler->second->getRequest()));
+		requesthandler->second->setIdx(parseHeaders(requesthandler->second->getBuffer(), requesthandler->second->getRequest(), requesthandler->second->getIdx()));
 		std::cout << "Parsing the line tututuuuuu...." << std::endl;
+	}
 	else
 		return 0;
 	return 0;

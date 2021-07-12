@@ -27,6 +27,12 @@ RequestHandler::fillBuffer(char *raw_buffer)
 }
 
 void
+RequestHandler::setIdx(int value)
+{
+	this->_idx = value;
+}
+
+void
 RequestHandler::incIdx(int value)
 {
 	this->_idx += value;
