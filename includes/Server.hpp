@@ -67,7 +67,7 @@ class Server
 		std::string 					_access_logs_path;
 		std::string 					_error_logs_path;
 		fd_t							_listen_fd;
-		std::vector<long>				_connections_fd;
+		std::vector<fd_t>				_connections_fd;
 		std::map<fd_t, RequestHandler*>	_request_handlers;
 
 		void				transferToBuffer(fd_t connection_fd, char *buf);

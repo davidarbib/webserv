@@ -1,8 +1,8 @@
 #include "RequestHandler.hpp"
 
-RequestHandler::RequestHandler(std::string &in_buffer):
+RequestHandler::RequestHandler():
 	_idx(0), 
-	_in_buffer(in_buffer),
+	_in_buffer(""),
 	_state(start),
 	_request(NULL)
 {
@@ -40,7 +40,7 @@ RequestHandler::getIdx(void) const
 }
 
 std::string &
-RequestHandler::getBuffer(void) const
+RequestHandler::getBuffer(void)
 {
 	return this->_in_buffer;
 }

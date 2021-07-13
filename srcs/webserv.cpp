@@ -17,7 +17,6 @@ int handleRequestBuffers(Server *server)
 	return ret;
 }
 
-/*
 int main(int ac, char **av)
 {
 	(void)ac;
@@ -46,8 +45,8 @@ int main(int ac, char **av)
 	}
 	return 0;
 }
-*/
 
+/*
 int main(int ac, char **av)
 {
 	(void)ac;
@@ -59,13 +58,14 @@ int main(int ac, char **av)
 	RequestHandler requesthandler2(s2);
 	std::map<fd_t, RequestHandler*> map;
 	std::map<fd_t, RequestHandler*>::iterator it;
-	it = map.begin();
 	map[1] = &requesthandler1;
+	it = map.begin();
 
 	std::cout << requesthandler1.getBuffer() << std::endl;
 	std::cout << requesthandler2.getBuffer() << std::endl;
 	requesthandler1.fillBuffer((char*)"test");
 	std::cout << requesthandler1.getBuffer() << std::endl;
-	//std::cout << "from map " << it->second->getBuffer() << std::endl;
-	std::cout << "from map : " << it->second << std::endl;
+	std::cout << "from map " << it->second->getBuffer() << std::endl;
+	//std::cout << "from map : " << it->second << std::endl;
 }
+*/
