@@ -24,58 +24,58 @@ isEndSection(std::string &line, int index)
 }
 
 int
-parseMethodToken(std::string &raw_request, Request *request)
+parseMethodToken(RequestHandler &rh)
 {
 	int index = 0;
 	std::string method_token;
 
-	while (raw_request[index] && raw_request[index] != ' ')
+	while (rh.getBuffer()[index] && rh.getBuffer()[index] != ' ')
 	{
-		method_token += raw_request[index];
+		method_token += rh.getBuffer()[index];
 		index++;
 	}
-	request->set_method_token(method_token);
+	rh.getRequest()->set_method_token(method_token);
 	return index + NEXT_SPACE_TOKEN;
 }
 
 int
-parseRequestURI(std::string &raw_request, Request *request, int position)
+parseRequestURI(RequestHandler &rh, int position)
 {
 	int index = position;
 	std::string request_URI;
 
-	while (raw_request[index] && raw_request[index] != ' ')
+	while (rh.getBuffer()[index] && rh.getBuffer()[index] != ' ')
 	{
-		request_URI += raw_request[index];
+		request_URI += rh.getBuffer()[index];
 		index++;
 	}
-	request->set_request_URI(request_URI);
+	rh.getRequest()->set_request_URI(request_URI);
 	return index + NEXT_SPACE_TOKEN;
 }
 
 int
-parseHttpVersion(std::string &raw_request, Request *request, int position)
+parseHttpVersion(RequestHandler &rh, int position)
 {
 	int index = position;
 	std::string http_version;
 
-	while (raw_request[index] && !isEndLine(raw_request, index))
+	while (rh.getBuffer()[index] && !isEndLine(rh.getBuffer(), index))
 	{
-		http_version += raw_request[index];
+		http_version += rh.getBuffer()[index];
 		index++;
 	}
-	request->set_http_version(http_version);
+	rh.getRequest()->set_http_version(http_version);
 	return index + CRLF;
 }
 
 int
-parseStartLine(std::string &raw_request, Request *request)
+parseStartLine(RequestHandler &rh)
 {
 	int request_position = 0;
 
-	request_position = parseMethodToken(raw_request, request);
-	request_position = parseRequestURI(raw_request, request, request_position);
-	request_position = parseHttpVersion(raw_request, request, request_position);
+	request_position = parseMethodToken(rh);
+	request_position = parseRequestURI(rh, request_position);
+	request_position = parseHttpVersion(rh, request_position);
 	return request_position;
 }
 
@@ -129,7 +129,7 @@ parseRequest(std::map<fd_t, RequestHandler*>::iterator requesthandler, Server *s
 
 	if (is_complete_line(requesthandler->second->getBuffer(), requesthandler->second->getIdx()))
 	{
-		requesthandler->second->setIdx(parseStartLine(requesthandler->second->getBuffer(), requesthandler->second->getRequest()));
+		requesthandler->second->setIdx(parseStartLine(*requesthandler->second));
 		requesthandler->second->setIdx(parseHeaders(requesthandler->second->getBuffer(), requesthandler->second->getRequest(), requesthandler->second->getIdx()));
 		std::cout << "Parsing the line tututuuuuu...." << std::endl;
 	}

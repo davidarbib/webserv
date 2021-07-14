@@ -16,16 +16,16 @@ bool
 isEndSection(std::string &line, int index);
 
 int
-parseMethodToken(std::string &raw_request, Request *request);
+parseMethodToken(RequestHandler &rh);
 
 int
-parseRequestURI(std::string &raw_request, Request *request, int position);
+parseRequestURI(RequestHandler &rh, int position);
 
 int
-parseHttpVersion(std::string &raw_request, Request *request, int position);
+parseHttpVersion(RequestHandler &rh, int position);
 
 int
-parseStartLine(std::string &raw_request, Request *request);
+parseStartLine(RequestHandler &rh);
 
 int
 getOneHeader(std::string &raw_request, Request *request, int position);
