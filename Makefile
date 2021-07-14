@@ -6,7 +6,7 @@
 #    By: darbib <darbib@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/11/06 14:53:36 by darbib            #+#    #+#              #
-#    Updated: 2021/07/08 16:48:07 by darbib           ###   ########.fr        #
+#    Updated: 2021/07/13 17:01:13 by darbib           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 SHELL = /bin/zsh
@@ -68,8 +68,8 @@ vpath %.cpp $(SRC_DIR)
 all : $(NAME)
 
 $(NAME): $(OBJ)
-	$(CC) $(INC) $(CFLAGS) -o $@ $(OBJ)
-	@echo $(GREEN) "binary $@ is successfully builded !" $(RESET)
+	@$(CC) $(INC) $(CFLAGS) -o $@ $(OBJ)
+	@echo $(GREEN) "binary $@ is successfully built !" $(RESET)
 
 $(OBJ_DIR)%.o : %.cpp
 	@mkdir -p objs

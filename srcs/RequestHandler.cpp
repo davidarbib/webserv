@@ -1,8 +1,8 @@
 #include "RequestHandler.hpp"
 
-RequestHandler::RequestHandler(std::string &in_buffer):
+RequestHandler::RequestHandler():
 	_idx(0), 
-	_in_buffer(in_buffer),
+	_in_buffer(""),
 	_state(start),
 	_request(NULL)
 {
@@ -24,6 +24,7 @@ void
 RequestHandler::fillBuffer(char *raw_buffer)
 {
 	this->_in_buffer += const_cast<char*>(raw_buffer);
+	std::cout << "after filling : " << std::endl << this->_in_buffer << std::endl;
 }
 
 void
@@ -45,11 +46,10 @@ RequestHandler::getIdx(void) const
 }
 
 std::string &
-RequestHandler::getBuffer(void) const
+RequestHandler::getBuffer(void)
 {
 	return this->_in_buffer;
 }
-
 
 Request *
 RequestHandler::getRequest(void) const

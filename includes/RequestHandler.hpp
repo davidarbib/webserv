@@ -21,18 +21,16 @@ class RequestHandler
 	private:
 
 		int						_idx;
-		std::string				&_in_buffer;
+		std::string				_in_buffer;
 		enum e_request_state	_state;
 		Request					*_request;
-
-		RequestHandler(void);
 
 		RequestHandler
 		&operator=(RequestHandler const &rhs);
 
 	public:
 
-		RequestHandler(std::string &);
+		RequestHandler(void);
 
 		RequestHandler(RequestHandler const &src);
 
@@ -51,7 +49,7 @@ class RequestHandler
 		fillBuffer(char *raw_buffer);
 
 		std::string &
-		getBuffer(void) const;
+		getBuffer(void);
 
 		Request *
 		getRequest(void) const;

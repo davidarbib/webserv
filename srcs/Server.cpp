@@ -84,10 +84,10 @@ Server::createConnection(void)
 	fd_t			new_sock_fd;
 	socklen_t sinsize = sizeof(new_sin);
 
-	std::cout << "connection" << std::endl;
+//	std::cout << "connection" << std::endl;
 	new_sock_fd = accept(this->_listen_fd, reinterpret_cast<sockaddr*>(&new_sin), &sinsize);
-	std::cout << "client port : " << (int)ntohs(new_sin.sin_port) << std::endl;
-	std::cout << "client IP : " << inet_ntoa(new_sin.sin_addr) << std::endl;
+//	std::cout << "client port : " << (int)ntohs(new_sin.sin_port) << std::endl;
+//	std::cout << "client IP : " << inet_ntoa(new_sin.sin_addr) << std::endl;
 //	std::cout << "client IP : " << ((unsigned char *)&new_sin.sin_addr)[0] << ".";
 //	std::cout << (int)((unsigned char *)&new_sin.sin_addr)[1] << ".";
 //	std::cout << (int)((unsigned char *)&new_sin.sin_addr)[2] << ".";
@@ -100,7 +100,7 @@ Server::createConnection(void)
 	this->_connections_fd.push_back(new_sock_fd);
 	// tmp fix
 	std::string tmp = "";
-	this->_request_handlers[new_sock_fd] = new RequestHandler(tmp);
+	this->_request_handlers[new_sock_fd] = new RequestHandler();
 	FD_CLR(this->_listen_fd, &read_fds);
 }
 
@@ -116,7 +116,7 @@ Server::watchInput()
 	char buf[BUFSIZE];
 	bzero(buf, BUFSIZE); //TODO
 
-	std::vector<long>::iterator fd_ptr;
+	std::vector<fd_t>::iterator fd_ptr;
 	fd_ptr = this->_connections_fd.begin();
 	while (fd_ptr != this->_connections_fd.end())
 	{
@@ -136,6 +136,8 @@ Server::watchInput()
 			continue ;
 		}
 		transferToBuffer(*fd_ptr, buf);
+		std::cout << "in watch input : " << std::endl;
+		std::cout << this->_request_handlers[*fd_ptr]->getBuffer() << std::endl;
 		std::cout << "fds size : " << this->_connections_fd.size() << std::endl;
 		//printf("%s\n", buf);
 		FD_CLR(*fd_ptr, &Server::read_fds);
