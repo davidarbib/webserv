@@ -28,10 +28,10 @@ int
 parseStartLine(RequestHandler &rh);
 
 int
-getOneHeader(std::string &raw_request, Request *request, int position);
+getOneHeader(RequestHandler &rh);
 
 int
-parseHeaders(std::string &raw_request, Request *request, int position);
+parseHeaders(RequestHandler &rh);
 
 int
 parseRequest(std::map<fd_t, RequestHandler*>::iterator raw_request, Server *server);

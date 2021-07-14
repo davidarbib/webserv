@@ -80,34 +80,34 @@ parseStartLine(RequestHandler &rh)
 }
 
 int
-getOneHeader(std::string &raw_request, Request *request, int position)
+getOneHeader(RequestHandler &rh, int position)
 {
 	int index = position;
 	std::string key;
 	std::string value;
 
-	while (raw_request[index] && raw_request[index] != ':')
+	while (rh.getBuffer()[index] && rh.getBuffer()[index] != ':')
 	{
-		key += raw_request[index];
+		key += rh.getBuffer()[index];
 		index++;
 	}
 	index += CRLF;
-	while (raw_request[index] && !isEndLine(raw_request, index))
+	while (rh.getBuffer()[index] && !isEndLine(rh.getBuffer(), index))
 	{
-		value += raw_request[index];
+		value += rh.getBuffer()[index];
 		index++;
 	}
-	request->set_header(key, value);
+	rh.getRequest()->set_header(key, value);
 	return index + CRLF;
 }
 
 int
-parseHeaders(std::string &raw_request, Request *request, int position)
+parseHeaders(RequestHandler &rh)
 {
-	int index = position;
+	int index = rh.getIdx();
 
-	while (raw_request[index] && !isEndSection(raw_request, index))
-		index = getOneHeader(raw_request, request, index);
+	while (rh.getBuffer()[index] && !isEndSection(rh.getBuffer(), index))
+		index = getOneHeader(rh, index);
 	return index + CRLFCRLF;
 }
 
@@ -130,7 +130,7 @@ parseRequest(std::map<fd_t, RequestHandler*>::iterator requesthandler, Server *s
 	if (is_complete_line(requesthandler->second->getBuffer(), requesthandler->second->getIdx()))
 	{
 		requesthandler->second->setIdx(parseStartLine(*requesthandler->second));
-		requesthandler->second->setIdx(parseHeaders(requesthandler->second->getBuffer(), requesthandler->second->getRequest(), requesthandler->second->getIdx()));
+		requesthandler->second->setIdx(parseHeaders(*requesthandler->second));
 		std::cout << "Parsing the line tututuuuuu...." << std::endl;
 	}
 	else
