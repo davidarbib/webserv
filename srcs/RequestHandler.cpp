@@ -4,7 +4,7 @@ RequestHandler::RequestHandler():
 	_idx(0), 
 	_in_buffer(""),
 	_state(start),
-	_request(NULL)
+	_request(new Request)
 {
 }
 
@@ -12,12 +12,13 @@ RequestHandler::RequestHandler(RequestHandler const &src):
 	_idx(0), 
 	_in_buffer(src._in_buffer),
 	_state(start),
-	_request(NULL)
+	_request(new Request)
 {
 }
 
 RequestHandler::~RequestHandler(void)
 {
+	delete this->_request;
 }
 
 void

@@ -35,7 +35,7 @@ class Request : public AHttpMessage
 		Request(Request &cpy);
 		Request &
 		operator=(Request const &src);
-		~Request(void);
+		virtual ~Request(void);
 
 		void
 		set_method_token(std::string const &method_token);
