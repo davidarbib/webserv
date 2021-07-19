@@ -129,14 +129,15 @@ parseRequest(std::map<fd_t, RequestHandler*>::iterator requesthandler, Server *s
 
 	if (is_complete_line(requesthandler->second->getBuffer(), requesthandler->second->getIdx()))
 	{
-		// if (requesthandler->second->getRequest()->is_start_line_initialized() == false)
-			// requesthandler->second->setIdx(parseStartLine(*requesthandler->second));
-		// else if (requesthandler->second->getRequest()->is_headers_initialized() == false)
-		// 	requesthandler->second->setIdx(parseHeaders(*requesthandler->second));
-		// else
-		std::cout << "Parsing the line tututuuuuu...." << std::endl;
+		if (requesthandler->second->getRequest()->is_start_line_initialized() == false)
+			requesthandler->second->setIdx(parseStartLine(*requesthandler->second));
+		else if (requesthandler->second->getRequest()->is_headers_initialized() == false)
+			requesthandler->second->setIdx(parseHeaders(*requesthandler->second));
+		else
+			std::cout << "Parsing the line tututuuuuu...." << std::endl;
 	}
 	else
 		return 0;
+	requesthandler->second->getRequest()->print_message(std::cout);
 	return 0;
 }
