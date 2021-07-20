@@ -2,22 +2,11 @@
 #include "Server.hpp"
 
 bool
-isEndLine(std::string &line, int index)
-{
-	if (line[index] == '\r')
-	{
-		if (line[index + 1] == '\n')
-			return true;
-	}
-	return false;
-}
-
-bool
 isEndSection(std::string &line, int index)
 {
-	if (isEndLine(line, index))
+	if (RequestHandler::isEndLine(line, index))
 	{
-		if (isEndLine(line, index + 2))
+		if (RequestHandler::isEndLine(line, index + 2))
 			return true;
 	}
 	return false;
@@ -59,7 +48,7 @@ parseHttpVersion(RequestHandler &rh, int position)
 	int index = position;
 	std::string http_version;
 
-	while (rh.getBuffer()[index] && !isEndLine(rh.getBuffer(), index))
+	while (rh.getBuffer()[index] && !RequestHandler::isEndLine(rh.getBuffer(), index))
 	{
 		http_version += rh.getBuffer()[index];
 		index++;
@@ -92,7 +81,7 @@ getOneHeader(RequestHandler &rh, int position)
 		index++;
 	}
 	index += CRLF;
-	while (rh.getBuffer()[index] && !isEndLine(rh.getBuffer(), index))
+	while (rh.getBuffer()[index] && !RequestHandler::isEndLine(rh.getBuffer(), index))
 	{
 		value += rh.getBuffer()[index];
 		index++;
@@ -116,7 +105,7 @@ is_complete_line(std::string &line, int idx)
 {
 	for (size_t i = idx; i < line.length(); i++)
 	{
-		if (isEndLine(line, i))
+		if (RequestHandler::isEndLine(line, i))
 			return true;
 	}
 	return false;

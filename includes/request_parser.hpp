@@ -10,9 +10,6 @@
 #define CRLFCRLF 4
 
 bool
-isEndLine(std::string &line, int index);
-
-bool
 isEndSection(std::string &line, int index);
 
 int

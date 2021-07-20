@@ -28,9 +28,6 @@ class RequestHandler
 		RequestHandler
 		&operator=(RequestHandler const &rhs);
 
-		bool
-		isEndLine(std::string &line, int index);
-
 	public:
 
 		RequestHandler(void);
@@ -56,6 +53,9 @@ class RequestHandler
 
 		Request *
 		getRequest(void) const;
+
+		static bool
+		isEndLine(std::string &line, int index);
 
 		void
 		clearBuffer(void);
