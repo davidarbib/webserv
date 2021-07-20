@@ -135,6 +135,7 @@ parseRequest(std::map<fd_t, RequestHandler*>::iterator requesthandler, Server *s
 			requesthandler->second->setIdx(parseHeaders(*requesthandler->second));
 		else
 			std::cout << "Parsing the line tututuuuuu...." << std::endl;
+		requesthandler->second->clearBuffer();
 	}
 	else
 		return 0;

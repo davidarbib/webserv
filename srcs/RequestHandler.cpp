@@ -57,3 +57,21 @@ RequestHandler::getRequest(void) const
 {
 	return this->_request;
 }
+
+bool
+RequestHandler::isEndLine(std::string &line, int index)
+{
+	if (line[index] == '\r')
+	{
+		if (line[index + 1] == '\n')
+			return true;
+	}
+	return false;
+}
+
+void
+RequestHandler::clearBuffer(void)
+{
+	for (int i = 0; this->_in_buffer[i] && RequestHandler::isEndLine(this->_in_buffer, i); i++)
+		this->_in_buffer[i] = 0;
+}
