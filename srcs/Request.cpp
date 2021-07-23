@@ -7,7 +7,7 @@ Request::Request(void) : _response(),
 {
 	this->set_header("Content-Length", "0");
 	this->set_header("Transfer-Encoding", "");
-	this->_body = NULL;
+	this->_body = std::string();
 	this->init_method_list();
 }
 
@@ -48,7 +48,7 @@ Request::set_http_version(std::string const &http_version)
 }
 
 void
-Request::set_body(char *body)
+Request::set_body(std::string body)
 {
 	this->_body = body;
 }

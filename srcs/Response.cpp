@@ -41,7 +41,7 @@ Response::set_reason_phrase(std::string const &reason_phrase)
 }
 
 void
-Response::set_body(char *body)
+Response::set_body(std::string body)
 {
 	this->_body = body;
 }

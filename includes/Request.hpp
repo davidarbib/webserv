@@ -47,7 +47,7 @@ class Request : public AHttpMessage
 		set_http_version(std::string const &http_version);
 
 		void
-		set_body(char *body);
+		set_body(std::string body);
 
 		void
 		set_header(std::string const &key, std::string const &value);
