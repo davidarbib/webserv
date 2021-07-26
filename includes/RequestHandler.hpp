@@ -42,6 +42,9 @@ class RequestHandler
 		void
 		incIdx(int);
 
+		void
+		incState(void);
+
 		int
 		getIdx(void) const;
 

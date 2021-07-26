@@ -75,3 +75,10 @@ RequestHandler::clearBuffer(void)
 	for (int i = 0; this->_in_buffer[i] && RequestHandler::isEndLine(this->_in_buffer, i); i++)
 		this->_in_buffer[i] = 0;
 }
+
+void
+RequestHandler::incState(void)
+{
+	if (this->_state != end)
+		this->_state = static_cast<e_request_state>(static_cast<int>(this->_state) + 1);
+}
