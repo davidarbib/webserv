@@ -135,8 +135,8 @@ parseRequest(std::map<fd_t, RequestHandler*>::iterator requesthandler, Server *s
 		else if (requesthandler->second->getRequest()->is_headers_initialized() == false)
 			requesthandler->second->setIdx(parseHeaders(*requesthandler->second));
 		else
-		{			
-			std::cout << "Parsing the line tututuuuuu...." << std::endl;
+		{	
+			requesthandler->second->setIdx(parseBody(*requesthandler->second));
 		}
 		requesthandler->second->clearBuffer();
 	}
