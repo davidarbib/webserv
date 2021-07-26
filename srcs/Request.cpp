@@ -149,6 +149,13 @@ Request::is_request_finalized(void) const
 	return this->_request_finalized;
 }
 
+bool
+Request::hadOctetInBody(char c)
+{
+	this->_body += c;
+	return true;
+}
+
 std::ostream&
 operator<<(std::ostream &flux, Request const &request)
 {

@@ -70,6 +70,9 @@ class Request : public AHttpMessage
 		bool
 		has_body(void) const;
 
+		bool
+		hadOctetInBody(char c);
+
 		std::string
 		get_header_value(std::string const &header_name) const;
 
