@@ -31,6 +31,9 @@ int
 parseHeaders(RequestHandler &rh);
 
 int
+parseBody(RequestHandler &rh);
+
+int
 parseRequest(std::map<fd_t, RequestHandler*>::iterator raw_request, Server *server);
 
 #endif

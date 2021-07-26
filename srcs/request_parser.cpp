@@ -112,6 +112,18 @@ is_complete_line(std::string &line, int idx)
 }
 
 int
+parseBody(RequestHandler &rh)
+{
+	int index = rh.getIdx();
+	while (rh.getBuffer()[index] && !isEndSection(rh.getBuffer(), index))
+	{
+		rh.getRequest()->hadOctetInBody(rh.getBuffer()[index]);
+		index++;
+	}
+	return index;
+}
+
+int
 parseRequest(std::map<fd_t, RequestHandler*>::iterator requesthandler, Server *server)
 {
 	(void)server;
