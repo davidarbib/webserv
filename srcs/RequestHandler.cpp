@@ -25,7 +25,6 @@ void
 RequestHandler::fillBuffer(char *raw_buffer)
 {
 	this->_in_buffer += const_cast<char*>(raw_buffer);
-	std::cout << "after filling : " << std::endl << this->_in_buffer << std::endl;
 }
 
 void

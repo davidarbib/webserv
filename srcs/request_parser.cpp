@@ -80,7 +80,7 @@ getOneHeader(RequestHandler &rh, int position)
 		key += rh.getBuffer()[index];
 		index++;
 	}
-	index += CRLF;
+	index++;
 	while (rh.getBuffer()[index] && !RequestHandler::isEndLine(rh.getBuffer(), index))
 	{
 		value += rh.getBuffer()[index];
@@ -97,7 +97,9 @@ parseHeaders(RequestHandler &rh)
 
 	while (rh.getBuffer()[index] && !isEndSection(rh.getBuffer(), index))
 		index = getOneHeader(rh, index);
-	return index + CRLFCRLF;
+	if (isEndSection(rh.getBuffer(), index))
+		index += CRLFCRLF;
+	return index;
 }
 
 bool

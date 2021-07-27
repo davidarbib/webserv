@@ -136,10 +136,6 @@ Server::watchInput()
 			continue ;
 		}
 		transferToBuffer(*fd_ptr, buf);
-		std::cout << "in watch input : " << std::endl;
-		std::cout << this->_request_handlers[*fd_ptr]->getBuffer() << std::endl;
-		std::cout << "fds size : " << this->_connections_fd.size() << std::endl;
-		//printf("%s\n", buf);
 		FD_CLR(*fd_ptr, &Server::read_fds);
 		fd_ptr++;
 	}
