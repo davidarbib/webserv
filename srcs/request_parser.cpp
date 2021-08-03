@@ -95,7 +95,6 @@ parseHeaders(RequestHandler &rh)
 {
 	int index = rh.getIdx();
 
-	std::cout << rh.getBuffer()[index] << std::endl;
 	if (isEndSection(rh.getBuffer(), index)) {
 		rh.getRequest()->set_header_initialized(true);
 		index += CRLFCRLF;
@@ -142,8 +141,9 @@ parseRequest(std::map<fd_t, RequestHandler*>::iterator requesthandler, Server *s
 		{
 			requesthandler->second->setIdx(parseBody(*requesthandler->second));
 		}
-		requesthandler->second->clearBuffer();
-		requesthandler->second->getRequest()->print_message(std::cout);
+		requesthandler->second->clearBuffer(requesthandler->second->getIdx());
+		// requesthandler->second->getRequest()->print_message(std::cout);
+		std::cout << requesthandler->second->getBuffer();
 	}
 	else
 	{

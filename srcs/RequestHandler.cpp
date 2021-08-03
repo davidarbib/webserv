@@ -69,9 +69,9 @@ RequestHandler::isEndLine(std::string &line, int index)
 }
 
 void
-RequestHandler::clearBuffer(void)
+RequestHandler::clearBuffer(int index)
 {
-	for (int i = 0; this->_in_buffer[i] && RequestHandler::isEndLine(this->_in_buffer, i); i++)
+	for (int i = 0; i < index; i++)
 		this->_in_buffer[i] = 0;
 }
 
