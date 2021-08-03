@@ -87,6 +87,11 @@ getOneHeader(RequestHandler &rh, int position)
 		index++;
 	}
 	rh.getRequest()->set_header(key, value);
+	if (isEndSection(rh.getBuffer(), index))
+	{
+		rh.getRequest()->set_header_initialized(true);
+		index += CRLF;
+	}
 	return index + CRLF;
 }
 
@@ -95,10 +100,6 @@ parseHeaders(RequestHandler &rh)
 {
 	int index = rh.getIdx();
 
-	if (isEndSection(rh.getBuffer(), index)) {
-		rh.getRequest()->set_header_initialized(true);
-		index += CRLFCRLF;
-	}
 	index = getOneHeader(rh, index);
 	return index;
 }
@@ -126,6 +127,20 @@ parseBody(RequestHandler &rh)
 	return index;
 }
 
+void print_buffer(std::string str) // for debug purpose
+{
+	 std::cout << "BUFFER : ";
+	 for(size_t i = 0; i < str.length(); i++)
+	 {
+	 	if (str[i] == '\r')
+	 		std::cout << "\\r";
+	 	else if (str[i] == '\n')
+	 		std::cout << "\\n";
+	 	else
+	 		std::cout << str[i];
+	 }
+}
+
 int
 parseRequest(std::map<fd_t, RequestHandler*>::iterator requesthandler, Server *server)
 {
@@ -142,12 +157,10 @@ parseRequest(std::map<fd_t, RequestHandler*>::iterator requesthandler, Server *s
 			requesthandler->second->setIdx(parseBody(*requesthandler->second));
 		}
 		requesthandler->second->clearBuffer(requesthandler->second->getIdx());
-		// requesthandler->second->getRequest()->print_message(std::cout);
-		std::cout << requesthandler->second->getBuffer();
+		requesthandler->second->getRequest()->print_message(std::cout);
+		print_buffer(requesthandler->second->getBuffer());
 	}
 	else
-	{
 		return 0;
-	}
 	return 0;
 }
