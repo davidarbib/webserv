@@ -107,11 +107,16 @@ parseHeaders(RequestHandler &rh)
 bool
 is_complete_line(std::string &line, int idx)
 {
-	for (size_t i = idx; i < line.length(); i++)
+	size_t i = idx;
+
+	while (i < line.length())
 	{
 		if (RequestHandler::isEndLine(line, i))
 			return true;
+		i++;
 	}
+	if (i == line.length())
+		return true;
 	return false;
 }
 
