@@ -35,7 +35,7 @@ class Request : public AHttpMessage
 		Request(Request &cpy);
 		Request &
 		operator=(Request const &src);
-		~Request(void);
+		virtual ~Request(void);
 
 		void
 		set_method_token(std::string const &method_token);
@@ -47,7 +47,7 @@ class Request : public AHttpMessage
 		set_http_version(std::string const &http_version);
 
 		void
-		set_body(char *body);
+		set_body(std::string body);
 
 		void
 		set_header(std::string const &key, std::string const &value);
@@ -69,6 +69,9 @@ class Request : public AHttpMessage
 
 		bool
 		has_body(void) const;
+
+		bool
+		hadOctetInBody(char c);
 
 		std::string
 		get_header_value(std::string const &header_name) const;

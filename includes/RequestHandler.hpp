@@ -37,7 +37,13 @@ class RequestHandler
 		virtual	~RequestHandler(void);
 
 		void
+		setIdx(int);
+
+		void
 		incIdx(int);
+
+		void
+		incState(void);
 
 		int
 		getIdx(void) const;
@@ -50,6 +56,12 @@ class RequestHandler
 
 		Request *
 		getRequest(void) const;
+
+		static bool
+		isEndLine(std::string &line, int index);
+
+		void
+		clearBuffer(int);
 };
 
 #endif

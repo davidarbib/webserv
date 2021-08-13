@@ -10,31 +10,28 @@
 #define CRLFCRLF 4
 
 bool
-is_end_line(std::string &line, int index);
-
-bool
-is_end_section(std::string &line, int index);
+isEndSection(std::string &line, int index);
 
 int
-parse_method_token(std::string &raw_request, Request *request);
+parseMethodToken(RequestHandler &rh);
 
 int
-parse_request_URI(std::string &raw_request, Request *request, int position);
+parseRequestURI(RequestHandler &rh, int position);
 
 int
-parse_http_version(std::string &raw_request, Request *request, int position);
+parseHttpVersion(RequestHandler &rh, int position);
 
 int
-parse_start_line(std::string &raw_request, Request *request);
+parseStartLine(RequestHandler &rh);
 
 int
-get_one_header(std::string &raw_request, Request *request, int position);
+getOneHeader(RequestHandler &rh);
 
 int
-parse_headers(std::string &raw_request, Request *request, int position);
+parseHeaders(RequestHandler &rh);
 
 int
-parse_request(std::string &raw_request, Request *request, int raw_request_index);
+parseBody(RequestHandler &rh);
 
 int
 parseRequest(std::map<fd_t, RequestHandler*>::iterator raw_request, Server *server);

@@ -7,7 +7,7 @@ Request::Request(void) : _response(),
 {
 	this->set_header("Content-Length", "0");
 	this->set_header("Transfer-Encoding", "");
-	this->_body = NULL;
+	this->_body = std::string();
 	this->init_method_list();
 }
 
@@ -48,7 +48,7 @@ Request::set_http_version(std::string const &http_version)
 }
 
 void
-Request::set_body(char *body)
+Request::set_body(std::string body)
 {
 	this->_body = body;
 }
@@ -94,7 +94,8 @@ void
 Request::print_message(std::ostream &flux) const
 {
 	flux << "---------------------" << "Start line :" << "---------------------" << std::endl;
-	flux << this->_start_line.method_token << " " << this->_start_line.request_URI << " " << this->_start_line.http_version << std::endl;
+	if (this->_start_line_initialized)
+		flux << this->_start_line.method_token << " " << this->_start_line.request_URI << " " << this->_start_line.http_version << std::endl;
 	AHttpMessage::print_message(flux);
 }
 
@@ -146,6 +147,13 @@ bool
 Request::is_request_finalized(void) const
 {
 	return this->_request_finalized;
+}
+
+bool
+Request::hadOctetInBody(char c)
+{
+	this->_body += c;
+	return true;
 }
 
 std::ostream&
