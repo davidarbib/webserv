@@ -118,6 +118,12 @@ Request::get_header_value(std::string const &header_name) const
 	return EMPTY_STRING;
 }
 
+const request_line
+Request::getStartLine(void) const
+{	
+	return this->_start_line;
+}
+
 Response
 Request::get_response(void)
 {

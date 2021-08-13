@@ -76,6 +76,9 @@ class Request : public AHttpMessage
 		std::string
 		get_header_value(std::string const &header_name) const;
 
+		const request_line
+		getStartLine(void) const;
+
 		Response
 		get_response(void);
 };
