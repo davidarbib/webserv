@@ -24,7 +24,7 @@ class CgiHandler
 		buildCgi(void);
 
 		std::string
-		extractQuery(std::string);
+		extractQuery(std::string); //TODO go private
 
 	private:
 		CgiHandler(CgiHandler const &src);

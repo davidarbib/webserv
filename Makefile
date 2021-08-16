@@ -6,7 +6,7 @@
 #    By: darbib <darbib@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/11/06 14:53:36 by darbib            #+#    #+#              #
-#    Updated: 2021/08/13 22:01:12 by darbib           ###   ########.fr        #
+#    Updated: 2021/08/16 16:36:32 by darbib           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 SHELL = /bin/zsh
@@ -52,8 +52,8 @@ SRC = AHttpMessage.cpp \
 	  Response.cpp \
 	  Server.cpp \
 	  request_parser.cpp \
-	  main_cgi.cpp \
-	  CgiHandler.cpp
+	  CgiHandler.cpp \
+	  main_cgi.cpp
 	  #webserv.cpp \
 
 #TEST_SRC = main_test.cpp
@@ -70,13 +70,13 @@ vpath %.cpp $(SRC_DIR)
 all : $(NAME)
 
 $(NAME): $(OBJ)
-	$(CC) $(INC) $(CFLAGS) -o $@ $(OBJ)
+	$(CC) $(CFLAGS) -o $@ $(OBJ) $(INC) 
 	@echo $(GREEN) "binary $@ is successfully built !" $(RESET)
 
 $(OBJ_DIR)%.o : %.cpp
 	@mkdir -p objs
 	@echo $(BLUE) "compiling" $< $(RESET)
-	@$(CC) $(INC) $(CFLAGS) -c $< -o $@ 
+	$(CC) $(CFLAGS) -c $< -o $@ $(INC) 
 
 clean :
 	@echo $(MAGENTA) "Cleaning objs..." $(RESET)
