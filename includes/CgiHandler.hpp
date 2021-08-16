@@ -3,9 +3,12 @@
 
 # include <string>
 # include <iostream>
+# include <algorithm>
 # include <cstdio>
 # include <map>
 # include <Request.hpp>
+
+# define QUERYCHAR '?'
 
 class CgiHandler
 {
@@ -20,6 +23,9 @@ class CgiHandler
 		void
 		buildCgi(void);
 
+		std::string
+		extractQuery(std::string);
+
 	private:
 		CgiHandler(CgiHandler const &src);
 		CgiHandler	&operator=(CgiHandler const &rhs);
@@ -27,7 +33,10 @@ class CgiHandler
 		char **
 		getCgiEnv(void);
 
+
 		std::string							_request;
 		std::map<std::string, std::string>	_cgi_env;
+		FILE								*_sender;
+		FILE								*_receiver;
 };
 #endif

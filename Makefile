@@ -6,7 +6,7 @@
 #    By: darbib <darbib@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/11/06 14:53:36 by darbib            #+#    #+#              #
-#    Updated: 2021/07/13 17:01:13 by darbib           ###   ########.fr        #
+#    Updated: 2021/08/13 22:01:12 by darbib           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 SHELL = /bin/zsh
@@ -52,7 +52,9 @@ SRC = AHttpMessage.cpp \
 	  Response.cpp \
 	  Server.cpp \
 	  request_parser.cpp \
-	  webserv.cpp
+	  main_cgi.cpp \
+	  CgiHandler.cpp
+	  #webserv.cpp \
 
 #TEST_SRC = main_test.cpp
 #TEST_FILES_DIR = test_files
@@ -68,7 +70,7 @@ vpath %.cpp $(SRC_DIR)
 all : $(NAME)
 
 $(NAME): $(OBJ)
-	@$(CC) $(INC) $(CFLAGS) -o $@ $(OBJ)
+	$(CC) $(INC) $(CFLAGS) -o $@ $(OBJ)
 	@echo $(GREEN) "binary $@ is successfully built !" $(RESET)
 
 $(OBJ_DIR)%.o : %.cpp
