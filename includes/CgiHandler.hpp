@@ -6,7 +6,7 @@
 # include <algorithm>
 # include <cstdio>
 # include <map>
-# include <Request.hpp>
+# include "Request.hpp"
 
 # define QUERYCHAR '?'
 
@@ -32,7 +32,9 @@ class CgiHandler
 
 		char **
 		getCgiEnv(void);
-
+		
+		void
+		addCgiEnv(const std::string&, const std::string&);
 
 		std::string							_request;
 		std::map<std::string, std::string>	_cgi_env;

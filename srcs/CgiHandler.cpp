@@ -1,12 +1,31 @@
-#include <CgiHandler.hpp>
+#include "CgiHandler.hpp"
 
 CgiHandler::CgiHandler(Request &request)
 {
+	std::string resource_test = "index.php";
+
 	//(void)request;
 	request_line startline = request.getStartLine();
 	(void)startline;
 	//cutting URI in start line for env
-	request.get_header_value("Content-Length");
+	addCgiEnv("AUTH_TYPE", "");
+	addCgiEnv("CONTENT_LENGTH", request.get_header_value("Content-Length"));
+	addCgiEnv("CONTENT_TYPE", request.get_header_value("Media-type"));
+	addCgiEnv("GATEWAY_INTERFACE", "CGI/1.1");
+	addCgiEnv("PATH_INFO", resource_test);
+	addCgiEnv("PATH_TRANSLATED", resource_test);
+	addCgiEnv("QUERY_STRING", extractQuery(startline.request_URI));
+	addCgiEnv("REMOTE_ADDR", "");
+	addCgiEnv("REMOTE_HOST", ""); 
+	addCgiEnv("REMOTE_IDENT", "");
+	addCgiEnv("REMOTE_USER", "");
+	addCgiEnv("REQUEST_METHOD", startline.method_token);
+	addCgiEnv("SCRIPT_NAME", "");
+	addCgiEnv("SERVER_NAME", "");
+	addCgiEnv("SERVER_PORT", "");
+	addCgiEnv("SERVER_PROTOCOL", "");
+	addCgiEnv("SERVER_SOFTWARE", "");
+	addCgiEnv("REDIRECT_STATUS", "200");
 }
 
 CgiHandler::~CgiHandler(void)
@@ -17,6 +36,12 @@ std::string
 CgiHandler::extractQuery(std::string requestURI)
 {
 	return requestURI.substr(requestURI.find(QUERYCHAR) + 1);
+}
+
+void
+CgiHandler::addCgiEnv(const std::string &var_name, const std::string &value)
+{
+	_cgi_env[var_name] = value;
 }
 
 //send env variables from request parser
@@ -52,4 +77,5 @@ CgiHandler::extractQuery(std::string requestURI)
  * "SERVER_PORT" =
  * "SERVER_PROTOCOL" =
  * "SERVER_SOFTWARE" = 
+ * + for php : "REDIRECT_STATUS" = 200 ( mb its a Hack !! search more perenne solution)
 */
