@@ -26,7 +26,7 @@ permission order: private / protected / public
 
 member declaration : `_member_name` (snake_case)
 
-use this->member always
+use this->member mandatory if ambiguous
 
 ## methods and variables qualifiers
 
@@ -40,18 +40,13 @@ ref and pointer signs is placed before name and attached
 
 explicit "void" if void arguments
 
-
 in method declaration or implementation:
 
 - optionnal line for template specification
 - first line for type specification
 - second for function name and arguments
-- third if throws specification
-
-
 
 casts must be explicit and C++ style
-
 
 ## naming
 

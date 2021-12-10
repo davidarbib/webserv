@@ -6,7 +6,7 @@
 #    By: darbib <darbib@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/11/06 14:53:36 by darbib            #+#    #+#              #
-#    Updated: 2021/07/13 17:01:13 by darbib           ###   ########.fr        #
+#    Updated: 2021/12/10 23:53:37 by darbib           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 SHELL = /bin/zsh
@@ -52,7 +52,8 @@ SRC = AHttpMessage.cpp \
 	  Response.cpp \
 	  Server.cpp \
 	  request_parser.cpp \
-	  webserv.cpp
+	  webserv.cpp \
+	  Connection.cpp
 
 #TEST_SRC = main_test.cpp
 #TEST_FILES_DIR = test_files
