@@ -137,6 +137,12 @@ Request::set_start_line_initilized(bool value)
 	this->_start_line_initialized = value;
 }
 
+void
+Request::set_request_finalized(bool value)
+{
+	this->_request_finalized = value;
+}
+
 bool
 Request::is_start_line_initialized(void) const
 {

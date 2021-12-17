@@ -60,6 +60,9 @@ class Request : public AHttpMessage
 		void
 		set_header_initialized(bool value);
 
+		void
+		set_request_finalized(bool value);
+
 		bool
 		is_start_line_initialized(void) const;
 

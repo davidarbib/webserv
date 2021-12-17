@@ -3,6 +3,7 @@
 
 #include "Request.hpp"
 #include "Server.hpp"
+#include <sstream>
 #include <string>
 
 #define NEXT_SPACE_TOKEN 1

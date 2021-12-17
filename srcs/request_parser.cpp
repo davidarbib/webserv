@@ -120,10 +120,19 @@ int
 parseBody(RequestHandler &rh)
 {
 	int index = rh.getIdx();
-	while (rh.getBuffer()[index] && !isEndSection(rh.getBuffer(), index))
+	
+	if (rh.getRequest()->get_header_value("Content-Length") != "0")
 	{
-		rh.getRequest()->hadOctetInBody(rh.getBuffer()[index]);
-		index++;
+		std::stringstream ss;
+		std::string body;
+		int content_length;
+
+		ss << rh.getRequest()->get_header_value("Content-Length");
+		ss >> content_length;
+		body.assign(rh.getBuffer(), index, content_length);
+		rh.getRequest()->set_body(body);
+		rh.getRequest()->set_request_finalized(true);
+		return index + content_length;
 	}
 	return index;
 }
@@ -155,9 +164,7 @@ parseRequest(std::map<fd_t, RequestHandler*>::iterator requesthandler, Server *s
 			requesthandler->second->setIdx(parseHeaders(*requesthandler->second));
 		else if (requesthandler->second->getRequest()->is_request_finalized() == false)
 		{
-			std::cout << "PARSING BODY .... tut tut tut ...." << std::endl;
-			// requesthandler->second->setIdx(parseBody(*requesthandler->second));
-
+			requesthandler->second->setIdx(parseBody(*requesthandler->second));
 		}
 		requesthandler->second->clearBuffer(requesthandler->second->getIdx());
 		requesthandler->second->getRequest()->print_message(std::cout);
