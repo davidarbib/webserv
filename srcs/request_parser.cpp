@@ -65,6 +65,7 @@ parseStartLine(RequestHandler &rh)
 	request_position = parseMethodToken(rh);
 	request_position = parseRequestURI(rh, request_position);
 	request_position = parseHttpVersion(rh, request_position);
+	rh.getRequest()->set_start_line_initilized(true);
 	return request_position;
 }
 
@@ -152,9 +153,11 @@ parseRequest(std::map<fd_t, RequestHandler*>::iterator requesthandler, Server *s
 			requesthandler->second->setIdx(parseStartLine(*requesthandler->second));
 		else if (requesthandler->second->getRequest()->is_headers_initialized() == false)
 			requesthandler->second->setIdx(parseHeaders(*requesthandler->second));
-		else
+		else if (requesthandler->second->getRequest()->is_request_finalized() == false)
 		{
-			requesthandler->second->setIdx(parseBody(*requesthandler->second));
+			std::cout << "PARSING BODY .... tut tut tut ...." << std::endl;
+			// requesthandler->second->setIdx(parseBody(*requesthandler->second));
+
 		}
 		requesthandler->second->clearBuffer(requesthandler->second->getIdx());
 		requesthandler->second->getRequest()->print_message(std::cout);

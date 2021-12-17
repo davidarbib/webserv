@@ -7,7 +7,6 @@
 #include "Response.hpp"
 
 #define METHOD_NB 4
-#define EMPTY_STRING ""
 
 class Request : public AHttpMessage
 {
@@ -54,6 +53,9 @@ class Request : public AHttpMessage
 
 		void
 		print_message(std::ostream &flux) const;
+
+		void
+		set_start_line_initilized(bool value);
 
 		void
 		set_header_initialized(bool value);
