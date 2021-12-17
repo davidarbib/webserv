@@ -17,6 +17,12 @@ AHttpMessage::print_message(std::ostream &flux) const
 	}
 }
 
+std::string &
+AHttpMessage::get_body(void)
+{
+	return this->_body;
+}
+
 std::string const
 AHttpMessage::get_date(void) const
 {

@@ -134,6 +134,38 @@ parseBody(RequestHandler &rh)
 		rh.getRequest()->set_request_finalized(true);
 		return index + content_length;
 	}
+	else if (rh.getRequest()->get_header_value("Transfer-Encoding") == "chunked")
+	{
+		if (rh.getBuffer()[index] == 0)
+		{
+			rh.getRequest()->set_request_finalized(true);
+			return index;
+		}
+		std::string tmp(rh.getRequest()->get_body());
+		std::string body;
+		int sublen = 0;
+		while(rh.getBuffer()[index])
+		{
+			index++;
+			sublen++;
+		}
+		body.assign(rh.getBuffer(), rh.getIdx(), sublen);
+		tmp += body;
+		rh.getRequest()->set_body(tmp);
+	}
+	else
+	{
+		std::string body;
+		int sublen = 0;
+		while (rh.getBuffer()[index] && !isEndSection(rh.getBuffer(), index))
+		{
+			index++;
+			sublen++;
+		}
+		body.assign(rh.getBuffer(), rh.getIdx(), sublen);
+		rh.getRequest()->set_body(body);
+		rh.getRequest()->set_request_finalized(true);
+	}
 	return index;
 }
 
