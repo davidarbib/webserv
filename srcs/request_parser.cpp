@@ -117,23 +117,44 @@ is_complete_line(std::string &line, int idx)
 }
 
 int
+getBodyWithContentLength(RequestHandler &rh, int index)
+{
+	std::stringstream ss;
+	std::string body;
+	int content_length;
+
+	ss << rh.getRequest()->get_header_value("Content-Length");
+	ss >> content_length;
+	body.assign(rh.getBuffer(), index, content_length);
+	rh.getRequest()->set_body(body);
+	rh.getRequest()->set_request_finalized(true);
+	return index + content_length;
+}
+
+int
+getChunkOfBody(RequestHandler &rh, int index)
+{
+	std::string tmp(rh.getRequest()->get_body());
+	std::string body;
+	int sublen = 0;
+	while(rh.getBuffer()[index])
+	{
+		index++;
+		sublen++;
+	}
+	body.assign(rh.getBuffer(), rh.getIdx(), sublen);
+	tmp += body;
+	rh.getRequest()->set_body(tmp);
+	return index;
+}
+
+int
 parseBody(RequestHandler &rh)
 {
 	int index = rh.getIdx();
 	
 	if (rh.getRequest()->get_header_value("Content-Length") != "0")
-	{
-		std::stringstream ss;
-		std::string body;
-		int content_length;
-
-		ss << rh.getRequest()->get_header_value("Content-Length");
-		ss >> content_length;
-		body.assign(rh.getBuffer(), index, content_length);
-		rh.getRequest()->set_body(body);
-		rh.getRequest()->set_request_finalized(true);
-		return index + content_length;
-	}
+		return getBodyWithContentLength(rh, index);
 	else if (rh.getRequest()->get_header_value("Transfer-Encoding") == "chunked")
 	{
 		if (rh.getBuffer()[index] == 0)
@@ -141,17 +162,7 @@ parseBody(RequestHandler &rh)
 			rh.getRequest()->set_request_finalized(true);
 			return index;
 		}
-		std::string tmp(rh.getRequest()->get_body());
-		std::string body;
-		int sublen = 0;
-		while(rh.getBuffer()[index])
-		{
-			index++;
-			sublen++;
-		}
-		body.assign(rh.getBuffer(), rh.getIdx(), sublen);
-		tmp += body;
-		rh.getRequest()->set_body(tmp);
+		index = getChunkOfBody(rh, index);
 	}
 	else
 	{

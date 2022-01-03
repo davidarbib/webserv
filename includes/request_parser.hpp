@@ -37,4 +37,10 @@ parseBody(RequestHandler &rh);
 int
 parseRequest(std::map<fd_t, RequestHandler*>::iterator raw_request, Server *server);
 
+int
+getBodyWithContentLength(RequestHandler &rh, int index);
+
+int
+getChunkOfBody(RequestHandler &rh, int index);
+
 #endif
