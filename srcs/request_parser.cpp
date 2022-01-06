@@ -102,6 +102,11 @@ parseHeaders(RequestHandler &rh)
 	int index = rh.getIdx();
 
 	index = getOneHeader(rh, index);
+	// if (rh.getRequest()->is_headers_initialized() == true)
+	// {
+		// if !has_body
+			// set request to finalized
+	// }
 	return index;
 }
 
@@ -210,8 +215,8 @@ parseRequest(std::map<fd_t, RequestHandler*>::iterator requesthandler, Server *s
 			requesthandler->second->setIdx(parseBody(*requesthandler->second));
 		}
 		requesthandler->second->clearBuffer(requesthandler->second->getIdx());
-		requesthandler->second->getRequest()->print_message(std::cout);
-		print_buffer(requesthandler->second->getBuffer());
+		// requesthandler->second->getRequest()->print_message(std::cout);
+		std::cout << "Complete line detected" << std::endl;
 	}
 	else
 		return 0;
