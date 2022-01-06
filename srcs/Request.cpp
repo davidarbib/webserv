@@ -6,7 +6,7 @@ Request::Request(void) : _response(),
 						 _request_finalized(false) 
 {
 	this->set_header("Content-Length", "0");
-	this->set_header("Transfer-Encoding", "");
+	this->set_header("Transfer-Encoding", std::string());
 	this->_body = std::string();
 	this->init_method_list();
 }
@@ -115,7 +115,7 @@ Request::get_header_value(std::string const &header_name) const
 	it = this->_headers.find(header_name);
 	if (it != this->_headers.end())
 		return it->second;
-	return EMPTY_STRING;
+	return std::string();
 }
 
 const request_line
@@ -135,6 +135,18 @@ void
 Request::set_header_initialized(bool value)
 {
 	this->_headers_initialized = value;
+}
+
+void
+Request::set_start_line_initilized(bool value)
+{
+	this->_start_line_initialized = value;
+}
+
+void
+Request::set_request_finalized(bool value)
+{
+	this->_request_finalized = value;
 }
 
 bool
