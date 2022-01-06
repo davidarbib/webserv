@@ -96,17 +96,27 @@ getOneHeader(RequestHandler &rh, int position)
 	return index + CRLF;
 }
 
+bool
+has_body(RequestHandler &rh)
+{
+	std::stringstream ss;
+	int content_length;
+
+	ss << rh.getRequest()->get_header_value("Content-Length");
+	ss >> content_length;
+	if (content_length == 0 || rh.getRequest()->get_header_value("Transfer-Encoding") != "chunked")
+		return false;
+	return true;
+}
+
 int
 parseHeaders(RequestHandler &rh)
 {
 	int index = rh.getIdx();
 
 	index = getOneHeader(rh, index);
-	// if (rh.getRequest()->is_headers_initialized() == true)
-	// {
-		// if !has_body
-			// set request to finalized
-	// }
+	if (rh.getRequest()->is_headers_initialized() == true)
+		rh.getRequest()->set_request_finalized(!has_body(rh));
 	return index;
 }
 
@@ -204,6 +214,8 @@ parseRequest(std::map<fd_t, RequestHandler*>::iterator requesthandler, Server *s
 {
 	(void)server;
 
+	if (requesthandler->second->getRequest()->is_request_finalized() == true)
+		return 1;
 	if (is_complete_line(requesthandler->second->getBuffer(), requesthandler->second->getIdx()))
 	{
 		if (requesthandler->second->getRequest()->is_start_line_initialized() == false)
@@ -215,7 +227,6 @@ parseRequest(std::map<fd_t, RequestHandler*>::iterator requesthandler, Server *s
 			requesthandler->second->setIdx(parseBody(*requesthandler->second));
 		}
 		requesthandler->second->clearBuffer(requesthandler->second->getIdx());
-		// requesthandler->second->getRequest()->print_message(std::cout);
 		std::cout << "Complete line detected" << std::endl;
 	}
 	else
