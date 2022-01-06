@@ -1,9 +1,7 @@
 #include "Connection.hpp"
 
-Connection::Connection(fd_t fd, unsigned long client_ip, unsigned short client_port,
-						Server &server)
-: _socket_fd(fd), _client_ip(client_ip), _client_port(client_port),
-	_server(server)
+Connection::Connection(fd_t fd, unsigned long client_ip, unsigned short client_port)
+: _socket_fd(fd), _client_ip(client_ip), _client_port(client_port)
 {
 	makeIpStr();
 	makePortStr();
@@ -11,7 +9,7 @@ Connection::Connection(fd_t fd, unsigned long client_ip, unsigned short client_p
 
 Connection::Connection(Connection const &src)
 : _socket_fd(src._socket_fd), _client_ip(src._client_ip),
-	_client_port(src._client_port), _server(src._server)
+	_client_port(src._client_port)
 { }
 
 Connection::~Connection(void)
@@ -25,7 +23,6 @@ Connection::operator=(Connection const &rhs)
 	_client_port = rhs._client_port;
 	_client_ip_str = rhs._client_ip_str;
 	_client_port_str = rhs._client_port_str;
-	_server = rhs._server;
 	return *this;
 }
 
@@ -48,10 +45,6 @@ Connection::getClientIpStr(void) const
 std::string
 Connection::getClientPortStr(void) const
 { return _client_port_str; }
-
-Server &
-Connection::getServer(void) const
-{ return _server; }
 
 void
 Connection::makeIpStr(void)

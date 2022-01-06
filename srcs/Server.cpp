@@ -92,12 +92,10 @@ Server::createConnection(void)
 	if (fcntl(new_sock_fd, F_SETFL, O_NONBLOCK) < 0)
 		throw ConnectionException();
 	addWatchedFd(new_sock_fd);
-	_connections[new_sock_fd]
-		= new Connection(new_sock_fd,
-							static_cast<unsigned long>(new_sin.sin_addr.s_addr),
-							static_cast<unsigned short>(new_sin.sin_port),
-							*this);
-	_request_handlers[new_sock_fd] = new RequestHandler();
+	_request_handlers[new_sock_fd]
+		= new RequestHandler(new Connection(new_sock_fd,
+								static_cast<unsigned long>(new_sin.sin_addr.s_addr),
+								static_cast<unsigned short>(new_sin.sin_port)));
 	FD_CLR(_listen_fd, &read_fds);
 }
 

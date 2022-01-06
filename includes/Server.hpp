@@ -12,6 +12,7 @@
 # include <unistd.h>
 # include <map>
 # include "RequestHandler.hpp"
+# include "Connection.hpp"
 # include "typedefs.hpp"
 
 # define DELAY		1
@@ -19,8 +20,6 @@
 # define PORT		8003
 # define IP			"127.0.0.1"
 # define HOSTNAME	"w3bs0rv.com"
-
-class Connection;
 
 class Server
 {
@@ -81,7 +80,5 @@ class Server
 		Server(void);
 		Server(Server const &src);
 };
-
-#include "Connection.hpp"
 
 #endif

@@ -5,13 +5,12 @@
 # include <iostream>
 # include "typedefs.hpp"
 # include <sstream>
-
-class Server;
+# include <arpa/inet.h>
 
 class Connection
 {
 	public:
-		Connection(fd_t, unsigned long, unsigned short, Server &server);
+		Connection(fd_t, unsigned long, unsigned short);
 		Connection	&operator=(Connection const &rhs);
 		Connection(Connection const &src);
 		~Connection(void);
@@ -36,9 +35,6 @@ class Connection
 		std::string
 		getClientPortStr(void) const;
 
-		Server&
-		getServer(void) const;
-
 	private:
 		/*
 		** ! _client_ip and _client_port are in network format
@@ -48,7 +44,6 @@ class Connection
 		unsigned short	_client_port;
 		std::string		_client_ip_str;
 		std::string		_client_port_str;
-		Server			&_server;
 
 		Connection(void);
 
@@ -57,9 +52,6 @@ class Connection
 
 		void
 		makePortStr(void);
-
 };
-
-#include "Server.hpp"
 
 #endif
