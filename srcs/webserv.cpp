@@ -25,7 +25,7 @@ int main(int ac, char **av)
 
 	Server::max_fd = 0;
 	Server::initFdset();
-	servers.push_back(new Server("origin", PORT, "/tmp/access", "/tmp/error"));
+	servers.push_back(new Server("origin", IP, PORT, "/tmp/access", "/tmp/error"));
 	
 	servers[0]->listenSocket();
 

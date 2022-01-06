@@ -1,10 +1,11 @@
 #include "RequestHandler.hpp"
 
-RequestHandler::RequestHandler():
+RequestHandler::RequestHandler(Connection *connection):
 	_idx(0),
 	_in_buffer(""),
 	_state(start),
-	_request(new Request)
+	_request(new Request),
+	_connection(connection)
 {
 }
 

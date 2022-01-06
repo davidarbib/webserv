@@ -5,6 +5,7 @@
 # include <string>
 # include <iostream>
 # include "Request.hpp"
+# include "Connection.hpp"
 
 class RequestHandler
 {
@@ -24,13 +25,16 @@ class RequestHandler
 		std::string				_in_buffer;
 		enum e_request_state	_state;
 		Request					*_request;
+		Connection				*_connection;
 
 		RequestHandler
 		&operator=(RequestHandler const &rhs);
 
+		RequestHandler(void);
+
 	public:
 
-		RequestHandler(void);
+		RequestHandler(Connection *connection);
 
 		RequestHandler(RequestHandler const &src);
 
