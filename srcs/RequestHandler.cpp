@@ -1,19 +1,16 @@
 #include "RequestHandler.hpp"
 
-RequestHandler::RequestHandler(Connection *connection):
-	_idx(0),
-	_in_buffer(""),
-	_state(start),
+RequestHandler::RequestHandler(Connection *connection, Buffer &buffer):
+	_in_buffer(buffer),
 	_request(new Request),
 	_connection(connection)
 {
 }
 
 RequestHandler::RequestHandler(RequestHandler const &src):
-	_idx(0),
 	_in_buffer(src._in_buffer),
-	_state(start),
-	_request(new Request)
+	_request(src._request),
+	_connection(src._connection)
 {
 }
 
@@ -25,31 +22,31 @@ RequestHandler::~RequestHandler(void)
 void
 RequestHandler::fillBuffer(char *raw_buffer)
 {
-	this->_in_buffer += const_cast<char*>(raw_buffer);
+	_in_buffer.fillBuffer(raw_buffer);
 }
 
 void
 RequestHandler::setIdx(int value)
 {
-	this->_idx = value;
+	_in_buffer.setIdx(value);
 }
 
 void
 RequestHandler::incIdx(int value)
 {
-	this->_idx += value;
+	_in_buffer.incIdx(value);
 }
 
 int
 RequestHandler::getIdx(void) const
 {
-	return this->_idx;
+	return _in_buffer.getIdx();
 }
 
 std::string &
 RequestHandler::getBuffer(void)
 {
-	return this->_in_buffer;
+	return _in_buffer.getBuffer();
 }
 
 Request *
@@ -72,13 +69,5 @@ RequestHandler::isEndLine(std::string &line, int index)
 void
 RequestHandler::clearBuffer(int index)
 {
-	for (int i = 0; i < index; i++)
-		this->_in_buffer[i] = 0;
-}
-
-void
-RequestHandler::incState(void)
-{
-	if (this->_state != end)
-		this->_state = static_cast<e_request_state>(static_cast<int>(this->_state) + 1);
+	_in_buffer.clearBuffer(index);
 }

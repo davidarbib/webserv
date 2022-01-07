@@ -13,16 +13,16 @@ Server::~Server(void)
 {
 }
 
-std::map<fd_t, RequestHandler*> &
-Server::getRefRequestHandlers(void)
+std::map<fd_t, Connection*> &
+Server::getRefConnections(void)
 {
-	return _request_handlers;
+	return _connections;
 }
 
-std::map<fd_t, RequestHandler*>
-Server::getRequestHandlers(void) const
+std::map<fd_t, Connection*>
+Server::getConnections(void) const
 {
-	return _request_handlers;
+	return _connections;
 }
 
 fd_t
@@ -92,17 +92,16 @@ Server::createConnection(void)
 	if (fcntl(new_sock_fd, F_SETFL, O_NONBLOCK) < 0)
 		throw ConnectionException();
 	addWatchedFd(new_sock_fd);
-	_request_handlers[new_sock_fd]
-		= new RequestHandler(new Connection(new_sock_fd,
+	_connections[new_sock_fd] = new Connection(new_sock_fd,
 								static_cast<unsigned long>(new_sin.sin_addr.s_addr),
-								static_cast<unsigned short>(new_sin.sin_port)));
+								static_cast<unsigned short>(new_sin.sin_port));
 	FD_CLR(_listen_fd, &read_fds);
 }
 
 void
 Server::transferToBuffer(fd_t connection_fd, char *buf)
 {
-	_request_handlers[connection_fd]->fillBuffer(buf);
+	_connections[connection_fd]->fillBuffer(buf);
 }
 
 void
@@ -126,7 +125,6 @@ Server::watchInput()
 			delWatchedFd(connection_it->first);
 			close(connection_it->first);
 			_connections.erase(connection_it);
-			_request_handlers.erase(connection_it->first);
 			connection_it = _connections.begin();
 		}
 		else

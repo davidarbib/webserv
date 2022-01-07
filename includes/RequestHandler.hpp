@@ -6,24 +6,14 @@
 # include <iostream>
 # include "Request.hpp"
 # include "Connection.hpp"
+# include "Buffer.hpp"
 
 class RequestHandler
 {
-	public:
-
-		enum	e_request_state
-		{
-			start,
-			header,
-			body,
-			end
-		};
-
 	private:
 
 		int						_idx;
-		std::string				_in_buffer;
-		enum e_request_state	_state;
+		Buffer					&_in_buffer;
 		Request					*_request;
 		Connection				*_connection;
 
@@ -34,7 +24,7 @@ class RequestHandler
 
 	public:
 
-		RequestHandler(Connection *connection);
+		RequestHandler(Connection *connection, Buffer &buffer);
 
 		RequestHandler(RequestHandler const &src);
 
@@ -45,9 +35,6 @@ class RequestHandler
 
 		void
 		incIdx(int);
-
-		void
-		incState(void);
 
 		int
 		getIdx(void) const;

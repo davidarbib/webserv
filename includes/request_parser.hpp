@@ -3,6 +3,7 @@
 
 #include "Request.hpp"
 #include "Server.hpp"
+#include "RequestHandler.hpp"
 #include <sstream>
 #include <string>
 

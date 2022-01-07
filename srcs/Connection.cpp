@@ -7,24 +7,8 @@ Connection::Connection(fd_t fd, unsigned long client_ip, unsigned short client_p
 	makePortStr();
 }
 
-Connection::Connection(Connection const &src)
-: _socket_fd(src._socket_fd), _client_ip(src._client_ip),
-	_client_port(src._client_port)
-{ }
-
 Connection::~Connection(void)
 { }
-
-Connection&
-Connection::operator=(Connection const &rhs)
-{
-	_socket_fd = rhs._socket_fd;
-	_client_ip = rhs._client_ip;
-	_client_port = rhs._client_port;
-	_client_ip_str = rhs._client_ip_str;
-	_client_port_str = rhs._client_port_str;
-	return *this;
-}
 
 fd_t			
 Connection::getSocketFd(void) const
@@ -45,6 +29,24 @@ Connection::getClientIpStr(void) const
 std::string
 Connection::getClientPortStr(void) const
 { return _client_port_str; }
+
+Buffer &
+Connection::getInBuffer(void)
+{
+	return _in_buffer;
+}
+
+Buffer &
+Connection::getOutBuffer(void)
+{
+	return _out_buffer;
+}
+
+void
+Connection::fillBuffer(char *buf)
+{
+	_in_buffer.fillBuffer(buf);	
+}
 
 void
 Connection::makeIpStr(void)

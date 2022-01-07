@@ -4,124 +4,604 @@
 !_TAG_PROGRAM_NAME	Exuberant Ctags	//
 !_TAG_PROGRAM_URL	http://ctags.sourceforge.net	/official site/
 !_TAG_PROGRAM_VERSION	5.9~svn20110310	//
-BUFSIZE	includes/Server.hpp	16;"	d
-BUFSIZE	srcs/nonblocking_socket.cpp	15;"	d	file:
-BUFSIZE	srcs/socket.cpp	9;"	d	file:
+AHTTP_MESSAGE_HPP	includes/AHttpMessage.hpp	2;"	d
+AHttpMessage	includes/AHttpMessage.hpp	/^class AHttpMessage$/;"	c
+AHttpMessage::_body	includes/AHttpMessage.hpp	/^		std::string		_body;$/;"	m	class:AHttpMessage	access:protected
+AHttpMessage::_headers	includes/AHttpMessage.hpp	/^		hash_map 		_headers;$/;"	m	class:AHttpMessage	access:protected
+AHttpMessage::get_body	includes/AHttpMessage.hpp	/^		get_body(void);$/;"	p	class:AHttpMessage	access:public	signature:(void)
+AHttpMessage::get_body	srcs/AHttpMessage.cpp	/^AHttpMessage::get_body(void)$/;"	f	class:AHttpMessage	signature:(void)
+AHttpMessage::hash_map	includes/AHttpMessage.hpp	/^		typedef std::map<std::string, std::string> hash_map;$/;"	t	class:AHttpMessage	access:protected
+AHttpMessage::print_message	includes/AHttpMessage.hpp	/^		print_message(std::ostream &flux) const;$/;"	p	class:AHttpMessage	access:public	signature:(std::ostream &flux) const
+AHttpMessage::print_message	srcs/AHttpMessage.cpp	/^AHttpMessage::print_message(std::ostream &flux) const$/;"	f	class:AHttpMessage	signature:(std::ostream &flux) const
+AHttpMessage::set_body	includes/AHttpMessage.hpp	/^		set_body(std::string body) = 0;$/;"	p	class:AHttpMessage	access:public	signature:(std::string body)
+AHttpMessage::set_header	includes/AHttpMessage.hpp	/^		set_header(std::string const &key, std::string const &value) = 0;$/;"	p	class:AHttpMessage	access:public	signature:(std::string const &key, std::string const &value)
+AHttpMessage::std::get_date	includes/AHttpMessage.hpp	/^		get_date(void) const;$/;"	p	class:AHttpMessage::std	access:public	signature:(void) const
+BUFFER_HPP	includes/Buffer.hpp	2;"	d
+BUFSIZE	includes/Server.hpp	20;"	d
+BUFSIZE	test/fakephp.cpp	17;"	d	file:
+Buffer	includes/Buffer.hpp	/^		Buffer(Buffer const &src);$/;"	p	class:Buffer	access:private	signature:(Buffer const &src)
+Buffer	includes/Buffer.hpp	/^		Buffer(void);$/;"	p	class:Buffer	access:public	signature:(void)
+Buffer	includes/Buffer.hpp	/^class Buffer$/;"	c
+Buffer	srcs/Buffer.cpp	/^Buffer::Buffer():$/;"	f	class:Buffer	signature:()
+Buffer	srcs/Buffer.cpp	/^Buffer::Buffer(Buffer const &src):$/;"	f	class:Buffer	signature:(Buffer const &src)
+Buffer::Buffer	includes/Buffer.hpp	/^		Buffer(Buffer const &src);$/;"	p	class:Buffer	access:private	signature:(Buffer const &src)
+Buffer::Buffer	includes/Buffer.hpp	/^		Buffer(void);$/;"	p	class:Buffer	access:public	signature:(void)
+Buffer::Buffer	srcs/Buffer.cpp	/^Buffer::Buffer():$/;"	f	class:Buffer	signature:()
+Buffer::Buffer	srcs/Buffer.cpp	/^Buffer::Buffer(Buffer const &src):$/;"	f	class:Buffer	signature:(Buffer const &src)
+Buffer::_idx	includes/Buffer.hpp	/^		int						_idx;$/;"	m	class:Buffer	access:private
+Buffer::_in_buffer	includes/Buffer.hpp	/^		std::string				_in_buffer;$/;"	m	class:Buffer	access:private
+Buffer::_state	includes/Buffer.hpp	/^		enum e_request_state	_state;$/;"	m	class:Buffer	typeref:enum:Buffer::e_request_state	access:private
+Buffer::body	includes/Buffer.hpp	/^			body,$/;"	e	enum:Buffer::e_request_state
+Buffer::clearBuffer	includes/Buffer.hpp	/^		clearBuffer(int);$/;"	p	class:Buffer	access:public	signature:(int)
+Buffer::clearBuffer	srcs/Buffer.cpp	/^Buffer::clearBuffer(int index)$/;"	f	class:Buffer	signature:(int index)
+Buffer::e_request_state	includes/Buffer.hpp	/^		enum	e_request_state$/;"	g	class:Buffer	access:public
+Buffer::end	includes/Buffer.hpp	/^			end$/;"	e	enum:Buffer::e_request_state
+Buffer::fillBuffer	includes/Buffer.hpp	/^		fillBuffer(char *raw_buffer);$/;"	p	class:Buffer	access:public	signature:(char *raw_buffer)
+Buffer::fillBuffer	srcs/Buffer.cpp	/^Buffer::fillBuffer(char *raw_buffer)$/;"	f	class:Buffer	signature:(char *raw_buffer)
+Buffer::getBuffer	includes/Buffer.hpp	/^		getBuffer(void);$/;"	p	class:Buffer	access:public	signature:(void)
+Buffer::getBuffer	srcs/Buffer.cpp	/^Buffer::getBuffer(void)$/;"	f	class:Buffer	signature:(void)
+Buffer::getIdx	includes/Buffer.hpp	/^		getIdx(void) const;$/;"	p	class:Buffer	access:public	signature:(void) const
+Buffer::getIdx	srcs/Buffer.cpp	/^Buffer::getIdx(void) const$/;"	f	class:Buffer	signature:(void) const
+Buffer::header	includes/Buffer.hpp	/^			header,$/;"	e	enum:Buffer::e_request_state
+Buffer::incIdx	includes/Buffer.hpp	/^		incIdx(int);$/;"	p	class:Buffer	access:public	signature:(int)
+Buffer::incIdx	srcs/Buffer.cpp	/^Buffer::incIdx(int value)$/;"	f	class:Buffer	signature:(int value)
+Buffer::incState	includes/Buffer.hpp	/^		incState(void);$/;"	p	class:Buffer	access:public	signature:(void)
+Buffer::incState	srcs/Buffer.cpp	/^Buffer::incState(void)$/;"	f	class:Buffer	signature:(void)
+Buffer::isEndLine	includes/Buffer.hpp	/^		isEndLine(std::string &line, int index);$/;"	p	class:Buffer	access:public	signature:(std::string &line, int index)
+Buffer::isEndLine	srcs/Buffer.cpp	/^Buffer::isEndLine(std::string &line, int index)$/;"	f	class:Buffer	signature:(std::string &line, int index)
+Buffer::operator =	includes/Buffer.hpp	/^		&operator=(Buffer const &rhs);$/;"	p	class:Buffer	access:private	signature:(Buffer const &rhs)
+Buffer::setIdx	includes/Buffer.hpp	/^		setIdx(int);$/;"	p	class:Buffer	access:public	signature:(int)
+Buffer::setIdx	srcs/Buffer.cpp	/^Buffer::setIdx(int value)$/;"	f	class:Buffer	signature:(int value)
+Buffer::start	includes/Buffer.hpp	/^			start,$/;"	e	enum:Buffer::e_request_state
+Buffer::~Buffer	includes/Buffer.hpp	/^		virtual	~Buffer(void);$/;"	p	class:Buffer	access:public	signature:(void)
+Buffer::~Buffer	srcs/Buffer.cpp	/^Buffer::~Buffer(void)$/;"	f	class:Buffer	signature:(void)
+CGIHANDLER_HPP	includes/CgiHandler.hpp	2;"	d
+CONNECTION_HPP	includes/Connection.hpp	2;"	d
+CRLF	includes/request_parser.hpp	10;"	d
+CRLFCRLF	includes/request_parser.hpp	11;"	d
+CgiHandler	includes/CgiHandler.hpp	/^		CgiHandler(CgiHandler const &src);$/;"	p	class:CgiHandler	access:private	signature:(CgiHandler const &src)
+CgiHandler	includes/CgiHandler.hpp	/^		CgiHandler(Request &request);$/;"	p	class:CgiHandler	access:public	signature:(Request &request)
+CgiHandler	includes/CgiHandler.hpp	/^		CgiHandler(void);$/;"	p	class:CgiHandler	access:public	signature:(void)
+CgiHandler	includes/CgiHandler.hpp	/^class CgiHandler$/;"	c
+CgiHandler	srcs/CgiHandler.cpp	/^CgiHandler::CgiHandler(Request &request)$/;"	f	class:CgiHandler	signature:(Request &request)
+CgiHandler::CgiHandler	includes/CgiHandler.hpp	/^		CgiHandler(CgiHandler const &src);$/;"	p	class:CgiHandler	access:private	signature:(CgiHandler const &src)
+CgiHandler::CgiHandler	includes/CgiHandler.hpp	/^		CgiHandler(Request &request);$/;"	p	class:CgiHandler	access:public	signature:(Request &request)
+CgiHandler::CgiHandler	includes/CgiHandler.hpp	/^		CgiHandler(void);$/;"	p	class:CgiHandler	access:public	signature:(void)
+CgiHandler::CgiHandler	srcs/CgiHandler.cpp	/^CgiHandler::CgiHandler(Request &request)$/;"	f	class:CgiHandler	signature:(Request &request)
+CgiHandler::_cgi_env	includes/CgiHandler.hpp	/^		std::map<std::string, std::string>	_cgi_env;$/;"	m	class:CgiHandler	access:private
+CgiHandler::_receiver	includes/CgiHandler.hpp	/^		FILE								*_receiver;$/;"	m	class:CgiHandler	access:private
+CgiHandler::_request	includes/CgiHandler.hpp	/^		std::string							_request;$/;"	m	class:CgiHandler	access:private
+CgiHandler::_sender	includes/CgiHandler.hpp	/^		FILE								*_sender;$/;"	m	class:CgiHandler	access:private
+CgiHandler::addCgiEnv	includes/CgiHandler.hpp	/^		addCgiEnv(const std::string&, const std::string&);$/;"	p	class:CgiHandler	access:private	signature:(const std::string&, const std::string&)
+CgiHandler::addCgiEnv	srcs/CgiHandler.cpp	/^CgiHandler::addCgiEnv(const std::string &var_name, const std::string &value)$/;"	f	class:CgiHandler	signature:(const std::string &var_name, const std::string &value)
+CgiHandler::buildCgi	includes/CgiHandler.hpp	/^		buildCgi(void);$/;"	p	class:CgiHandler	access:public	signature:(void)
+CgiHandler::extractQuery	includes/CgiHandler.hpp	/^		extractQuery(std::string); \/\/TODO go private$/;"	p	class:CgiHandler	access:public	signature:(std::string)
+CgiHandler::extractQuery	srcs/CgiHandler.cpp	/^CgiHandler::extractQuery(std::string requestURI)$/;"	f	class:CgiHandler	signature:(std::string requestURI)
+CgiHandler::getCgiEnv	includes/CgiHandler.hpp	/^		getCgiEnv(void);$/;"	p	class:CgiHandler	access:private	signature:(void)
+CgiHandler::operator =	includes/CgiHandler.hpp	/^		CgiHandler	&operator=(CgiHandler const &rhs);$/;"	p	class:CgiHandler	access:private	signature:(CgiHandler const &rhs)
+CgiHandler::sendCgi	includes/CgiHandler.hpp	/^		sendCgi(void);$/;"	p	class:CgiHandler	access:public	signature:(void)
+CgiHandler::~CgiHandler	includes/CgiHandler.hpp	/^		virtual	~CgiHandler(void);$/;"	p	class:CgiHandler	access:public	signature:(void)
+CgiHandler::~CgiHandler	srcs/CgiHandler.cpp	/^CgiHandler::~CgiHandler(void)$/;"	f	class:CgiHandler	signature:(void)
 ClassName	norm/example.hpp	/^class ClassName$/;"	c
 ClassName::_first_name	norm/example.hpp	/^		std::string		_first_name;$/;"	m	class:ClassName	access:private
 ClassName::_number	norm/example.hpp	/^		int				_number;$/;"	m	class:ClassName	access:private
+Connection	includes/Connection.hpp	/^		Connection(Connection const &src);$/;"	p	class:Connection	access:public	signature:(Connection const &src)
+Connection	includes/Connection.hpp	/^		Connection(fd_t, unsigned long, unsigned short);$/;"	p	class:Connection	access:public	signature:(fd_t, unsigned long, unsigned short)
+Connection	includes/Connection.hpp	/^		Connection(void);$/;"	p	class:Connection	access:private	signature:(void)
+Connection	includes/Connection.hpp	/^class Connection$/;"	c
+Connection	srcs/Connection.cpp	/^Connection::Connection(Connection const &src)$/;"	f	class:Connection	signature:(Connection const &src)
+Connection	srcs/Connection.cpp	/^Connection::Connection(fd_t fd, unsigned long client_ip, unsigned short client_port)$/;"	f	class:Connection	signature:(fd_t fd, unsigned long client_ip, unsigned short client_port)
+Connection::Connection	includes/Connection.hpp	/^		Connection(Connection const &src);$/;"	p	class:Connection	access:public	signature:(Connection const &src)
+Connection::Connection	includes/Connection.hpp	/^		Connection(fd_t, unsigned long, unsigned short);$/;"	p	class:Connection	access:public	signature:(fd_t, unsigned long, unsigned short)
+Connection::Connection	includes/Connection.hpp	/^		Connection(void);$/;"	p	class:Connection	access:private	signature:(void)
+Connection::Connection	srcs/Connection.cpp	/^Connection::Connection(Connection const &src)$/;"	f	class:Connection	signature:(Connection const &src)
+Connection::Connection	srcs/Connection.cpp	/^Connection::Connection(fd_t fd, unsigned long client_ip, unsigned short client_port)$/;"	f	class:Connection	signature:(fd_t fd, unsigned long client_ip, unsigned short client_port)
+Connection::_client_ip	includes/Connection.hpp	/^		unsigned long	_client_ip;$/;"	m	class:Connection	access:private
+Connection::_client_ip_str	includes/Connection.hpp	/^		std::string		_client_ip_str;$/;"	m	class:Connection	access:private
+Connection::_client_port	includes/Connection.hpp	/^		unsigned short	_client_port;$/;"	m	class:Connection	access:private
+Connection::_client_port_str	includes/Connection.hpp	/^		std::string		_client_port_str;$/;"	m	class:Connection	access:private
+Connection::_socket_fd	includes/Connection.hpp	/^		fd_t			_socket_fd;$/;"	m	class:Connection	access:private
+Connection::getClientIp	includes/Connection.hpp	/^		getClientIp(void) const;$/;"	p	class:Connection	access:public	signature:(void) const
+Connection::getClientIp	srcs/Connection.cpp	/^Connection::getClientIp(void) const$/;"	f	class:Connection	signature:(void) const
+Connection::getClientIpStr	includes/Connection.hpp	/^		getClientIpStr(void) const;$/;"	p	class:Connection	access:public	signature:(void) const
+Connection::getClientIpStr	srcs/Connection.cpp	/^Connection::getClientIpStr(void) const$/;"	f	class:Connection	signature:(void) const
+Connection::getClientPort	includes/Connection.hpp	/^		getClientPort(void) const;$/;"	p	class:Connection	access:public	signature:(void) const
+Connection::getClientPort	srcs/Connection.cpp	/^Connection::getClientPort(void) const$/;"	f	class:Connection	signature:(void) const
+Connection::getClientPortStr	includes/Connection.hpp	/^		getClientPortStr(void) const;$/;"	p	class:Connection	access:public	signature:(void) const
+Connection::getClientPortStr	srcs/Connection.cpp	/^Connection::getClientPortStr(void) const$/;"	f	class:Connection	signature:(void) const
+Connection::getSocketFd	includes/Connection.hpp	/^		getSocketFd(void) const;$/;"	p	class:Connection	access:public	signature:(void) const
+Connection::getSocketFd	srcs/Connection.cpp	/^Connection::getSocketFd(void) const$/;"	f	class:Connection	signature:(void) const
+Connection::makeIpStr	includes/Connection.hpp	/^		makeIpStr(void);$/;"	p	class:Connection	access:private	signature:(void)
+Connection::makeIpStr	srcs/Connection.cpp	/^Connection::makeIpStr(void)$/;"	f	class:Connection	signature:(void)
+Connection::makePortStr	includes/Connection.hpp	/^		makePortStr(void);$/;"	p	class:Connection	access:private	signature:(void)
+Connection::makePortStr	srcs/Connection.cpp	/^Connection::makePortStr(void)$/;"	f	class:Connection	signature:(void)
+Connection::operator =	includes/Connection.hpp	/^		Connection	&operator=(Connection const &rhs);$/;"	p	class:Connection	access:public	signature:(Connection const &rhs)
+Connection::operator =	srcs/Connection.cpp	/^Connection::operator=(Connection const &rhs)$/;"	f	class:Connection	signature:(Connection const &rhs)
+Connection::~Connection	includes/Connection.hpp	/^		~Connection(void);$/;"	p	class:Connection	access:public	signature:(void)
+Connection::~Connection	srcs/Connection.cpp	/^Connection::~Connection(void)$/;"	f	class:Connection	signature:(void)
 ConnectionException	includes/Server.hpp	/^	class ConnectionException : public std::exception$/;"	c	class:Server	inherits:std::exception	access:private
-DELAY	includes/Server.hpp	15;"	d
-DELAY	srcs/nonblocking_socket.cpp	16;"	d	file:
+DATE_BUFFER	includes/AHttpMessage.hpp	9;"	d
+DELAY	includes/Server.hpp	19;"	d
+DELAY	test/fakephp.cpp	16;"	d	file:
+H	objs/Response.o	/^ELF/;"	v
+HOSTNAME	includes/Server.hpp	23;"	d
+HTTP_VERSION	includes/Response.hpp	7;"	d
+IP	includes/Server.hpp	22;"	d
 ListenException	includes/Server.hpp	/^	class ListenException : public std::exception$/;"	c	class:Server	inherits:std::exception	access:private
-PORT	includes/Server.hpp	17;"	d
-PORT	srcs/nonblocking_socket.cpp	14;"	d	file:
-PORT	srcs/socket.cpp	8;"	d	file:
+METHOD_NB	includes/Request.hpp	9;"	d
+NEXT_SPACE_TOKEN	includes/request_parser.hpp	9;"	d
+PORT	includes/Server.hpp	21;"	d
+PORT	test/fakephp.cpp	18;"	d	file:
+QUERYCHAR	includes/CgiHandler.hpp	11;"	d
+REQUESTHANDLER_HPP	includes/RequestHandler.hpp	2;"	d
+REQUEST_HPP	includes/Request.hpp	2;"	d
+REQUEST_PARSER_HPP	includes/request_parser.hpp	2;"	d
+RESPONSE_HPP	includes/Response.hpp	2;"	d
+Request	includes/Request.hpp	/^		Request(Request &cpy);$/;"	p	class:Request	access:public	signature:(Request &cpy)
+Request	includes/Request.hpp	/^		Request(void);$/;"	p	class:Request	access:public	signature:(void)
+Request	includes/Request.hpp	/^class Request : public AHttpMessage$/;"	c	inherits:AHttpMessage
+Request	srcs/Request.cpp	/^Request::Request(Request & cpy)$/;"	f	class:Request	signature:(Request & cpy)
+Request	srcs/Request.cpp	/^Request::Request(void) : _response(), $/;"	f	class:Request	signature:(void)
+Request::Request	includes/Request.hpp	/^		Request(Request &cpy);$/;"	p	class:Request	access:public	signature:(Request &cpy)
+Request::Request	includes/Request.hpp	/^		Request(void);$/;"	p	class:Request	access:public	signature:(void)
+Request::Request	srcs/Request.cpp	/^Request::Request(Request & cpy)$/;"	f	class:Request	signature:(Request & cpy)
+Request::Request	srcs/Request.cpp	/^Request::Request(void) : _response(), $/;"	f	class:Request	signature:(void)
+Request::_headers_initialized	includes/Request.hpp	/^		bool			_headers_initialized;$/;"	m	class:Request	access:private
+Request::_method_list	includes/Request.hpp	/^		std::string 	_method_list[METHOD_NB];$/;"	m	class:Request	access:private
+Request::_request_finalized	includes/Request.hpp	/^		bool			_request_finalized;$/;"	m	class:Request	access:private
+Request::_response	includes/Request.hpp	/^		Response 		_response;$/;"	m	class:Request	access:private
+Request::_start_line	includes/Request.hpp	/^		request_line 	_start_line;$/;"	m	class:Request	access:private
+Request::_start_line_initialized	includes/Request.hpp	/^		bool			_start_line_initialized;$/;"	m	class:Request	access:private
+Request::getStartLine	includes/Request.hpp	/^		getStartLine(void) const;$/;"	p	class:Request	access:public	signature:(void) const
+Request::getStartLine	srcs/Request.cpp	/^Request::getStartLine(void) const$/;"	f	class:Request	signature:(void) const
+Request::get_header_value	includes/Request.hpp	/^		get_header_value(std::string const &header_name) const;$/;"	p	class:Request	access:public	signature:(std::string const &header_name) const
+Request::get_header_value	srcs/Request.cpp	/^Request::get_header_value(std::string const &header_name) const$/;"	f	class:Request	signature:(std::string const &header_name) const
+Request::get_response	includes/Request.hpp	/^		get_response(void);$/;"	p	class:Request	access:public	signature:(void)
+Request::get_response	srcs/Request.cpp	/^Request::get_response(void)$/;"	f	class:Request	signature:(void)
+Request::hadOctetInBody	includes/Request.hpp	/^		hadOctetInBody(char c);$/;"	p	class:Request	access:public	signature:(char c)
+Request::hadOctetInBody	srcs/Request.cpp	/^Request::hadOctetInBody(char c)$/;"	f	class:Request	signature:(char c)
+Request::has_body	includes/Request.hpp	/^		has_body(void) const;$/;"	p	class:Request	access:public	signature:(void) const
+Request::has_body	srcs/Request.cpp	/^Request::has_body(void) const$/;"	f	class:Request	signature:(void) const
+Request::init_method_list	includes/Request.hpp	/^		init_method_list(void);$/;"	p	class:Request	access:private	signature:(void)
+Request::init_method_list	srcs/Request.cpp	/^Request::init_method_list(void)$/;"	f	class:Request	signature:(void)
+Request::is_allowed_method	includes/Request.hpp	/^		is_allowed_method(std::string const &method) const;$/;"	p	class:Request	access:private	signature:(std::string const &method) const
+Request::is_allowed_method	srcs/Request.cpp	/^Request::is_allowed_method(std::string const &method) const$/;"	f	class:Request	signature:(std::string const &method) const
+Request::is_headers_initialized	includes/Request.hpp	/^		is_headers_initialized(void) const;$/;"	p	class:Request	access:public	signature:(void) const
+Request::is_headers_initialized	srcs/Request.cpp	/^Request::is_headers_initialized(void) const$/;"	f	class:Request	signature:(void) const
+Request::is_request_finalized	includes/Request.hpp	/^		is_request_finalized(void) const;$/;"	p	class:Request	access:public	signature:(void) const
+Request::is_request_finalized	srcs/Request.cpp	/^Request::is_request_finalized(void) const$/;"	f	class:Request	signature:(void) const
+Request::is_start_line_initialized	includes/Request.hpp	/^		is_start_line_initialized(void) const;$/;"	p	class:Request	access:public	signature:(void) const
+Request::is_start_line_initialized	srcs/Request.cpp	/^Request::is_start_line_initialized(void) const$/;"	f	class:Request	signature:(void) const
+Request::is_valid_method	includes/Request.hpp	/^		is_valid_method(std::string const &method) const;$/;"	p	class:Request	access:private	signature:(std::string const &method) const
+Request::is_valid_method	srcs/Request.cpp	/^Request::is_valid_method(std::string const &method) const$/;"	f	class:Request	signature:(std::string const &method) const
+Request::operator =	includes/Request.hpp	/^		operator=(Request const &src);$/;"	p	class:Request	access:public	signature:(Request const &src)
+Request::operator =	srcs/Request.cpp	/^Request::operator=(Request const &src)$/;"	f	class:Request	signature:(Request const &src)
+Request::print_message	includes/Request.hpp	/^		print_message(std::ostream &flux) const;$/;"	p	class:Request	access:public	signature:(std::ostream &flux) const
+Request::print_message	srcs/Request.cpp	/^Request::print_message(std::ostream &flux) const$/;"	f	class:Request	signature:(std::ostream &flux) const
+Request::set_body	includes/Request.hpp	/^		set_body(std::string body);$/;"	p	class:Request	access:public	signature:(std::string body)
+Request::set_body	srcs/Request.cpp	/^Request::set_body(std::string body)$/;"	f	class:Request	signature:(std::string body)
+Request::set_header	includes/Request.hpp	/^		set_header(std::string const &key, std::string const &value);$/;"	p	class:Request	access:public	signature:(std::string const &key, std::string const &value)
+Request::set_header	srcs/Request.cpp	/^Request::set_header(std::string const &key, std::string const &value)$/;"	f	class:Request	signature:(std::string const &key, std::string const &value)
+Request::set_header_initialized	includes/Request.hpp	/^		set_header_initialized(bool value);$/;"	p	class:Request	access:public	signature:(bool value)
+Request::set_header_initialized	srcs/Request.cpp	/^Request::set_header_initialized(bool value)$/;"	f	class:Request	signature:(bool value)
+Request::set_http_version	includes/Request.hpp	/^		set_http_version(std::string const &http_version);$/;"	p	class:Request	access:public	signature:(std::string const &http_version)
+Request::set_http_version	srcs/Request.cpp	/^Request::set_http_version(std::string const &http_version)$/;"	f	class:Request	signature:(std::string const &http_version)
+Request::set_method_token	includes/Request.hpp	/^		set_method_token(std::string const &method_token);$/;"	p	class:Request	access:public	signature:(std::string const &method_token)
+Request::set_method_token	srcs/Request.cpp	/^Request::set_method_token(std::string const &method_token)$/;"	f	class:Request	signature:(std::string const &method_token)
+Request::set_request_URI	includes/Request.hpp	/^		set_request_URI(std::string const &request_URI);$/;"	p	class:Request	access:public	signature:(std::string const &request_URI)
+Request::set_request_URI	srcs/Request.cpp	/^Request::set_request_URI(std::string const &request_URI)$/;"	f	class:Request	signature:(std::string const &request_URI)
+Request::set_request_finalized	includes/Request.hpp	/^		set_request_finalized(bool value);$/;"	p	class:Request	access:public	signature:(bool value)
+Request::set_request_finalized	srcs/Request.cpp	/^Request::set_request_finalized(bool value)$/;"	f	class:Request	signature:(bool value)
+Request::set_start_line_initilized	includes/Request.hpp	/^		set_start_line_initilized(bool value);$/;"	p	class:Request	access:public	signature:(bool value)
+Request::set_start_line_initilized	srcs/Request.cpp	/^Request::set_start_line_initilized(bool value)$/;"	f	class:Request	signature:(bool value)
+Request::~Request	includes/Request.hpp	/^		virtual ~Request(void);$/;"	p	class:Request	access:public	signature:(void)
+Request::~Request	srcs/Request.cpp	/^Request::~Request(void) {}$/;"	f	class:Request	signature:(void)
+RequestHandler	includes/RequestHandler.hpp	/^		RequestHandler(Connection *connection);$/;"	p	class:RequestHandler	access:public	signature:(Connection *connection)
+RequestHandler	includes/RequestHandler.hpp	/^		RequestHandler(RequestHandler const &src);$/;"	p	class:RequestHandler	access:public	signature:(RequestHandler const &src)
+RequestHandler	includes/RequestHandler.hpp	/^		RequestHandler(void);$/;"	p	class:RequestHandler	access:private	signature:(void)
+RequestHandler	includes/RequestHandler.hpp	/^class RequestHandler$/;"	c
+RequestHandler	srcs/RequestHandler.cpp	/^RequestHandler::RequestHandler(Connection *connection):$/;"	f	class:RequestHandler	signature:(Connection *connection)
+RequestHandler	srcs/RequestHandler.cpp	/^RequestHandler::RequestHandler(RequestHandler const &src):$/;"	f	class:RequestHandler	signature:(RequestHandler const &src)
+RequestHandler::RequestHandler	includes/RequestHandler.hpp	/^		RequestHandler(Connection *connection);$/;"	p	class:RequestHandler	access:public	signature:(Connection *connection)
+RequestHandler::RequestHandler	includes/RequestHandler.hpp	/^		RequestHandler(RequestHandler const &src);$/;"	p	class:RequestHandler	access:public	signature:(RequestHandler const &src)
+RequestHandler::RequestHandler	includes/RequestHandler.hpp	/^		RequestHandler(void);$/;"	p	class:RequestHandler	access:private	signature:(void)
+RequestHandler::RequestHandler	srcs/RequestHandler.cpp	/^RequestHandler::RequestHandler(Connection *connection):$/;"	f	class:RequestHandler	signature:(Connection *connection)
+RequestHandler::RequestHandler	srcs/RequestHandler.cpp	/^RequestHandler::RequestHandler(RequestHandler const &src):$/;"	f	class:RequestHandler	signature:(RequestHandler const &src)
+RequestHandler::_connection	includes/RequestHandler.hpp	/^		Connection				*_connection;$/;"	m	class:RequestHandler	access:private
+RequestHandler::_idx	includes/RequestHandler.hpp	/^		int						_idx;$/;"	m	class:RequestHandler	access:private
+RequestHandler::_in_buffer	includes/RequestHandler.hpp	/^		std::string				_in_buffer;$/;"	m	class:RequestHandler	access:private
+RequestHandler::_request	includes/RequestHandler.hpp	/^		Request					*_request;$/;"	m	class:RequestHandler	access:private
+RequestHandler::_state	includes/RequestHandler.hpp	/^		enum e_request_state	_state;$/;"	m	class:RequestHandler	typeref:enum:RequestHandler::e_request_state	access:private
+RequestHandler::body	includes/RequestHandler.hpp	/^			body,$/;"	e	enum:RequestHandler::e_request_state
+RequestHandler::clearBuffer	includes/RequestHandler.hpp	/^		clearBuffer(int);$/;"	p	class:RequestHandler	access:public	signature:(int)
+RequestHandler::clearBuffer	srcs/RequestHandler.cpp	/^RequestHandler::clearBuffer(int index)$/;"	f	class:RequestHandler	signature:(int index)
+RequestHandler::e_request_state	includes/RequestHandler.hpp	/^		enum	e_request_state$/;"	g	class:RequestHandler	access:public
+RequestHandler::end	includes/RequestHandler.hpp	/^			end$/;"	e	enum:RequestHandler::e_request_state
+RequestHandler::fillBuffer	includes/RequestHandler.hpp	/^		fillBuffer(char *raw_buffer);$/;"	p	class:RequestHandler	access:public	signature:(char *raw_buffer)
+RequestHandler::fillBuffer	srcs/RequestHandler.cpp	/^RequestHandler::fillBuffer(char *raw_buffer)$/;"	f	class:RequestHandler	signature:(char *raw_buffer)
+RequestHandler::getBuffer	includes/RequestHandler.hpp	/^		getBuffer(void);$/;"	p	class:RequestHandler	access:public	signature:(void)
+RequestHandler::getBuffer	srcs/RequestHandler.cpp	/^RequestHandler::getBuffer(void)$/;"	f	class:RequestHandler	signature:(void)
+RequestHandler::getIdx	includes/RequestHandler.hpp	/^		getIdx(void) const;$/;"	p	class:RequestHandler	access:public	signature:(void) const
+RequestHandler::getIdx	srcs/RequestHandler.cpp	/^RequestHandler::getIdx(void) const$/;"	f	class:RequestHandler	signature:(void) const
+RequestHandler::getRequest	includes/RequestHandler.hpp	/^		getRequest(void) const;$/;"	p	class:RequestHandler	access:public	signature:(void) const
+RequestHandler::getRequest	srcs/RequestHandler.cpp	/^RequestHandler::getRequest(void) const$/;"	f	class:RequestHandler	signature:(void) const
+RequestHandler::header	includes/RequestHandler.hpp	/^			header,$/;"	e	enum:RequestHandler::e_request_state
+RequestHandler::incIdx	includes/RequestHandler.hpp	/^		incIdx(int);$/;"	p	class:RequestHandler	access:public	signature:(int)
+RequestHandler::incIdx	srcs/RequestHandler.cpp	/^RequestHandler::incIdx(int value)$/;"	f	class:RequestHandler	signature:(int value)
+RequestHandler::incState	includes/RequestHandler.hpp	/^		incState(void);$/;"	p	class:RequestHandler	access:public	signature:(void)
+RequestHandler::incState	srcs/RequestHandler.cpp	/^RequestHandler::incState(void)$/;"	f	class:RequestHandler	signature:(void)
+RequestHandler::isEndLine	includes/RequestHandler.hpp	/^		isEndLine(std::string &line, int index);$/;"	p	class:RequestHandler	access:public	signature:(std::string &line, int index)
+RequestHandler::isEndLine	srcs/RequestHandler.cpp	/^RequestHandler::isEndLine(std::string &line, int index)$/;"	f	class:RequestHandler	signature:(std::string &line, int index)
+RequestHandler::operator =	includes/RequestHandler.hpp	/^		&operator=(RequestHandler const &rhs);$/;"	p	class:RequestHandler	access:private	signature:(RequestHandler const &rhs)
+RequestHandler::setIdx	includes/RequestHandler.hpp	/^		setIdx(int);$/;"	p	class:RequestHandler	access:public	signature:(int)
+RequestHandler::setIdx	srcs/RequestHandler.cpp	/^RequestHandler::setIdx(int value)$/;"	f	class:RequestHandler	signature:(int value)
+RequestHandler::start	includes/RequestHandler.hpp	/^			start,$/;"	e	enum:RequestHandler::e_request_state
+RequestHandler::~RequestHandler	includes/RequestHandler.hpp	/^		virtual	~RequestHandler(void);$/;"	p	class:RequestHandler	access:public	signature:(void)
+RequestHandler::~RequestHandler	srcs/RequestHandler.cpp	/^RequestHandler::~RequestHandler(void)$/;"	f	class:RequestHandler	signature:(void)
+Response	includes/Response.hpp	/^		Response(Response &cpy);$/;"	p	class:Response	access:public	signature:(Response &cpy)
+Response	includes/Response.hpp	/^		Response(void);$/;"	p	class:Response	access:public	signature:(void)
+Response	includes/Response.hpp	/^class Response : public AHttpMessage$/;"	c	inherits:AHttpMessage
+Response	srcs/Response.cpp	/^Response::Response(Response &cpy)$/;"	f	class:Response	signature:(Response &cpy)
+Response	srcs/Response.cpp	/^Response::Response(void) : _error_lock(false)$/;"	f	class:Response	signature:(void)
+Response::Response	includes/Response.hpp	/^		Response(Response &cpy);$/;"	p	class:Response	access:public	signature:(Response &cpy)
+Response::Response	includes/Response.hpp	/^		Response(void);$/;"	p	class:Response	access:public	signature:(void)
+Response::Response	srcs/Response.cpp	/^Response::Response(Response &cpy)$/;"	f	class:Response	signature:(Response &cpy)
+Response::Response	srcs/Response.cpp	/^Response::Response(void) : _error_lock(false)$/;"	f	class:Response	signature:(void)
+Response::_error_lock	includes/Response.hpp	/^		bool		_error_lock;$/;"	m	class:Response	access:private
+Response::_start_line	includes/Response.hpp	/^		status_line	_start_line;$/;"	m	class:Response	access:private
+Response::bad_request	includes/Response.hpp	/^		bad_request(void);$/;"	p	class:Response	access:public	signature:(void)
+Response::bad_request	srcs/Response.cpp	/^Response::bad_request(void)$/;"	f	class:Response	signature:(void)
+Response::method_not_allowed	includes/Response.hpp	/^		method_not_allowed(void);$/;"	p	class:Response	access:public	signature:(void)
+Response::method_not_allowed	srcs/Response.cpp	/^Response::method_not_allowed(void)$/;"	f	class:Response	signature:(void)
+Response::not_found	includes/Response.hpp	/^		not_found(void);$/;"	p	class:Response	access:public	signature:(void)
+Response::not_found	srcs/Response.cpp	/^Response::not_found(void)$/;"	f	class:Response	signature:(void)
+Response::operator =	includes/Response.hpp	/^		operator=(Response const &src);$/;"	p	class:Response	access:public	signature:(Response const &src)
+Response::operator =	srcs/Response.cpp	/^Response::operator=(Response const &src)$/;"	f	class:Response	signature:(Response const &src)
+Response::print_message	includes/Response.hpp	/^		print_message(std::ostream &flux) const;$/;"	p	class:Response	access:public	signature:(std::ostream &flux) const
+Response::print_message	srcs/Response.cpp	/^Response::print_message(std::ostream &flux) const$/;"	f	class:Response	signature:(std::ostream &flux) const
+Response::set_body	includes/Response.hpp	/^		set_body(std::string body);$/;"	p	class:Response	access:public	signature:(std::string body)
+Response::set_body	srcs/Response.cpp	/^Response::set_body(std::string body)$/;"	f	class:Response	signature:(std::string body)
+Response::set_header	includes/Response.hpp	/^		set_header(std::string const &key, std::string const &value);$/;"	p	class:Response	access:public	signature:(std::string const &key, std::string const &value)
+Response::set_header	srcs/Response.cpp	/^Response::set_header(std::string const &key, std::string const &value)$/;"	f	class:Response	signature:(std::string const &key, std::string const &value)
+Response::set_protocol_version	includes/Response.hpp	/^		set_protocol_version(std::string const &protocol_version);$/;"	p	class:Response	access:public	signature:(std::string const &protocol_version)
+Response::set_protocol_version	srcs/Response.cpp	/^Response::set_protocol_version(std::string const &protocol_version)$/;"	f	class:Response	signature:(std::string const &protocol_version)
+Response::set_reason_phrase	includes/Response.hpp	/^		set_reason_phrase(std::string const &reason_phrase);$/;"	p	class:Response	access:public	signature:(std::string const &reason_phrase)
+Response::set_reason_phrase	srcs/Response.cpp	/^Response::set_reason_phrase(std::string const &reason_phrase)$/;"	f	class:Response	signature:(std::string const &reason_phrase)
+Response::set_status_code	includes/Response.hpp	/^		set_status_code(int status_code);$/;"	p	class:Response	access:public	signature:(int status_code)
+Response::set_status_code	srcs/Response.cpp	/^Response::set_status_code(int status_code)$/;"	f	class:Response	signature:(int status_code)
+Response::~Response	includes/Response.hpp	/^		virtual ~Response(void);$/;"	p	class:Response	access:public	signature:(void)
+Response::~Response	srcs/Response.cpp	/^Response::~Response(void)$/;"	f	class:Response	signature:(void)
 SERVER_HPP	includes/Server.hpp	2;"	d
+SERVER_VERSION	includes/Response.hpp	8;"	d
 Server	includes/Server.hpp	/^		Server(Server const &src);$/;"	p	class:Server	access:private	signature:(Server const &src)
-Server	includes/Server.hpp	/^		Server(std::string, int, std::string, std::string);$/;"	p	class:Server	access:public	signature:(std::string, int, std::string, std::string)
+Server	includes/Server.hpp	/^		Server(std::string, std::string, uint16_t, std::string, std::string);$/;"	p	class:Server	access:public	signature:(std::string, std::string, uint16_t, std::string, std::string)
 Server	includes/Server.hpp	/^		Server(void);$/;"	p	class:Server	access:private	signature:(void)
 Server	includes/Server.hpp	/^class Server$/;"	c
-Server	srcs/Server.cpp	/^Server::Server(std::string name, int port, std::string access_logs_path, std::string error_logs_path)$/;"	f	class:Server	signature:(std::string name, int port, std::string access_logs_path, std::string error_logs_path)
+Server	srcs/Server.cpp	/^Server::Server(std::string name, std::string ip, unsigned short port, std::string access_logs_path, std::string error_logs_path)$/;"	f	class:Server	signature:(std::string name, std::string ip, unsigned short port, std::string access_logs_path, std::string error_logs_path)
 Server::ConnectionException	includes/Server.hpp	/^	class ConnectionException : public std::exception$/;"	c	class:Server	inherits:std::exception	access:private
 Server::ConnectionException::what	includes/Server.hpp	/^			what() const$/;"	f	class:Server::ConnectionException	access:public	signature:() const
 Server::ListenException	includes/Server.hpp	/^	class ListenException : public std::exception$/;"	c	class:Server	inherits:std::exception	access:private
 Server::ListenException::what	includes/Server.hpp	/^			what() const$/;"	f	class:Server::ListenException	access:public	signature:() const
 Server::Server	includes/Server.hpp	/^		Server(Server const &src);$/;"	p	class:Server	access:private	signature:(Server const &src)
-Server::Server	includes/Server.hpp	/^		Server(std::string, int, std::string, std::string);$/;"	p	class:Server	access:public	signature:(std::string, int, std::string, std::string)
+Server::Server	includes/Server.hpp	/^		Server(std::string, std::string, uint16_t, std::string, std::string);$/;"	p	class:Server	access:public	signature:(std::string, std::string, uint16_t, std::string, std::string)
 Server::Server	includes/Server.hpp	/^		Server(void);$/;"	p	class:Server	access:private	signature:(void)
-Server::Server	srcs/Server.cpp	/^Server::Server(std::string name, int port, std::string access_logs_path, std::string error_logs_path)$/;"	f	class:Server	signature:(std::string name, int port, std::string access_logs_path, std::string error_logs_path)
+Server::Server	srcs/Server.cpp	/^Server::Server(std::string name, std::string ip, unsigned short port, std::string access_logs_path, std::string error_logs_path)$/;"	f	class:Server	signature:(std::string name, std::string ip, unsigned short port, std::string access_logs_path, std::string error_logs_path)
 Server::_access_logs_path	includes/Server.hpp	/^		std::string 					_access_logs_path;$/;"	m	class:Server	access:private
-Server::_connections_fd	includes/Server.hpp	/^		std::vector<long>				_connections_fd;$/;"	m	class:Server	access:private
 Server::_error_logs_path	includes/Server.hpp	/^		std::string 					_error_logs_path;$/;"	m	class:Server	access:private
+Server::_ip	includes/Server.hpp	/^		std::string						_ip;$/;"	m	class:Server	access:private
 Server::_listen_fd	includes/Server.hpp	/^		fd_t							_listen_fd;$/;"	m	class:Server	access:private
 Server::_name	includes/Server.hpp	/^		std::string						_name;$/;"	m	class:Server	access:private
-Server::_port	includes/Server.hpp	/^		int								_port;$/;"	m	class:Server	access:private
-Server::_request_buffers	includes/Server.hpp	/^		std::map<fd_t, std::string>		_request_buffers;$/;"	m	class:Server	access:private
+Server::_port	includes/Server.hpp	/^		uint16_t						_port;$/;"	m	class:Server	access:private
+Server::_request_handlers	includes/Server.hpp	/^		std::map<fd_t, RequestHandler*>	_request_handlers;$/;"	m	class:Server	access:private
 Server::addWatchedFd	includes/Server.hpp	/^		void				addWatchedFd(fd_t);$/;"	p	class:Server	access:private	signature:(fd_t)
 Server::addWatchedFd	srcs/Server.cpp	/^Server::addWatchedFd(fd_t fd)$/;"	f	class:Server	signature:(fd_t fd)
-Server::createConnection	includes/Server.hpp	/^		void				createConnection();$/;"	p	class:Server	access:public	signature:()
-Server::createConnection	srcs/Server.cpp	/^Server::createConnection()$/;"	f	class:Server	signature:()
+Server::createConnection	includes/Server.hpp	/^		void				createConnection(void);$/;"	p	class:Server	access:public	signature:(void)
+Server::createConnection	srcs/Server.cpp	/^Server::createConnection(void)$/;"	f	class:Server	signature:(void)
 Server::delWatchedFd	includes/Server.hpp	/^		void				delWatchedFd(fd_t);$/;"	p	class:Server	access:private	signature:(fd_t)
 Server::delWatchedFd	srcs/Server.cpp	/^Server::delWatchedFd(fd_t fd)$/;"	f	class:Server	signature:(fd_t fd)
-Server::getRequestBuffers	includes/Server.hpp	/^		std::map<fd_t, std::string>		getRequestBuffers() const;$/;"	p	class:Server	access:public	signature:() const
-Server::getRequestBuffers	srcs/Server.cpp	/^Server::getRequestBuffers() const$/;"	f	class:Server	signature:() const
-Server::initFdset	includes/Server.hpp	/^		static void			initFdset();$/;"	p	class:Server	access:public	signature:()
+Server::getRefRequestHandlers	includes/Server.hpp	/^		std::map<fd_t, RequestHandler*>	&getRefRequestHandlers();$/;"	p	class:Server	access:public	signature:()
+Server::getRefRequestHandlers	srcs/Server.cpp	/^Server::getRefRequestHandlers(void)$/;"	f	class:Server	signature:(void)
+Server::getRequestHandlers	includes/Server.hpp	/^		std::map<fd_t, RequestHandler*>	getRequestHandlers() const;$/;"	p	class:Server	access:public	signature:() const
+Server::getRequestHandlers	srcs/Server.cpp	/^Server::getRequestHandlers(void) const$/;"	f	class:Server	signature:(void) const
+Server::initFdset	includes/Server.hpp	/^		static void			initFdset(void);$/;"	p	class:Server	access:public	signature:(void)
 Server::initFdset	srcs/Server.cpp	/^Server::initFdset()$/;"	f	class:Server	signature:()
-Server::isThereConnectionRequest	includes/Server.hpp	/^		bool				isThereConnectionRequest();$/;"	p	class:Server	access:public	signature:()
-Server::isThereConnectionRequest	srcs/Server.cpp	/^Server::isThereConnectionRequest()$/;"	f	class:Server	signature:()
+Server::isThereConnectionRequest	includes/Server.hpp	/^		bool				isThereConnectionRequest(void);$/;"	p	class:Server	access:public	signature:(void)
+Server::isThereConnectionRequest	srcs/Server.cpp	/^Server::isThereConnectionRequest(void)$/;"	f	class:Server	signature:(void)
 Server::isThereSomethingToRead	includes/Server.hpp	/^		bool				isThereSomethingToRead(fd_t);$/;"	p	class:Server	access:private	signature:(fd_t)
 Server::isThereSomethingToRead	srcs/Server.cpp	/^Server::isThereSomethingToRead(fd_t fd)$/;"	f	class:Server	signature:(fd_t fd)
-Server::listenSocket	includes/Server.hpp	/^		fd_t				listenSocket()$/;"	p	class:Server	access:public	signature:()
+Server::listenSocket	includes/Server.hpp	/^		fd_t				listenSocket(void);$/;"	p	class:Server	access:public	signature:(void)
 Server::listenSocket	srcs/Server.cpp	/^Server::listenSocket()$/;"	f	class:Server	signature:()
 Server::max_fd	includes/Server.hpp	/^		static fd_t			max_fd;$/;"	m	class:Server	access:public
 Server::max_fd	srcs/Server.cpp	/^fd_t		Server::max_fd = 0;$/;"	m	class:Server	file:
-Server::operator =	includes/Server.hpp	/^		Server				&operator=(Server const &rhs);$/;"	p	class:Server	access:private	signature:(Server const &rhs)
 Server::origin_fds	includes/Server.hpp	/^		static fd_set 		origin_fds;$/;"	m	class:Server	access:public
 Server::origin_fds	srcs/Server.cpp	/^fd_set 		Server::origin_fds;$/;"	m	class:Server	file:
 Server::read_fds	includes/Server.hpp	/^		static fd_set		read_fds;$/;"	m	class:Server	access:public
 Server::read_fds	srcs/Server.cpp	/^fd_set		Server::read_fds;$/;"	m	class:Server	file:
-Server::recvSend	includes/Server.hpp	/^		void				recvSend();$/;"	p	class:Server	access:private	signature:()
-Server::setFdset	includes/Server.hpp	/^		static void			setFdset();$/;"	p	class:Server	access:public	signature:()
+Server::recvSend	includes/Server.hpp	/^		void				recvSend(void);$/;"	p	class:Server	access:private	signature:(void)
+Server::setFdset	includes/Server.hpp	/^		static void			setFdset(void);$/;"	p	class:Server	access:public	signature:(void)
 Server::setFdset	srcs/Server.cpp	/^Server::setFdset()$/;"	f	class:Server	signature:()
 Server::transferToBuffer	includes/Server.hpp	/^		void				transferToBuffer(fd_t connection_fd, char *buf);$/;"	p	class:Server	access:private	signature:(fd_t connection_fd, char *buf)
 Server::transferToBuffer	srcs/Server.cpp	/^Server::transferToBuffer(fd_t connection_fd, char *buf)$/;"	f	class:Server	signature:(fd_t connection_fd, char *buf)
-Server::watchInput	includes/Server.hpp	/^		void				watchInput();$/;"	p	class:Server	access:public	signature:()
+Server::watchInput	includes/Server.hpp	/^		void				watchInput(void);$/;"	p	class:Server	access:public	signature:(void)
 Server::watchInput	srcs/Server.cpp	/^Server::watchInput()$/;"	f	class:Server	signature:()
 Server::write_fds	includes/Server.hpp	/^		static fd_set 		write_fds;$/;"	m	class:Server	access:public
 Server::write_fds	srcs/Server.cpp	/^fd_set 		Server::write_fds;$/;"	m	class:Server	file:
 Server::~Server	includes/Server.hpp	/^		virtual ~Server(void);$/;"	p	class:Server	access:public	signature:(void)
 Server::~Server	srcs/Server.cpp	/^Server::~Server(void)$/;"	f	class:Server	signature:(void)
+TYPEDEFS_HPP	includes/typedefs.hpp	2;"	d
 _access_logs_path	includes/Server.hpp	/^		std::string 					_access_logs_path;$/;"	m	class:Server	access:private
-_connections_fd	includes/Server.hpp	/^		std::vector<long>				_connections_fd;$/;"	m	class:Server	access:private
+_body	includes/AHttpMessage.hpp	/^		std::string		_body;$/;"	m	class:AHttpMessage	access:protected
+_cgi_env	includes/CgiHandler.hpp	/^		std::map<std::string, std::string>	_cgi_env;$/;"	m	class:CgiHandler	access:private
+_client_ip	includes/Connection.hpp	/^		unsigned long	_client_ip;$/;"	m	class:Connection	access:private
+_client_ip_str	includes/Connection.hpp	/^		std::string		_client_ip_str;$/;"	m	class:Connection	access:private
+_client_port	includes/Connection.hpp	/^		unsigned short	_client_port;$/;"	m	class:Connection	access:private
+_client_port_str	includes/Connection.hpp	/^		std::string		_client_port_str;$/;"	m	class:Connection	access:private
+_connection	includes/RequestHandler.hpp	/^		Connection				*_connection;$/;"	m	class:RequestHandler	access:private
+_error_lock	includes/Response.hpp	/^		bool		_error_lock;$/;"	m	class:Response	access:private
 _error_logs_path	includes/Server.hpp	/^		std::string 					_error_logs_path;$/;"	m	class:Server	access:private
 _first_name	norm/example.hpp	/^		std::string		_first_name;$/;"	m	class:ClassName	access:private
+_headers	includes/AHttpMessage.hpp	/^		hash_map 		_headers;$/;"	m	class:AHttpMessage	access:protected
+_headers_initialized	includes/Request.hpp	/^		bool			_headers_initialized;$/;"	m	class:Request	access:private
+_idx	includes/Buffer.hpp	/^		int						_idx;$/;"	m	class:Buffer	access:private
+_idx	includes/RequestHandler.hpp	/^		int						_idx;$/;"	m	class:RequestHandler	access:private
+_in_buffer	includes/Buffer.hpp	/^		std::string				_in_buffer;$/;"	m	class:Buffer	access:private
+_in_buffer	includes/RequestHandler.hpp	/^		std::string				_in_buffer;$/;"	m	class:RequestHandler	access:private
+_ip	includes/Server.hpp	/^		std::string						_ip;$/;"	m	class:Server	access:private
 _listen_fd	includes/Server.hpp	/^		fd_t							_listen_fd;$/;"	m	class:Server	access:private
+_method_list	includes/Request.hpp	/^		std::string 	_method_list[METHOD_NB];$/;"	m	class:Request	access:private
 _name	includes/Server.hpp	/^		std::string						_name;$/;"	m	class:Server	access:private
 _number	norm/example.hpp	/^		int				_number;$/;"	m	class:ClassName	access:private
-_port	includes/Server.hpp	/^		int								_port;$/;"	m	class:Server	access:private
-_request_buffers	includes/Server.hpp	/^		std::map<fd_t, std::string>		_request_buffers;$/;"	m	class:Server	access:private
+_port	includes/Server.hpp	/^		uint16_t						_port;$/;"	m	class:Server	access:private
+_receiver	includes/CgiHandler.hpp	/^		FILE								*_receiver;$/;"	m	class:CgiHandler	access:private
+_request	includes/CgiHandler.hpp	/^		std::string							_request;$/;"	m	class:CgiHandler	access:private
+_request	includes/RequestHandler.hpp	/^		Request					*_request;$/;"	m	class:RequestHandler	access:private
+_request_finalized	includes/Request.hpp	/^		bool			_request_finalized;$/;"	m	class:Request	access:private
+_request_handlers	includes/Server.hpp	/^		std::map<fd_t, RequestHandler*>	_request_handlers;$/;"	m	class:Server	access:private
+_response	includes/Request.hpp	/^		Response 		_response;$/;"	m	class:Request	access:private
+_sender	includes/CgiHandler.hpp	/^		FILE								*_sender;$/;"	m	class:CgiHandler	access:private
+_socket_fd	includes/Connection.hpp	/^		fd_t			_socket_fd;$/;"	m	class:Connection	access:private
+_start_line	includes/Request.hpp	/^		request_line 	_start_line;$/;"	m	class:Request	access:private
+_start_line	includes/Response.hpp	/^		status_line	_start_line;$/;"	m	class:Response	access:private
+_start_line_initialized	includes/Request.hpp	/^		bool			_start_line_initialized;$/;"	m	class:Request	access:private
+_state	includes/Buffer.hpp	/^		enum e_request_state	_state;$/;"	m	class:Buffer	typeref:enum:Buffer::e_request_state	access:private
+_state	includes/RequestHandler.hpp	/^		enum e_request_state	_state;$/;"	m	class:RequestHandler	typeref:enum:RequestHandler::e_request_state	access:private
+addCgiEnv	includes/CgiHandler.hpp	/^		addCgiEnv(const std::string&, const std::string&);$/;"	p	class:CgiHandler	access:private	signature:(const std::string&, const std::string&)
+addCgiEnv	srcs/CgiHandler.cpp	/^CgiHandler::addCgiEnv(const std::string &var_name, const std::string &value)$/;"	f	class:CgiHandler	signature:(const std::string &var_name, const std::string &value)
 addWatchedFd	includes/Server.hpp	/^		void				addWatchedFd(fd_t);$/;"	p	class:Server	access:private	signature:(fd_t)
 addWatchedFd	srcs/Server.cpp	/^Server::addWatchedFd(fd_t fd)$/;"	f	class:Server	signature:(fd_t fd)
-createConnection	includes/Server.hpp	/^		void				createConnection();$/;"	p	class:Server	access:public	signature:()
-createConnection	srcs/Server.cpp	/^Server::createConnection()$/;"	f	class:Server	signature:()
-create_connection	srcs/nonblocking_socket.cpp	/^int	create_connection(int sock_fd, fd_set *origin_fds, int *maxfd)$/;"	f	signature:(int sock_fd, fd_set *origin_fds, int *maxfd)
+bad_request	includes/Response.hpp	/^		bad_request(void);$/;"	p	class:Response	access:public	signature:(void)
+bad_request	srcs/Response.cpp	/^Response::bad_request(void)$/;"	f	class:Response	signature:(void)
+body	includes/Buffer.hpp	/^			body,$/;"	e	enum:Buffer::e_request_state
+body	includes/RequestHandler.hpp	/^			body,$/;"	e	enum:RequestHandler::e_request_state
+buildCgi	includes/CgiHandler.hpp	/^		buildCgi(void);$/;"	p	class:CgiHandler	access:public	signature:(void)
+clearBuffer	includes/Buffer.hpp	/^		clearBuffer(int);$/;"	p	class:Buffer	access:public	signature:(int)
+clearBuffer	includes/RequestHandler.hpp	/^		clearBuffer(int);$/;"	p	class:RequestHandler	access:public	signature:(int)
+clearBuffer	srcs/Buffer.cpp	/^Buffer::clearBuffer(int index)$/;"	f	class:Buffer	signature:(int index)
+clearBuffer	srcs/RequestHandler.cpp	/^RequestHandler::clearBuffer(int index)$/;"	f	class:RequestHandler	signature:(int index)
+createConnection	includes/Server.hpp	/^		void				createConnection(void);$/;"	p	class:Server	access:public	signature:(void)
+createConnection	srcs/Server.cpp	/^Server::createConnection(void)$/;"	f	class:Server	signature:(void)
 delWatchedFd	includes/Server.hpp	/^		void				delWatchedFd(fd_t);$/;"	p	class:Server	access:private	signature:(fd_t)
 delWatchedFd	srcs/Server.cpp	/^Server::delWatchedFd(fd_t fd)$/;"	f	class:Server	signature:(fd_t fd)
-fd_t	includes/Server.hpp	/^typedef long fd_t;$/;"	t
-g_close_flag	srcs/nonblocking_socket.cpp	/^int g_close_flag = 0;$/;"	v
-getRequestBuffers	includes/Server.hpp	/^		std::map<fd_t, std::string>		getRequestBuffers() const;$/;"	p	class:Server	access:public	signature:() const
-getRequestBuffers	srcs/Server.cpp	/^Server::getRequestBuffers() const$/;"	f	class:Server	signature:() const
-initFdset	includes/Server.hpp	/^		static void			initFdset();$/;"	p	class:Server	access:public	signature:()
+e_request_state	includes/Buffer.hpp	/^		enum	e_request_state$/;"	g	class:Buffer	access:public
+e_request_state	includes/RequestHandler.hpp	/^		enum	e_request_state$/;"	g	class:RequestHandler	access:public
+end	includes/Buffer.hpp	/^			end$/;"	e	enum:Buffer::e_request_state
+end	includes/RequestHandler.hpp	/^			end$/;"	e	enum:RequestHandler::e_request_state
+extractQuery	includes/CgiHandler.hpp	/^		extractQuery(std::string); \/\/TODO go private$/;"	p	class:CgiHandler	access:public	signature:(std::string)
+extractQuery	srcs/CgiHandler.cpp	/^CgiHandler::extractQuery(std::string requestURI)$/;"	f	class:CgiHandler	signature:(std::string requestURI)
+fd_t	includes/typedefs.hpp	/^typedef long fd_t;$/;"	t
+fd_t	test/fakephp.cpp	/^typedef long fd_t;$/;"	t	file:
+fillBuffer	includes/Buffer.hpp	/^		fillBuffer(char *raw_buffer);$/;"	p	class:Buffer	access:public	signature:(char *raw_buffer)
+fillBuffer	includes/RequestHandler.hpp	/^		fillBuffer(char *raw_buffer);$/;"	p	class:RequestHandler	access:public	signature:(char *raw_buffer)
+fillBuffer	srcs/Buffer.cpp	/^Buffer::fillBuffer(char *raw_buffer)$/;"	f	class:Buffer	signature:(char *raw_buffer)
+fillBuffer	srcs/RequestHandler.cpp	/^RequestHandler::fillBuffer(char *raw_buffer)$/;"	f	class:RequestHandler	signature:(char *raw_buffer)
+getBodyWithContentLength	includes/request_parser.hpp	/^getBodyWithContentLength(RequestHandler &rh, int index);$/;"	p	signature:(RequestHandler &rh, int index)
+getBodyWithContentLength	srcs/request_parser.cpp	/^getBodyWithContentLength(RequestHandler &rh, int index)$/;"	f	signature:(RequestHandler &rh, int index)
+getBuffer	includes/Buffer.hpp	/^		getBuffer(void);$/;"	p	class:Buffer	access:public	signature:(void)
+getBuffer	includes/RequestHandler.hpp	/^		getBuffer(void);$/;"	p	class:RequestHandler	access:public	signature:(void)
+getBuffer	srcs/Buffer.cpp	/^Buffer::getBuffer(void)$/;"	f	class:Buffer	signature:(void)
+getBuffer	srcs/RequestHandler.cpp	/^RequestHandler::getBuffer(void)$/;"	f	class:RequestHandler	signature:(void)
+getCgiEnv	includes/CgiHandler.hpp	/^		getCgiEnv(void);$/;"	p	class:CgiHandler	access:private	signature:(void)
+getChunkOfBody	includes/request_parser.hpp	/^getChunkOfBody(RequestHandler &rh, int index);$/;"	p	signature:(RequestHandler &rh, int index)
+getChunkOfBody	srcs/request_parser.cpp	/^getChunkOfBody(RequestHandler &rh, int index)$/;"	f	signature:(RequestHandler &rh, int index)
+getClientIp	includes/Connection.hpp	/^		getClientIp(void) const;$/;"	p	class:Connection	access:public	signature:(void) const
+getClientIp	srcs/Connection.cpp	/^Connection::getClientIp(void) const$/;"	f	class:Connection	signature:(void) const
+getClientIpStr	includes/Connection.hpp	/^		getClientIpStr(void) const;$/;"	p	class:Connection	access:public	signature:(void) const
+getClientIpStr	srcs/Connection.cpp	/^Connection::getClientIpStr(void) const$/;"	f	class:Connection	signature:(void) const
+getClientPort	includes/Connection.hpp	/^		getClientPort(void) const;$/;"	p	class:Connection	access:public	signature:(void) const
+getClientPort	srcs/Connection.cpp	/^Connection::getClientPort(void) const$/;"	f	class:Connection	signature:(void) const
+getClientPortStr	includes/Connection.hpp	/^		getClientPortStr(void) const;$/;"	p	class:Connection	access:public	signature:(void) const
+getClientPortStr	srcs/Connection.cpp	/^Connection::getClientPortStr(void) const$/;"	f	class:Connection	signature:(void) const
+getIdx	includes/Buffer.hpp	/^		getIdx(void) const;$/;"	p	class:Buffer	access:public	signature:(void) const
+getIdx	includes/RequestHandler.hpp	/^		getIdx(void) const;$/;"	p	class:RequestHandler	access:public	signature:(void) const
+getIdx	srcs/Buffer.cpp	/^Buffer::getIdx(void) const$/;"	f	class:Buffer	signature:(void) const
+getIdx	srcs/RequestHandler.cpp	/^RequestHandler::getIdx(void) const$/;"	f	class:RequestHandler	signature:(void) const
+getOneHeader	includes/request_parser.hpp	/^getOneHeader(RequestHandler &rh);$/;"	p	signature:(RequestHandler &rh)
+getOneHeader	srcs/request_parser.cpp	/^getOneHeader(RequestHandler &rh, int position)$/;"	f	signature:(RequestHandler &rh, int position)
+getRefRequestHandlers	includes/Server.hpp	/^		std::map<fd_t, RequestHandler*>	&getRefRequestHandlers();$/;"	p	class:Server	access:public	signature:()
+getRefRequestHandlers	srcs/Server.cpp	/^Server::getRefRequestHandlers(void)$/;"	f	class:Server	signature:(void)
+getRequest	includes/RequestHandler.hpp	/^		getRequest(void) const;$/;"	p	class:RequestHandler	access:public	signature:(void) const
+getRequest	srcs/RequestHandler.cpp	/^RequestHandler::getRequest(void) const$/;"	f	class:RequestHandler	signature:(void) const
+getRequestHandlers	includes/Server.hpp	/^		std::map<fd_t, RequestHandler*>	getRequestHandlers() const;$/;"	p	class:Server	access:public	signature:() const
+getRequestHandlers	srcs/Server.cpp	/^Server::getRequestHandlers(void) const$/;"	f	class:Server	signature:(void) const
+getSocketFd	includes/Connection.hpp	/^		getSocketFd(void) const;$/;"	p	class:Connection	access:public	signature:(void) const
+getSocketFd	srcs/Connection.cpp	/^Connection::getSocketFd(void) const$/;"	f	class:Connection	signature:(void) const
+getStartLine	includes/Request.hpp	/^		getStartLine(void) const;$/;"	p	class:Request	access:public	signature:(void) const
+getStartLine	srcs/Request.cpp	/^Request::getStartLine(void) const$/;"	f	class:Request	signature:(void) const
+get_body	includes/AHttpMessage.hpp	/^		get_body(void);$/;"	p	class:AHttpMessage	access:public	signature:(void)
+get_body	srcs/AHttpMessage.cpp	/^AHttpMessage::get_body(void)$/;"	f	class:AHttpMessage	signature:(void)
+get_date	includes/AHttpMessage.hpp	/^		get_date(void) const;$/;"	p	class:AHttpMessage::std	access:public	signature:(void) const
+get_date	srcs/AHttpMessage.cpp	/^AHttpMessage::get_date(void) const$/;"	f	class:std::AHttpMessage	signature:(void) const
+get_header_value	includes/Request.hpp	/^		get_header_value(std::string const &header_name) const;$/;"	p	class:Request	access:public	signature:(std::string const &header_name) const
+get_header_value	srcs/Request.cpp	/^Request::get_header_value(std::string const &header_name) const$/;"	f	class:Request	signature:(std::string const &header_name) const
+get_response	includes/Request.hpp	/^		get_response(void);$/;"	p	class:Request	access:public	signature:(void)
+get_response	srcs/Request.cpp	/^Request::get_response(void)$/;"	f	class:Request	signature:(void)
+hadOctetInBody	includes/Request.hpp	/^		hadOctetInBody(char c);$/;"	p	class:Request	access:public	signature:(char c)
+hadOctetInBody	srcs/Request.cpp	/^Request::hadOctetInBody(char c)$/;"	f	class:Request	signature:(char c)
+handleRequestBuffers	srcs/webserv.cpp	/^int handleRequestBuffers(Server *server)$/;"	f	signature:(Server *server)
+has_body	includes/Request.hpp	/^		has_body(void) const;$/;"	p	class:Request	access:public	signature:(void) const
+has_body	srcs/Request.cpp	/^Request::has_body(void) const$/;"	f	class:Request	signature:(void) const
+has_body	srcs/request_parser.cpp	/^has_body(RequestHandler &rh)$/;"	f	signature:(RequestHandler &rh)
+hash_map	includes/AHttpMessage.hpp	/^		typedef std::map<std::string, std::string> hash_map;$/;"	t	class:AHttpMessage	access:protected
+header	includes/Buffer.hpp	/^			header,$/;"	e	enum:Buffer::e_request_state
+header	includes/RequestHandler.hpp	/^			header,$/;"	e	enum:RequestHandler::e_request_state
+http_version	includes/AHttpMessage.hpp	/^	std::string http_version;$/;"	m	struct:request_line	access:public
+incIdx	includes/Buffer.hpp	/^		incIdx(int);$/;"	p	class:Buffer	access:public	signature:(int)
+incIdx	includes/RequestHandler.hpp	/^		incIdx(int);$/;"	p	class:RequestHandler	access:public	signature:(int)
+incIdx	srcs/Buffer.cpp	/^Buffer::incIdx(int value)$/;"	f	class:Buffer	signature:(int value)
+incIdx	srcs/RequestHandler.cpp	/^RequestHandler::incIdx(int value)$/;"	f	class:RequestHandler	signature:(int value)
+incState	includes/Buffer.hpp	/^		incState(void);$/;"	p	class:Buffer	access:public	signature:(void)
+incState	includes/RequestHandler.hpp	/^		incState(void);$/;"	p	class:RequestHandler	access:public	signature:(void)
+incState	srcs/Buffer.cpp	/^Buffer::incState(void)$/;"	f	class:Buffer	signature:(void)
+incState	srcs/RequestHandler.cpp	/^RequestHandler::incState(void)$/;"	f	class:RequestHandler	signature:(void)
+initFdset	includes/Server.hpp	/^		static void			initFdset(void);$/;"	p	class:Server	access:public	signature:(void)
 initFdset	srcs/Server.cpp	/^Server::initFdset()$/;"	f	class:Server	signature:()
-isThereConnectionRequest	includes/Server.hpp	/^		bool				isThereConnectionRequest();$/;"	p	class:Server	access:public	signature:()
-isThereConnectionRequest	srcs/Server.cpp	/^Server::isThereConnectionRequest()$/;"	f	class:Server	signature:()
+init_method_list	includes/Request.hpp	/^		init_method_list(void);$/;"	p	class:Request	access:private	signature:(void)
+init_method_list	srcs/Request.cpp	/^Request::init_method_list(void)$/;"	f	class:Request	signature:(void)
+isEndLine	includes/Buffer.hpp	/^		isEndLine(std::string &line, int index);$/;"	p	class:Buffer	access:public	signature:(std::string &line, int index)
+isEndLine	includes/RequestHandler.hpp	/^		isEndLine(std::string &line, int index);$/;"	p	class:RequestHandler	access:public	signature:(std::string &line, int index)
+isEndLine	srcs/Buffer.cpp	/^Buffer::isEndLine(std::string &line, int index)$/;"	f	class:Buffer	signature:(std::string &line, int index)
+isEndLine	srcs/RequestHandler.cpp	/^RequestHandler::isEndLine(std::string &line, int index)$/;"	f	class:RequestHandler	signature:(std::string &line, int index)
+isEndSection	includes/request_parser.hpp	/^isEndSection(std::string &line, int index);$/;"	p	signature:(std::string &line, int index)
+isEndSection	srcs/request_parser.cpp	/^isEndSection(std::string &line, int index)$/;"	f	signature:(std::string &line, int index)
+isThereConnectionRequest	includes/Server.hpp	/^		bool				isThereConnectionRequest(void);$/;"	p	class:Server	access:public	signature:(void)
+isThereConnectionRequest	srcs/Server.cpp	/^Server::isThereConnectionRequest(void)$/;"	f	class:Server	signature:(void)
 isThereSomethingToRead	includes/Server.hpp	/^		bool				isThereSomethingToRead(fd_t);$/;"	p	class:Server	access:private	signature:(fd_t)
 isThereSomethingToRead	srcs/Server.cpp	/^Server::isThereSomethingToRead(fd_t fd)$/;"	f	class:Server	signature:(fd_t fd)
-listenSocket	includes/Server.hpp	/^		fd_t				listenSocket()$/;"	p	class:Server	access:public	signature:()
+is_allowed_method	includes/Request.hpp	/^		is_allowed_method(std::string const &method) const;$/;"	p	class:Request	access:private	signature:(std::string const &method) const
+is_allowed_method	srcs/Request.cpp	/^Request::is_allowed_method(std::string const &method) const$/;"	f	class:Request	signature:(std::string const &method) const
+is_complete_line	srcs/request_parser.cpp	/^is_complete_line(std::string &line, int idx)$/;"	f	signature:(std::string &line, int idx)
+is_headers_initialized	includes/Request.hpp	/^		is_headers_initialized(void) const;$/;"	p	class:Request	access:public	signature:(void) const
+is_headers_initialized	srcs/Request.cpp	/^Request::is_headers_initialized(void) const$/;"	f	class:Request	signature:(void) const
+is_request_finalized	includes/Request.hpp	/^		is_request_finalized(void) const;$/;"	p	class:Request	access:public	signature:(void) const
+is_request_finalized	srcs/Request.cpp	/^Request::is_request_finalized(void) const$/;"	f	class:Request	signature:(void) const
+is_start_line_initialized	includes/Request.hpp	/^		is_start_line_initialized(void) const;$/;"	p	class:Request	access:public	signature:(void) const
+is_start_line_initialized	srcs/Request.cpp	/^Request::is_start_line_initialized(void) const$/;"	f	class:Request	signature:(void) const
+is_valid_method	includes/Request.hpp	/^		is_valid_method(std::string const &method) const;$/;"	p	class:Request	access:private	signature:(std::string const &method) const
+is_valid_method	srcs/Request.cpp	/^Request::is_valid_method(std::string const &method) const$/;"	f	class:Request	signature:(std::string const &method) const
+listenSocket	includes/Server.hpp	/^		fd_t				listenSocket(void);$/;"	p	class:Server	access:public	signature:(void)
 listenSocket	srcs/Server.cpp	/^Server::listenSocket()$/;"	f	class:Server	signature:()
-main	srcs/nonblocking_socket.cpp	/^int main(int ac, char **av)$/;"	f	signature:(int ac, char **av)
-main	srcs/socket.cpp	/^int main(int ac, char **av)$/;"	f	signature:(int ac, char **av)
+main	main_cgi.cpp	/^int main()$/;"	f	signature:()
 main	srcs/webserv.cpp	/^int main(int ac, char **av)$/;"	f	signature:(int ac, char **av)
+main	test/fakephp.cpp	/^int main()$/;"	f	signature:()
+makeIpStr	includes/Connection.hpp	/^		makeIpStr(void);$/;"	p	class:Connection	access:private	signature:(void)
+makeIpStr	srcs/Connection.cpp	/^Connection::makeIpStr(void)$/;"	f	class:Connection	signature:(void)
+makePortStr	includes/Connection.hpp	/^		makePortStr(void);$/;"	p	class:Connection	access:private	signature:(void)
+makePortStr	srcs/Connection.cpp	/^Connection::makePortStr(void)$/;"	f	class:Connection	signature:(void)
 max_fd	includes/Server.hpp	/^		static fd_t			max_fd;$/;"	m	class:Server	access:public
 max_fd	srcs/Server.cpp	/^fd_t		Server::max_fd = 0;$/;"	m	class:Server	file:
-operator =	includes/Server.hpp	/^		Server				&operator=(Server const &rhs);$/;"	p	class:Server	access:private	signature:(Server const &rhs)
+method_not_allowed	includes/Response.hpp	/^		method_not_allowed(void);$/;"	p	class:Response	access:public	signature:(void)
+method_not_allowed	srcs/Response.cpp	/^Response::method_not_allowed(void)$/;"	f	class:Response	signature:(void)
+method_token	includes/AHttpMessage.hpp	/^	std::string method_token;$/;"	m	struct:request_line	access:public
+not_found	includes/Response.hpp	/^		not_found(void);$/;"	p	class:Response	access:public	signature:(void)
+not_found	srcs/Response.cpp	/^Response::not_found(void)$/;"	f	class:Response	signature:(void)
+operator <<	includes/Request.hpp	/^operator<<(std::ostream &flux, Request const &request);$/;"	p	signature:(std::ostream &flux, Request const &request)
+operator <<	includes/Response.hpp	/^operator<<(std::ostream &flux, Response const &response);$/;"	p	signature:(std::ostream &flux, Response const &response)
+operator <<	srcs/Request.cpp	/^operator<<(std::ostream &flux, Request const &request)$/;"	f	signature:(std::ostream &flux, Request const &request)
+operator <<	srcs/Response.cpp	/^operator<<(std::ostream &flux, Response const &response)$/;"	f	signature:(std::ostream &flux, Response const &response)
+operator =	includes/Buffer.hpp	/^		&operator=(Buffer const &rhs);$/;"	p	class:Buffer	access:private	signature:(Buffer const &rhs)
+operator =	includes/CgiHandler.hpp	/^		CgiHandler	&operator=(CgiHandler const &rhs);$/;"	p	class:CgiHandler	access:private	signature:(CgiHandler const &rhs)
+operator =	includes/Connection.hpp	/^		Connection	&operator=(Connection const &rhs);$/;"	p	class:Connection	access:public	signature:(Connection const &rhs)
+operator =	includes/Request.hpp	/^		operator=(Request const &src);$/;"	p	class:Request	access:public	signature:(Request const &src)
+operator =	includes/RequestHandler.hpp	/^		&operator=(RequestHandler const &rhs);$/;"	p	class:RequestHandler	access:private	signature:(RequestHandler const &rhs)
+operator =	includes/Response.hpp	/^		operator=(Response const &src);$/;"	p	class:Response	access:public	signature:(Response const &src)
+operator =	srcs/Connection.cpp	/^Connection::operator=(Connection const &rhs)$/;"	f	class:Connection	signature:(Connection const &rhs)
+operator =	srcs/Request.cpp	/^Request::operator=(Request const &src)$/;"	f	class:Request	signature:(Request const &src)
+operator =	srcs/Response.cpp	/^Response::operator=(Response const &src)$/;"	f	class:Response	signature:(Response const &src)
 origin_fds	includes/Server.hpp	/^		static fd_set 		origin_fds;$/;"	m	class:Server	access:public
 origin_fds	srcs/Server.cpp	/^fd_set 		Server::origin_fds;$/;"	m	class:Server	file:
-parseRequest	srcs/webserv.cpp	/^int parseRequest(Server &server)$/;"	f	signature:(Server &server)
+parseBody	includes/request_parser.hpp	/^parseBody(RequestHandler &rh);$/;"	p	signature:(RequestHandler &rh)
+parseBody	srcs/request_parser.cpp	/^parseBody(RequestHandler &rh)$/;"	f	signature:(RequestHandler &rh)
+parseHeaders	includes/request_parser.hpp	/^parseHeaders(RequestHandler &rh);$/;"	p	signature:(RequestHandler &rh)
+parseHeaders	srcs/request_parser.cpp	/^parseHeaders(RequestHandler &rh)$/;"	f	signature:(RequestHandler &rh)
+parseHttpVersion	includes/request_parser.hpp	/^parseHttpVersion(RequestHandler &rh, int position);$/;"	p	signature:(RequestHandler &rh, int position)
+parseHttpVersion	srcs/request_parser.cpp	/^parseHttpVersion(RequestHandler &rh, int position)$/;"	f	signature:(RequestHandler &rh, int position)
+parseMethodToken	includes/request_parser.hpp	/^parseMethodToken(RequestHandler &rh);$/;"	p	signature:(RequestHandler &rh)
+parseMethodToken	srcs/request_parser.cpp	/^parseMethodToken(RequestHandler &rh)$/;"	f	signature:(RequestHandler &rh)
+parseRequest	includes/request_parser.hpp	/^parseRequest(std::map<fd_t, RequestHandler*>::iterator raw_request, Server *server);$/;"	p	signature:(std::map<fd_t, RequestHandler*>::iterator raw_request, Server *server)
+parseRequest	srcs/request_parser.cpp	/^parseRequest(std::map<fd_t, RequestHandler*>::iterator requesthandler, Server *server)$/;"	f	signature:(std::map<fd_t, RequestHandler*>::iterator requesthandler, Server *server)
+parseRequestURI	includes/request_parser.hpp	/^parseRequestURI(RequestHandler &rh, int position);$/;"	p	signature:(RequestHandler &rh, int position)
+parseRequestURI	srcs/request_parser.cpp	/^parseRequestURI(RequestHandler &rh, int position)$/;"	f	signature:(RequestHandler &rh, int position)
+parseStartLine	includes/request_parser.hpp	/^parseStartLine(RequestHandler &rh);$/;"	p	signature:(RequestHandler &rh)
+parseStartLine	srcs/request_parser.cpp	/^parseStartLine(RequestHandler &rh)$/;"	f	signature:(RequestHandler &rh)
+print_buffer	srcs/request_parser.cpp	/^void print_buffer(std::string str) \/\/ for debug purpose$/;"	f	signature:(std::string str)
+print_message	includes/AHttpMessage.hpp	/^		print_message(std::ostream &flux) const;$/;"	p	class:AHttpMessage	access:public	signature:(std::ostream &flux) const
+print_message	includes/Request.hpp	/^		print_message(std::ostream &flux) const;$/;"	p	class:Request	access:public	signature:(std::ostream &flux) const
+print_message	includes/Response.hpp	/^		print_message(std::ostream &flux) const;$/;"	p	class:Response	access:public	signature:(std::ostream &flux) const
+print_message	srcs/AHttpMessage.cpp	/^AHttpMessage::print_message(std::ostream &flux) const$/;"	f	class:AHttpMessage	signature:(std::ostream &flux) const
+print_message	srcs/Request.cpp	/^Request::print_message(std::ostream &flux) const$/;"	f	class:Request	signature:(std::ostream &flux) const
+print_message	srcs/Response.cpp	/^Response::print_message(std::ostream &flux) const$/;"	f	class:Response	signature:(std::ostream &flux) const
+protocol_version	includes/AHttpMessage.hpp	/^	std::string protocol_version;$/;"	m	struct:status_line	access:public
 read_fds	includes/Server.hpp	/^		static fd_set		read_fds;$/;"	m	class:Server	access:public
 read_fds	srcs/Server.cpp	/^fd_set		Server::read_fds;$/;"	m	class:Server	file:
-recvSend	includes/Server.hpp	/^		void				recvSend();$/;"	p	class:Server	access:private	signature:()
-setFdset	includes/Server.hpp	/^		static void			setFdset();$/;"	p	class:Server	access:public	signature:()
+reason_phrase	includes/AHttpMessage.hpp	/^	std::string	reason_phrase;$/;"	m	struct:status_line	access:public
+recvSend	includes/Server.hpp	/^		void				recvSend(void);$/;"	p	class:Server	access:private	signature:(void)
+request_URI	includes/AHttpMessage.hpp	/^	std::string request_URI;$/;"	m	struct:request_line	access:public
+request_line	includes/AHttpMessage.hpp	/^struct request_line$/;"	s
+request_line::http_version	includes/AHttpMessage.hpp	/^	std::string http_version;$/;"	m	struct:request_line	access:public
+request_line::method_token	includes/AHttpMessage.hpp	/^	std::string method_token;$/;"	m	struct:request_line	access:public
+request_line::request_URI	includes/AHttpMessage.hpp	/^	std::string request_URI;$/;"	m	struct:request_line	access:public
+sendCgi	includes/CgiHandler.hpp	/^		sendCgi(void);$/;"	p	class:CgiHandler	access:public	signature:(void)
+setFdset	includes/Server.hpp	/^		static void			setFdset(void);$/;"	p	class:Server	access:public	signature:(void)
 setFdset	srcs/Server.cpp	/^Server::setFdset()$/;"	f	class:Server	signature:()
-signalHandler	srcs/nonblocking_socket.cpp	/^void signalHandler(int signum)$/;"	f	signature:(int signum)
+setIdx	includes/Buffer.hpp	/^		setIdx(int);$/;"	p	class:Buffer	access:public	signature:(int)
+setIdx	includes/RequestHandler.hpp	/^		setIdx(int);$/;"	p	class:RequestHandler	access:public	signature:(int)
+setIdx	srcs/Buffer.cpp	/^Buffer::setIdx(int value)$/;"	f	class:Buffer	signature:(int value)
+setIdx	srcs/RequestHandler.cpp	/^RequestHandler::setIdx(int value)$/;"	f	class:RequestHandler	signature:(int value)
+set_body	includes/AHttpMessage.hpp	/^		set_body(std::string body) = 0;$/;"	p	class:AHttpMessage	access:public	signature:(std::string body)
+set_body	includes/Request.hpp	/^		set_body(std::string body);$/;"	p	class:Request	access:public	signature:(std::string body)
+set_body	includes/Response.hpp	/^		set_body(std::string body);$/;"	p	class:Response	access:public	signature:(std::string body)
+set_body	srcs/Request.cpp	/^Request::set_body(std::string body)$/;"	f	class:Request	signature:(std::string body)
+set_body	srcs/Response.cpp	/^Response::set_body(std::string body)$/;"	f	class:Response	signature:(std::string body)
+set_header	includes/AHttpMessage.hpp	/^		set_header(std::string const &key, std::string const &value) = 0;$/;"	p	class:AHttpMessage	access:public	signature:(std::string const &key, std::string const &value)
+set_header	includes/Request.hpp	/^		set_header(std::string const &key, std::string const &value);$/;"	p	class:Request	access:public	signature:(std::string const &key, std::string const &value)
+set_header	includes/Response.hpp	/^		set_header(std::string const &key, std::string const &value);$/;"	p	class:Response	access:public	signature:(std::string const &key, std::string const &value)
+set_header	srcs/Request.cpp	/^Request::set_header(std::string const &key, std::string const &value)$/;"	f	class:Request	signature:(std::string const &key, std::string const &value)
+set_header	srcs/Response.cpp	/^Response::set_header(std::string const &key, std::string const &value)$/;"	f	class:Response	signature:(std::string const &key, std::string const &value)
+set_header_initialized	includes/Request.hpp	/^		set_header_initialized(bool value);$/;"	p	class:Request	access:public	signature:(bool value)
+set_header_initialized	srcs/Request.cpp	/^Request::set_header_initialized(bool value)$/;"	f	class:Request	signature:(bool value)
+set_http_version	includes/Request.hpp	/^		set_http_version(std::string const &http_version);$/;"	p	class:Request	access:public	signature:(std::string const &http_version)
+set_http_version	srcs/Request.cpp	/^Request::set_http_version(std::string const &http_version)$/;"	f	class:Request	signature:(std::string const &http_version)
+set_method_token	includes/Request.hpp	/^		set_method_token(std::string const &method_token);$/;"	p	class:Request	access:public	signature:(std::string const &method_token)
+set_method_token	srcs/Request.cpp	/^Request::set_method_token(std::string const &method_token)$/;"	f	class:Request	signature:(std::string const &method_token)
+set_protocol_version	includes/Response.hpp	/^		set_protocol_version(std::string const &protocol_version);$/;"	p	class:Response	access:public	signature:(std::string const &protocol_version)
+set_protocol_version	srcs/Response.cpp	/^Response::set_protocol_version(std::string const &protocol_version)$/;"	f	class:Response	signature:(std::string const &protocol_version)
+set_reason_phrase	includes/Response.hpp	/^		set_reason_phrase(std::string const &reason_phrase);$/;"	p	class:Response	access:public	signature:(std::string const &reason_phrase)
+set_reason_phrase	srcs/Response.cpp	/^Response::set_reason_phrase(std::string const &reason_phrase)$/;"	f	class:Response	signature:(std::string const &reason_phrase)
+set_request_URI	includes/Request.hpp	/^		set_request_URI(std::string const &request_URI);$/;"	p	class:Request	access:public	signature:(std::string const &request_URI)
+set_request_URI	srcs/Request.cpp	/^Request::set_request_URI(std::string const &request_URI)$/;"	f	class:Request	signature:(std::string const &request_URI)
+set_request_finalized	includes/Request.hpp	/^		set_request_finalized(bool value);$/;"	p	class:Request	access:public	signature:(bool value)
+set_request_finalized	srcs/Request.cpp	/^Request::set_request_finalized(bool value)$/;"	f	class:Request	signature:(bool value)
+set_start_line_initilized	includes/Request.hpp	/^		set_start_line_initilized(bool value);$/;"	p	class:Request	access:public	signature:(bool value)
+set_start_line_initilized	srcs/Request.cpp	/^Request::set_start_line_initilized(bool value)$/;"	f	class:Request	signature:(bool value)
+set_status_code	includes/Response.hpp	/^		set_status_code(int status_code);$/;"	p	class:Response	access:public	signature:(int status_code)
+set_status_code	srcs/Response.cpp	/^Response::set_status_code(int status_code)$/;"	f	class:Response	signature:(int status_code)
+start	includes/Buffer.hpp	/^			start,$/;"	e	enum:Buffer::e_request_state
+start	includes/RequestHandler.hpp	/^			start,$/;"	e	enum:RequestHandler::e_request_state
+status_code	includes/AHttpMessage.hpp	/^	int 		status_code;$/;"	m	struct:status_line	access:public
+status_line	includes/AHttpMessage.hpp	/^struct status_line$/;"	s
+status_line::protocol_version	includes/AHttpMessage.hpp	/^	std::string protocol_version;$/;"	m	struct:status_line	access:public
+status_line::reason_phrase	includes/AHttpMessage.hpp	/^	std::string	reason_phrase;$/;"	m	struct:status_line	access:public
+status_line::status_code	includes/AHttpMessage.hpp	/^	int 		status_code;$/;"	m	struct:status_line	access:public
+std::AHttpMessage::get_date	srcs/AHttpMessage.cpp	/^AHttpMessage::get_date(void) const$/;"	f	class:std::AHttpMessage	signature:(void) const
 transferToBuffer	includes/Server.hpp	/^		void				transferToBuffer(fd_t connection_fd, char *buf);$/;"	p	class:Server	access:private	signature:(fd_t connection_fd, char *buf)
 transferToBuffer	srcs/Server.cpp	/^Server::transferToBuffer(fd_t connection_fd, char *buf)$/;"	f	class:Server	signature:(fd_t connection_fd, char *buf)
-watchInput	includes/Server.hpp	/^		void				watchInput();$/;"	p	class:Server	access:public	signature:()
+watchInput	includes/Server.hpp	/^		void				watchInput(void);$/;"	p	class:Server	access:public	signature:(void)
 watchInput	srcs/Server.cpp	/^Server::watchInput()$/;"	f	class:Server	signature:()
 what	includes/Server.hpp	/^			what() const$/;"	f	class:Server::ConnectionException	access:public	signature:() const
 what	includes/Server.hpp	/^			what() const$/;"	f	class:Server::ListenException	access:public	signature:() const
 write_fds	includes/Server.hpp	/^		static fd_set 		write_fds;$/;"	m	class:Server	access:public
 write_fds	srcs/Server.cpp	/^fd_set 		Server::write_fds;$/;"	m	class:Server	file:
+~Buffer	includes/Buffer.hpp	/^		virtual	~Buffer(void);$/;"	p	class:Buffer	access:public	signature:(void)
+~Buffer	srcs/Buffer.cpp	/^Buffer::~Buffer(void)$/;"	f	class:Buffer	signature:(void)
+~CgiHandler	includes/CgiHandler.hpp	/^		virtual	~CgiHandler(void);$/;"	p	class:CgiHandler	access:public	signature:(void)
+~CgiHandler	srcs/CgiHandler.cpp	/^CgiHandler::~CgiHandler(void)$/;"	f	class:CgiHandler	signature:(void)
+~Connection	includes/Connection.hpp	/^		~Connection(void);$/;"	p	class:Connection	access:public	signature:(void)
+~Connection	srcs/Connection.cpp	/^Connection::~Connection(void)$/;"	f	class:Connection	signature:(void)
+~Request	includes/Request.hpp	/^		virtual ~Request(void);$/;"	p	class:Request	access:public	signature:(void)
+~Request	srcs/Request.cpp	/^Request::~Request(void) {}$/;"	f	class:Request	signature:(void)
+~RequestHandler	includes/RequestHandler.hpp	/^		virtual	~RequestHandler(void);$/;"	p	class:RequestHandler	access:public	signature:(void)
+~RequestHandler	srcs/RequestHandler.cpp	/^RequestHandler::~RequestHandler(void)$/;"	f	class:RequestHandler	signature:(void)
+~Response	includes/Response.hpp	/^		virtual ~Response(void);$/;"	p	class:Response	access:public	signature:(void)
+~Response	srcs/Response.cpp	/^Response::~Response(void)$/;"	f	class:Response	signature:(void)
 ~Server	includes/Server.hpp	/^		virtual ~Server(void);$/;"	p	class:Server	access:public	signature:(void)
 ~Server	srcs/Server.cpp	/^Server::~Server(void)$/;"	f	class:Server	signature:(void)

@@ -3,16 +3,13 @@
 
 int handleRequestBuffers(Server *server)
 {
-	std::map<fd_t, RequestHandler*> request_handlers = server->getRefRequestHandlers();
 	int ret;
 
-	if (request_handlers.size() == 0)
+	if (server->getRefConnections().size() == 0)
 		return 0;
-	std::map<fd_t, RequestHandler*>::iterator it;
-	for (it = request_handlers.begin();
-			it != request_handlers.end();
-			it++)
-	ret = parseRequest(it, server);
+	std::map<fd_t, Connection*>::iterator it = server->getRefConnections().begin();
+	for (; it != server->getRefConnections().end(); it++)
+		ret = parseRequest(it, server);
 	return ret;
 }
 

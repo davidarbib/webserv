@@ -11,8 +11,8 @@
 # include <arpa/inet.h>
 # include <unistd.h>
 # include <map>
-# include "RequestHandler.hpp"
 # include "Connection.hpp"
+# include "Buffer.hpp"
 # include "typedefs.hpp"
 
 # define DELAY		1
@@ -45,8 +45,8 @@ class Server
 		Server(std::string, std::string, uint16_t, std::string, std::string);
 		virtual ~Server(void);
 
-		std::map<fd_t, RequestHandler*>	&getRefRequestHandlers();
-		std::map<fd_t, RequestHandler*>	getRequestHandlers() const;
+		std::map<fd_t, Connection*> &getRefConnections(void);
+		std::map<fd_t, Connection*> getConnections(void) const;
 
 		fd_t				listenSocket(void);
 		bool				isThereConnectionRequest(void);
@@ -69,7 +69,6 @@ class Server
 		std::string 					_error_logs_path;
 		fd_t							_listen_fd;
 		std::map<fd_t, Connection*>		_connections;
-		std::map<fd_t, RequestHandler*>	_request_handlers;
 
 		void				transferToBuffer(fd_t connection_fd, char *buf);
 		void				recvSend(void);

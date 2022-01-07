@@ -6,13 +6,12 @@
 # include "typedefs.hpp"
 # include <sstream>
 # include <arpa/inet.h>
+# include "Buffer.hpp"
 
 class Connection
 {
 	public:
 		Connection(fd_t, unsigned long, unsigned short);
-		Connection	&operator=(Connection const &rhs);
-		Connection(Connection const &src);
 		~Connection(void);
 
 		/*
@@ -34,8 +33,20 @@ class Connection
 
 		std::string
 		getClientPortStr(void) const;
+		
+		Buffer &
+		getInBuffer(void);
+
+		Buffer &
+		getOutBuffer(void);
+		
+		void
+		fillBuffer(char *buf);
 
 	private:
+		Connection	&operator=(Connection const &rhs);
+		Connection(Connection const &src);
+
 		/*
 		** ! _client_ip and _client_port are in network format
 		*/
@@ -44,6 +55,8 @@ class Connection
 		unsigned short	_client_port;
 		std::string		_client_ip_str;
 		std::string		_client_port_str;
+		Buffer			_in_buffer;
+		Buffer			_out_buffer;
 
 		Connection(void);
 
