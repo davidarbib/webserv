@@ -23,19 +23,19 @@ Response::~Response(void)
 { }
 
 void
-Response::set_protocol_version(std::string const &protocol_version)
+Response::setProtocolVersion(std::string const &protocol_version)
 {
 	this->_start_line.protocol_version = protocol_version;
 }
 
 void
-Response::set_status_code(int status_code)
+Response::setStatusCode(int status_code)
 {
 	this->_start_line.status_code = status_code;
 }
 
 void
-Response::set_reason_phrase(std::string const &reason_phrase)
+Response::setReasonPhrase(std::string const &reason_phrase)
 {
 	this->_start_line.reason_phrase = reason_phrase;
 }
@@ -61,7 +61,7 @@ Response::printMessage(std::ostream &flux) const
 }
 
 void
-Response::bad_request(void)
+Response::badRequest(void)
 {
 	if (this->_error_lock == false)
 	{
@@ -77,7 +77,7 @@ Response::bad_request(void)
 }
 
 void
-Response::method_not_allowed(void)
+Response::methodNotAllowed(void)
 {
 	if (this->_error_lock == false)
 	{
@@ -93,7 +93,7 @@ Response::method_not_allowed(void)
 }
 
 void
-Response::not_found(void)
+Response::notFound(void)
 {
 	if (this->_error_lock == false)
 	{
