@@ -8,7 +8,7 @@ Request::Request(void) : _response(),
 	this->set_header("Content-Length", "0");
 	this->set_header("Transfer-Encoding", std::string());
 	this->_body = std::string();
-	this->init_method_list();
+	this->initMethodList();
 }
 
 Request::Request(Request & cpy)
@@ -30,7 +30,7 @@ Request::~Request(void) {}
 void
 Request::set_method_token(std::string const &method_token)
 {
-	if (this->is_allowed_method(method_token) == true)
+	if (this->isAllowedMethod(method_token) == true)
 		this->_start_line.method_token = method_token;
 }
 
@@ -60,7 +60,7 @@ Request::set_header(std::string const &key, std::string const &value)
 }
 
 void
-Request::init_method_list(void)
+Request::initMethodList(void)
 {
 	this->_method_list[0] = "GET";
 	this->_method_list[1] = "POST";
@@ -69,7 +69,7 @@ Request::init_method_list(void)
 }
 
 bool
-Request::is_allowed_method(std::string const &method) const
+Request::isAllowedMethod(std::string const &method) const
 {
 	for (int i = 0; i < METHOD_NB; i++)
 	{
@@ -80,7 +80,7 @@ Request::is_allowed_method(std::string const &method) const
 }
 
 bool
-Request::is_valid_method(std::string const &method) const
+Request::isValidMethod(std::string const &method) const
 {
 	for (size_t i = 0; i < method.length(); i++)
 	{

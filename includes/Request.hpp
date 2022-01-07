@@ -20,13 +20,13 @@ class Request : public AHttpMessage
 		bool			_request_finalized;
 
 		void
-		init_method_list(void);
+		initMethodList(void);
 
 		bool
-		is_allowed_method(std::string const &method) const;
+		isAllowedMethod(std::string const &method) const;
 
 		bool
-		is_valid_method(std::string const &method) const;
+		isValidMethod(std::string const &method) const;
 
 	public:
 
