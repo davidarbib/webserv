@@ -70,7 +70,7 @@ Response::bad_request(void)
 		this->_headers["Content-Type"] = "text/html";
 		this->_headers["Content-Length"] = "42";
 		this->_headers["Server"] = SERVER_VERSION;
-		this->_headers["Date"] = get_date();
+		this->_headers["Date"] = getDate();
 		this->_headers["Connection"] = "close";
 		this->_error_lock = true;
 	}
@@ -84,7 +84,7 @@ Response::method_not_allowed(void)
 		this->_start_line.status_code = 405;
 		this->_start_line.reason_phrase = "Not Allowed";
 		this->_headers["Server"] = SERVER_VERSION;
-		this->_headers["Date"] = get_date();
+		this->_headers["Date"] = getDate();
 		this->_headers["Content-Type"] = "text/html";
 		this->_headers["Content-Length"] = "42";
 		this->_headers["Connection"] = "keep-alive";
@@ -100,7 +100,7 @@ Response::not_found(void)
 		this->_start_line.status_code = 404;
 		this->_start_line.reason_phrase = "Not Found";
 		this->_headers["Server"] = SERVER_VERSION;
-		this->_headers["Date"] = get_date();
+		this->_headers["Date"] = getDate();
 		this->_headers["Content-Type"] = "text/html";
 		this->_headers["Content-Length"] = "42";
 		this->_headers["Connection"] = "keep-alive";

@@ -18,13 +18,13 @@ AHttpMessage::printMessage(std::ostream &flux) const
 }
 
 std::string &
-AHttpMessage::get_body(void)
+AHttpMessage::getBody(void)
 {
 	return this->_body;
 }
 
 std::string const
-AHttpMessage::get_date(void) const
+AHttpMessage::getDate(void) const
 {
 	time_t 		raw_time;
 	struct 		tm *ptm;

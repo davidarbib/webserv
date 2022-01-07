@@ -40,13 +40,13 @@ class AHttpMessage
 		setHeader(std::string const &key, std::string const &value) = 0;
 
 		std::string &
-		get_body(void);
+		getBody(void);
 
 		void
 		printMessage(std::ostream &flux) const;
 
 		std::string const
-		get_date(void) const;
+		getDate(void) const;
 
 };
 

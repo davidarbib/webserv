@@ -154,7 +154,7 @@ getBodyWithContentLength(RequestHandler &rh, int index)
 int
 getChunkOfBody(RequestHandler &rh, int index)
 {
-	std::string tmp(rh.getRequest()->get_body());
+	std::string tmp(rh.getRequest()->getBody());
 	std::string body;
 	int sublen = 0;
 	while(rh.getBuffer()[index])
