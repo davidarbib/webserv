@@ -1,7 +1,7 @@
 #include "AHttpMessage.hpp"
 
 void
-AHttpMessage::print_message(std::ostream &flux) const
+AHttpMessage::printMessage(std::ostream &flux) const
 {
 	hash_map::const_iterator it;
 	flux << "---------------------" << "Headers :" << "---------------------" << std::endl;

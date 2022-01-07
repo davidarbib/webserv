@@ -5,8 +5,8 @@ Request::Request(void) : _response(),
 						 _headers_initialized(false),
 						 _request_finalized(false) 
 {
-	this->set_header("Content-Length", "0");
-	this->set_header("Transfer-Encoding", std::string());
+	this->setHeader("Content-Length", "0");
+	this->setHeader("Transfer-Encoding", std::string());
 	this->_body = std::string();
 	this->initMethodList();
 }
@@ -28,33 +28,33 @@ Request::operator=(Request const &src)
 Request::~Request(void) {}
 
 void
-Request::set_method_token(std::string const &method_token)
+Request::setMethodToken(std::string const &method_token)
 {
 	if (this->isAllowedMethod(method_token) == true)
 		this->_start_line.method_token = method_token;
 }
 
 void
-Request::set_request_URI(std::string const &request_URI)
+Request::setRequestURI(std::string const &request_URI)
 {
 	this->_start_line.request_URI = request_URI;
 }
 
 void
-Request::set_http_version(std::string const &http_version)
+Request::setHttpVersion(std::string const &http_version)
 {
 	this->_start_line.http_version = http_version;
 	this->_start_line_initialized = true;
 }
 
 void
-Request::set_body(std::string body)
+Request::setBody(std::string body)
 {
 	this->_body = body;
 }
 
 void
-Request::set_header(std::string const &key, std::string const &value)
+Request::setHeader(std::string const &key, std::string const &value)
 {
 	this->_headers[key] = value;
 }
@@ -91,12 +91,12 @@ Request::isValidMethod(std::string const &method) const
 }
 
 void
-Request::print_message(std::ostream &flux) const
+Request::printMessage(std::ostream &flux) const
 {
 	flux << "---------------------" << "Start line :" << "---------------------" << std::endl;
 	if (this->_start_line_initialized)
 		flux << this->_start_line.method_token << " " << this->_start_line.request_URI << " " << this->_start_line.http_version << std::endl;
-	AHttpMessage::print_message(flux);
+	AHttpMessage::printMessage(flux);
 }
 
 bool
@@ -177,6 +177,6 @@ Request::hadOctetInBody(char c)
 std::ostream&
 operator<<(std::ostream &flux, Request const &request)
 {
-	request.print_message(flux);
+	request.printMessage(flux);
 	return flux;
 }

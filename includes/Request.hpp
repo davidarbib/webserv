@@ -37,22 +37,22 @@ class Request : public AHttpMessage
 		virtual ~Request(void);
 
 		void
-		set_method_token(std::string const &method_token);
+		setMethodToken(std::string const &method_token);
 
 		void
-		set_request_URI(std::string const &request_URI);
+		setRequestURI(std::string const &request_URI);
 
 		void
-		set_http_version(std::string const &http_version);
+		setHttpVersion(std::string const &http_version);
 
 		void
-		set_body(std::string body);
+		setBody(std::string body);
 
 		void
-		set_header(std::string const &key, std::string const &value);
+		setHeader(std::string const &key, std::string const &value);
 
 		void
-		print_message(std::ostream &flux) const;
+		printMessage(std::ostream &flux) const;
 
 		void
 		set_start_line_initilized(bool value);

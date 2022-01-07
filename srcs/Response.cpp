@@ -41,23 +41,23 @@ Response::set_reason_phrase(std::string const &reason_phrase)
 }
 
 void
-Response::set_body(std::string body)
+Response::setBody(std::string body)
 {
 	this->_body = body;
 }
 
 void
-Response::set_header(std::string const &key, std::string const &value)
+Response::setHeader(std::string const &key, std::string const &value)
 {
 	this->_headers[key] = value;
 }
 
 void
-Response::print_message(std::ostream &flux) const
+Response::printMessage(std::ostream &flux) const
 {
 	flux << "---------------------" << "Start line :" << "---------------------" << std::endl;
 	flux << this->_start_line.protocol_version << " " << this->_start_line.status_code << " " << this->_start_line.reason_phrase << std::endl;
-	AHttpMessage::print_message(flux);
+	AHttpMessage::printMessage(flux);
 }
 
 void
@@ -111,6 +111,6 @@ Response::not_found(void)
 std::ostream &
 operator<<(std::ostream &flux, Response const &response)
 {
-	response.print_message(flux);
+	response.printMessage(flux);
 	return flux;
 }

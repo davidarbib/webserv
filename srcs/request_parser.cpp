@@ -23,7 +23,7 @@ parseMethodToken(RequestHandler &rh)
 		method_token += rh.getBuffer()[index];
 		index++;
 	}
-	rh.getRequest()->set_method_token(method_token);
+	rh.getRequest()->setMethodToken(method_token);
 	return index + NEXT_SPACE_TOKEN;
 }
 
@@ -38,7 +38,7 @@ parseRequestURI(RequestHandler &rh, int position)
 		request_URI += rh.getBuffer()[index];
 		index++;
 	}
-	rh.getRequest()->set_request_URI(request_URI);
+	rh.getRequest()->setRequestURI(request_URI);
 	return index + NEXT_SPACE_TOKEN;
 }
 
@@ -53,7 +53,7 @@ parseHttpVersion(RequestHandler &rh, int position)
 		http_version += rh.getBuffer()[index];
 		index++;
 	}
-	rh.getRequest()->set_http_version(http_version);
+	rh.getRequest()->setHttpVersion(http_version);
 	return index + CRLF;
 }
 
@@ -87,7 +87,7 @@ getOneHeader(RequestHandler &rh, int position)
 		value += rh.getBuffer()[index];
 		index++;
 	}
-	rh.getRequest()->set_header(key, value);
+	rh.getRequest()->setHeader(key, value);
 	if (isEndSection(rh.getBuffer(), index))
 	{
 		rh.getRequest()->set_header_initialized(true);
@@ -146,7 +146,7 @@ getBodyWithContentLength(RequestHandler &rh, int index)
 	ss << rh.getRequest()->get_header_value("Content-Length");
 	ss >> content_length;
 	body.assign(rh.getBuffer(), index, content_length);
-	rh.getRequest()->set_body(body);
+	rh.getRequest()->setBody(body);
 	rh.getRequest()->set_request_finalized(true);
 	return index + content_length;
 }
@@ -164,7 +164,7 @@ getChunkOfBody(RequestHandler &rh, int index)
 	}
 	body.assign(rh.getBuffer(), rh.getIdx(), sublen);
 	tmp += body;
-	rh.getRequest()->set_body(tmp);
+	rh.getRequest()->setBody(tmp);
 	return index;
 }
 
@@ -194,7 +194,7 @@ parseBody(RequestHandler &rh)
 			sublen++;
 		}
 		body.assign(rh.getBuffer(), rh.getIdx(), sublen);
-		rh.getRequest()->set_body(body);
+		rh.getRequest()->setBody(body);
 		rh.getRequest()->set_request_finalized(true);
 	}
 	return index;
