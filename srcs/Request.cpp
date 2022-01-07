@@ -132,37 +132,37 @@ Request::get_response(void)
 }
 
 void
-Request::set_header_initialized(bool value)
+Request::setHeaderInitialized(bool value)
 {
 	this->_headers_initialized = value;
 }
 
 void
-Request::set_start_line_initilized(bool value)
+Request::setStartLineInitialized(bool value)
 {
 	this->_start_line_initialized = value;
 }
 
 void
-Request::set_request_finalized(bool value)
+Request::setRequestFinalized(bool value)
 {
 	this->_request_finalized = value;
 }
 
 bool
-Request::is_start_line_initialized(void) const
+Request::iStartLineInitialized(void) const
 {
 	return this->_start_line_initialized;
 }
 
 bool
-Request::is_headers_initialized(void) const
+Request::isHeadersInitialized(void) const
 {
 	return this->_headers_initialized;
 }
 
 bool
-Request::is_request_finalized(void) const
+Request::isRequestFinalized(void) const
 {
 	return this->_request_finalized;
 }

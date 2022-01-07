@@ -65,7 +65,7 @@ parseStartLine(RequestHandler &rh)
 	request_position = parseMethodToken(rh);
 	request_position = parseRequestURI(rh, request_position);
 	request_position = parseHttpVersion(rh, request_position);
-	rh.getRequest()->set_start_line_initilized(true);
+	rh.getRequest()->setStartLineInitialized(true);
 	return request_position;
 }
 
@@ -90,7 +90,7 @@ getOneHeader(RequestHandler &rh, int position)
 	rh.getRequest()->setHeader(key, value);
 	if (isEndSection(rh.getBuffer(), index))
 	{
-		rh.getRequest()->set_header_initialized(true);
+		rh.getRequest()->setHeaderInitialized(true);
 		index += CRLF;
 	}
 	return index + CRLF;
@@ -115,8 +115,8 @@ parseHeaders(RequestHandler &rh)
 	int index = rh.getIdx();
 
 	index = getOneHeader(rh, index);
-	if (rh.getRequest()->is_headers_initialized() == true)
-		rh.getRequest()->set_request_finalized(!has_body(rh));
+	if (rh.getRequest()->isHeadersInitialized() == true)
+		rh.getRequest()->setRequestFinalized(!has_body(rh));
 	return index;
 }
 
@@ -147,7 +147,7 @@ getBodyWithContentLength(RequestHandler &rh, int index)
 	ss >> content_length;
 	body.assign(rh.getBuffer(), index, content_length);
 	rh.getRequest()->setBody(body);
-	rh.getRequest()->set_request_finalized(true);
+	rh.getRequest()->setRequestFinalized(true);
 	return index + content_length;
 }
 
@@ -179,7 +179,7 @@ parseBody(RequestHandler &rh)
 	{
 		if (rh.getBuffer()[index] == 0)
 		{
-			rh.getRequest()->set_request_finalized(true);
+			rh.getRequest()->setRequestFinalized(true);
 			return index;
 		}
 		index = getChunkOfBody(rh, index);
@@ -195,7 +195,7 @@ parseBody(RequestHandler &rh)
 		}
 		body.assign(rh.getBuffer(), rh.getIdx(), sublen);
 		rh.getRequest()->setBody(body);
-		rh.getRequest()->set_request_finalized(true);
+		rh.getRequest()->setRequestFinalized(true);
 	}
 	return index;
 }
@@ -219,15 +219,15 @@ parseRequest(std::map<fd_t, RequestHandler*>::iterator requesthandler, Server *s
 {
 	(void)server;
 
-	if (requesthandler->second->getRequest()->is_request_finalized() == true)
+	if (requesthandler->second->getRequest()->isRequestFinalized() == true)
 		return 1;
 	if (is_complete_line(requesthandler->second->getBuffer(), requesthandler->second->getIdx()))
 	{
-		if (requesthandler->second->getRequest()->is_start_line_initialized() == false)
+		if (requesthandler->second->getRequest()->iStartLineInitialized() == false)
 			requesthandler->second->setIdx(parseStartLine(*requesthandler->second));
-		else if (requesthandler->second->getRequest()->is_headers_initialized() == false)
+		else if (requesthandler->second->getRequest()->isHeadersInitialized() == false)
 			requesthandler->second->setIdx(parseHeaders(*requesthandler->second));
-		else if (requesthandler->second->getRequest()->is_request_finalized() == false)
+		else if (requesthandler->second->getRequest()->isRequestFinalized() == false)
 		{
 			requesthandler->second->setIdx(parseBody(*requesthandler->second));
 		}

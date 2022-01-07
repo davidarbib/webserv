@@ -55,22 +55,22 @@ class Request : public AHttpMessage
 		printMessage(std::ostream &flux) const;
 
 		void
-		set_start_line_initilized(bool value);
+		setStartLineInitialized(bool value);
 
 		void
-		set_header_initialized(bool value);
+		setHeaderInitialized(bool value);
 
 		void
-		set_request_finalized(bool value);
+		setRequestFinalized(bool value);
 
 		bool
-		is_start_line_initialized(void) const;
+		iStartLineInitialized(void) const;
 
 		bool
-		is_headers_initialized(void) const;
+		isHeadersInitialized(void) const;
 
 		bool
-		is_request_finalized(void) const;
+		isRequestFinalized(void) const;
 
 		bool
 		has_body(void) const;
