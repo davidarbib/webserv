@@ -1,14 +1,12 @@
 #include "RequestHandler.hpp"
 
-RequestHandler::RequestHandler(Connection *connection, Buffer &buffer):
-	_in_buffer(buffer),
+RequestHandler::RequestHandler(Connection *connection):
 	_request(new Request),
-	_connection(connection)
+	_connection(*connection)
 {
 }
 
 RequestHandler::RequestHandler(RequestHandler const &src):
-	_in_buffer(src._in_buffer),
 	_request(src._request),
 	_connection(src._connection)
 {
@@ -22,31 +20,31 @@ RequestHandler::~RequestHandler(void)
 void
 RequestHandler::fillBuffer(char *raw_buffer)
 {
-	_in_buffer.fillBuffer(raw_buffer);
+	_connection.getInBuffer().fillBuffer(raw_buffer);
 }
 
 void
 RequestHandler::setIdx(int value)
 {
-	_in_buffer.setIdx(value);
+	_connection.getInBuffer().setIdx(value);
 }
 
 void
 RequestHandler::incIdx(int value)
 {
-	_in_buffer.incIdx(value);
+	_connection.getInBuffer().incIdx(value);
 }
 
 int
 RequestHandler::getIdx(void) const
 {
-	return _in_buffer.getIdx();
+	return _connection.getInBuffer().getIdx();
 }
 
 std::string &
 RequestHandler::getBuffer(void)
 {
-	return _in_buffer.getBuffer();
+	return _connection.getInBuffer().getBuffer();
 }
 
 Request *
@@ -69,5 +67,5 @@ RequestHandler::isEndLine(std::string &line, int index)
 void
 RequestHandler::clearBuffer(int index)
 {
-	_in_buffer.clearBuffer(index);
+	_connection.getInBuffer().clearBuffer(index);
 }

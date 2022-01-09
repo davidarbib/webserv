@@ -6,7 +6,7 @@
 #    By: darbib <darbib@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/11/06 14:53:36 by darbib            #+#    #+#              #
-#    Updated: 2022/01/06 14:06:05 by darbib           ###   ########.fr        #
+#    Updated: 2022/01/09 19:14:39 by darbib           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 SHELL = /bin/zsh
@@ -53,6 +53,7 @@ SRC = AHttpMessage.cpp \
 	  Server.cpp \
 	  request_parser.cpp \
 	  CgiHandler.cpp \
+	  Buffer.cpp \
 	  Connection.cpp
 
 ifeq ($(CGI_UT), 1)

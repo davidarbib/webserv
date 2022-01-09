@@ -6,16 +6,13 @@
 # include <iostream>
 # include "Request.hpp"
 # include "Connection.hpp"
-# include "Buffer.hpp"
 
 class RequestHandler
 {
 	private:
 
-		int						_idx;
-		Buffer					&_in_buffer;
 		Request					*_request;
-		Connection				*_connection;
+		Connection				&_connection;
 
 		RequestHandler
 		&operator=(RequestHandler const &rhs);
@@ -24,7 +21,7 @@ class RequestHandler
 
 	public:
 
-		RequestHandler(Connection *connection, Buffer &buffer);
+		RequestHandler(Connection *connection);
 
 		RequestHandler(RequestHandler const &src);
 

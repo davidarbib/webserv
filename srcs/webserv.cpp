@@ -1,17 +1,18 @@
 #include "Server.hpp"
 #include "request_parser.hpp"
-#include "RequestParser.hpp"
+#include "RequestHandler.hpp"
+#include <deque>
 
-int handleRequestBuffers(RequestParser &parser, Server *server)
+int handleRequestBuffers(Server &server)
 {
-	int ret;
+	//int ret;
 
-	if (server->getRefConnections().size() == 0)
+	if (server.getRefConnections().size() == 0)
 		return 0;
-	std::map<fd_t, Connection*>::iterator it = server->getRefConnections().begin();
-	for (; it != server->getRefConnections().end(); it++)
-		ret = parser.parseRequest(it->second->getInBuffer(), *server);
-	return ret;
+	//std::map<fd_t, Connection*>::iterator it = server.getRefConnections().begin();
+	//for (; it != server.getRefConnections().end(); it++)
+	//	ret = parseRequest(it->second->getInBuffer(), server);
+	return 0;
 }
 
 int main(int ac, char **av)
@@ -20,7 +21,7 @@ int main(int ac, char **av)
 	(void)av;
 	struct timeval		tv;
 	std::vector<Server*> servers;
-	RequestParser		parser;
+	std::deque<RequestHandler> request_handlers;
 
 	Server::max_fd = 0;
 	Server::initFdset();
@@ -38,7 +39,7 @@ int main(int ac, char **av)
 		if (servers[0]->isThereConnectionRequest())
 			servers[0]->createConnection();
 		servers[0]->watchInput();
-		handleRequestBuffers(parser, servers[0]);
+		handleRequestBuffers(*servers[0]);
 		//writes
 	}
 	return 0;
