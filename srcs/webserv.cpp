@@ -1,7 +1,8 @@
 #include "Server.hpp"
 #include "request_parser.hpp"
+#include "RequestParser.hpp"
 
-int handleRequestBuffers(Server *server)
+int handleRequestBuffers(RequestParser &parser, Server *server)
 {
 	int ret;
 
@@ -9,7 +10,7 @@ int handleRequestBuffers(Server *server)
 		return 0;
 	std::map<fd_t, Connection*>::iterator it = server->getRefConnections().begin();
 	for (; it != server->getRefConnections().end(); it++)
-		ret = parseRequest(it, server);
+		ret = parser.parseRequest(it->second->getInBuffer(), *server);
 	return ret;
 }
 
@@ -19,6 +20,7 @@ int main(int ac, char **av)
 	(void)av;
 	struct timeval		tv;
 	std::vector<Server*> servers;
+	RequestParser		parser;
 
 	Server::max_fd = 0;
 	Server::initFdset();
@@ -36,7 +38,7 @@ int main(int ac, char **av)
 		if (servers[0]->isThereConnectionRequest())
 			servers[0]->createConnection();
 		servers[0]->watchInput();
-		handleRequestBuffers(servers[0]);
+		handleRequestBuffers(parser, servers[0]);
 		//writes
 	}
 	return 0;

@@ -215,8 +215,7 @@ void print_buffer(std::string str) // for debug purpose
 }
 
 int
-RequestParser::parseRequest(std::map<fd_t, RequestHandler*>::iterator requesthandler,
-							Server *server)
+RequestParser::parseRequest(Buffer &buffer, Server &server)
 {
 	(void)server;
 

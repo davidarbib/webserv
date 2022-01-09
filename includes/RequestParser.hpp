@@ -20,8 +20,8 @@ class RequestParser
 		virtual ~RequestParser();
 
 		int
-		parseRequest(std::map<fd_t, RequestHandler*>::iterator raw_request,
-					Server *server); 
+		parseRequest(Buffer &buffer, Server &server);
+
 	private :	
 		std::map<fd_t, RequestHandler*> request_handlers;
 
