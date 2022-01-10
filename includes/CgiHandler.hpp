@@ -5,8 +5,10 @@
 # include <iostream>
 # include <algorithm>
 # include <cstdio>
+# include <cstring>
 # include <map>
 # include "Request.hpp"
+# include "safe_wrappers.hpp"
 
 # define QUERYCHAR '?'
 
@@ -26,16 +28,17 @@ class CgiHandler
 		std::string
 		extractQuery(std::string); //TODO go private
 
+		char **
+		getCgiEnv(void); //TODO go private 
+
 	private:
 		CgiHandler(CgiHandler const &src);
 		CgiHandler	&operator=(CgiHandler const &rhs);
 
-		char **
-		getCgiEnv(void);
 		
 		void
 		addCgiEnv(const std::string&, const std::string&);
-
+		
 		std::string							_request;
 		std::map<std::string, std::string>	_cgi_env;
 		FILE								*_sender;

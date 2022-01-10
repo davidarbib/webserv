@@ -8,23 +8,23 @@ CgiHandler::CgiHandler(Request &request)
 	request_line startline = request.getStartLine();
 	(void)startline;
 	//cutting URI in start line for env
-	addCgiEnv("AUTH_TYPE", "");
+	//addCgiEnv("AUTH_TYPE", "");
 	addCgiEnv("CONTENT_LENGTH", request.get_header_value("Content-Length"));
-	addCgiEnv("CONTENT_TYPE", request.get_header_value("Media-type"));
+	addCgiEnv("CONTENT_TYPE", request.get_header_value("Content-Type"));
 	addCgiEnv("GATEWAY_INTERFACE", "CGI/1.1");
 	addCgiEnv("PATH_INFO", resource_test);
 	addCgiEnv("PATH_TRANSLATED", resource_test);
 	addCgiEnv("QUERY_STRING", extractQuery(startline.request_URI));
-	addCgiEnv("REMOTE_ADDR", "");
-	addCgiEnv("REMOTE_HOST", ""); 
-	addCgiEnv("REMOTE_IDENT", "");
-	addCgiEnv("REMOTE_USER", "");
+	//addCgiEnv("REMOTE_ADDR", "");
+	//addCgiEnv("REMOTE_HOST", ""); 
+	//addCgiEnv("REMOTE_IDENT", "");
+	//addCgiEnv("REMOTE_USER", "");
 	addCgiEnv("REQUEST_METHOD", startline.method_token);
-	addCgiEnv("SCRIPT_NAME", "");
-	addCgiEnv("SERVER_NAME", "");
-	addCgiEnv("SERVER_PORT", "");
-	addCgiEnv("SERVER_PROTOCOL", "");
-	addCgiEnv("SERVER_SOFTWARE", "");
+	addCgiEnv("SCRIPT_NAME", resource_test);
+	//addCgiEnv("SERVER_NAME", "");
+	//addCgiEnv("SERVER_PORT", "");
+	//addCgiEnv("SERVER_PROTOCOL", "");
+	//addCgiEnv("SERVER_SOFTWARE", "");
 	addCgiEnv("REDIRECT_STATUS", "200");
 }
 
@@ -42,6 +42,49 @@ void
 CgiHandler::addCgiEnv(const std::string &var_name, const std::string &value)
 {
 	_cgi_env[var_name] = value;
+}
+
+char **
+CgiHandler::getCgiEnv(void)
+{
+	char **env = NULL;
+
+	try
+	{
+		env = new char*[_cgi_env.size() + 1];
+	}
+	catch (std::bad_alloc &e)
+	{
+		std::cout << e.what() << std::endl;
+	}
+
+	int i = 0;
+	for (std::map<std::string, std::string>::iterator mit = _cgi_env.begin();
+			mit != _cgi_env.end();
+			mit++, i++)
+	{
+		std::string concat = mit->first + "=" + mit->second;
+		try
+		{
+			env[i] = new char[concat.size() + 1];
+		}
+		catch(std::bad_alloc &e)
+		{
+			for (int j = i - 1; j <= 0; j--)
+				delete env[i];
+			delete env;
+			std::cout << e.what() << std::endl;
+		}
+		strcpy(env[i], concat.c_str());
+	}
+	env[i] = NULL;
+	return env;
+}
+
+void
+CgiHandler::sendCgi(void)
+{
+
 }
 
 //send env variables from request parser
