@@ -3,12 +3,13 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: darbib <darbib@student.42.fr>              +#+  +:+       +#+         #
+#    By: lnezonde <lnezonde@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/11/06 14:53:36 by darbib            #+#    #+#              #
-#    Updated: 2021/07/13 17:01:13 by darbib           ###   ########.fr        #
+#    Updated: 2022/01/13 16:18:05 by lnezonde         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
+
 SHELL = /bin/zsh
 
 BLUE = 		'\033[0;34m'
@@ -52,7 +53,11 @@ SRC = AHttpMessage.cpp \
 	  Response.cpp \
 	  Server.cpp \
 	  request_parser.cpp \
-	  webserv.cpp
+	  webserv.cpp \
+	  Config.cpp \
+	  ConfigUtils.cpp \
+	  ConfigServer.cpp \
+	  ServerLocations.cpp \
 
 #TEST_SRC = main_test.cpp
 #TEST_FILES_DIR = test_files
