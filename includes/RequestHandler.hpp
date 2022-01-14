@@ -5,36 +5,30 @@
 # include <string>
 # include <iostream>
 # include "Request.hpp"
+# include "Connection.hpp"
 
 class RequestHandler
 {
-	public:
-
-		enum	e_request_state
-		{
-			start,
-			header,
-			body,
-			end
-		};
-
 	private:
 
-		int						_idx;
-		std::string				_in_buffer;
-		enum e_request_state	_state;
 		Request					*_request;
+		Connection				&_connection;
 
 		RequestHandler
 		&operator=(RequestHandler const &rhs);
 
+		RequestHandler(void);
+
 	public:
 
-		RequestHandler(void);
+		RequestHandler(Connection *connection);
 
 		RequestHandler(RequestHandler const &src);
 
 		virtual	~RequestHandler(void);
+
+		void
+		setIdx(int);
 
 		void
 		incIdx(int);
@@ -50,6 +44,12 @@ class RequestHandler
 
 		Request *
 		getRequest(void) const;
+
+		static bool
+		isEndLine(std::string &line, int index);
+
+		void
+		clearBuffer(int);
 };
 
 #endif

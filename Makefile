@@ -6,7 +6,7 @@
 #    By: lnezonde <lnezonde@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/11/06 14:53:36 by darbib            #+#    #+#              #
-#    Updated: 2022/01/14 11:19:42 by darbib           ###   ########.fr        #
+#    Updated: 2022/01/14 11:27:12 by darbib           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -58,6 +58,16 @@ SRC = AHttpMessage.cpp \
 	  ConfigUtils.cpp \
 	  ConfigServer.cpp \
 	  ServerLocations.cpp \
+	  safe_wrappers.cpp \
+	  CgiHandler.cpp \
+	  Buffer.cpp \
+	  Connection.cpp
+
+ifeq ($(CGI_UT), 1)
+	SRC += main_cgi.cpp
+else
+	SRC += webserv.cpp
+endif
 
 #TEST_SRC = main_test.cpp
 #TEST_FILES_DIR = test_files
@@ -73,13 +83,13 @@ vpath %.cpp $(SRC_DIR)
 all : $(NAME)
 
 $(NAME): $(OBJ)
-	@$(CC) $(INC) $(CFLAGS) -o $@ $(OBJ)
+	$(CC) $(CFLAGS) -o $@ $(OBJ) $(INC) 
 	@echo $(GREEN) "binary $@ is successfully built !" $(RESET)
 
 $(OBJ_DIR)%.o : %.cpp
 	@mkdir -p objs
 	@echo $(BLUE) "compiling" $< $(RESET)
-	@$(CC) $(INC) $(CFLAGS) -c $< -o $@ 
+	$(CC) $(CFLAGS) -c $< -o $@ $(INC) 
 
 clean :
 	@echo $(MAGENTA) "Cleaning objs..." $(RESET)

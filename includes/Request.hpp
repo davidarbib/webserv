@@ -7,7 +7,6 @@
 #include "Response.hpp"
 
 #define METHOD_NB 4
-#define EMPTY_STRING ""
 
 class Request : public AHttpMessage
 {
@@ -35,7 +34,7 @@ class Request : public AHttpMessage
 		Request(Request &cpy);
 		Request &
 		operator=(Request const &src);
-		~Request(void);
+		virtual ~Request(void);
 
 		void
 		set_method_token(std::string const &method_token);
@@ -47,7 +46,7 @@ class Request : public AHttpMessage
 		set_http_version(std::string const &http_version);
 
 		void
-		set_body(char *body);
+		set_body(std::string body);
 
 		void
 		set_header(std::string const &key, std::string const &value);
@@ -56,7 +55,13 @@ class Request : public AHttpMessage
 		print_message(std::ostream &flux) const;
 
 		void
+		set_start_line_initilized(bool value);
+
+		void
 		set_header_initialized(bool value);
+
+		void
+		set_request_finalized(bool value);
 
 		bool
 		is_start_line_initialized(void) const;
@@ -70,8 +75,14 @@ class Request : public AHttpMessage
 		bool
 		has_body(void) const;
 
+		bool
+		hadOctetInBody(char c);
+
 		std::string
 		get_header_value(std::string const &header_name) const;
+
+		const request_line
+		getStartLine(void) const;
 
 		Response
 		get_response(void);

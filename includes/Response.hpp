@@ -19,7 +19,7 @@ class Response : public AHttpMessage
 		Response(Response &cpy);
 		Response &
 		operator=(Response const &src);
-		~Response(void);
+		virtual ~Response(void);
 
 		void
 		set_protocol_version(std::string const &protocol_version);
@@ -31,7 +31,7 @@ class Response : public AHttpMessage
 		set_reason_phrase(std::string const &reason_phrase);
 
 		void
-		set_body(char *body);
+		set_body(std::string body);
 
 		void
 		set_header(std::string const &key, std::string const &value);

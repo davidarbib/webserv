@@ -6,8 +6,8 @@ Request::Request(void) : _response(),
 						 _request_finalized(false) 
 {
 	this->set_header("Content-Length", "0");
-	this->set_header("Transfer-Encoding", "");
-	this->_body = NULL;
+	this->set_header("Transfer-Encoding", std::string());
+	this->_body = std::string();
 	this->init_method_list();
 }
 
@@ -48,7 +48,7 @@ Request::set_http_version(std::string const &http_version)
 }
 
 void
-Request::set_body(char *body)
+Request::set_body(std::string body)
 {
 	this->_body = body;
 }
@@ -94,7 +94,8 @@ void
 Request::print_message(std::ostream &flux) const
 {
 	flux << "---------------------" << "Start line :" << "---------------------" << std::endl;
-	flux << this->_start_line.method_token << " " << this->_start_line.request_URI << " " << this->_start_line.http_version << std::endl;
+	if (this->_start_line_initialized)
+		flux << this->_start_line.method_token << " " << this->_start_line.request_URI << " " << this->_start_line.http_version << std::endl;
 	AHttpMessage::print_message(flux);
 }
 
@@ -114,7 +115,13 @@ Request::get_header_value(std::string const &header_name) const
 	it = this->_headers.find(header_name);
 	if (it != this->_headers.end())
 		return it->second;
-	return EMPTY_STRING;
+	return std::string();
+}
+
+const request_line
+Request::getStartLine(void) const
+{	
+	return this->_start_line;
 }
 
 Response
@@ -128,6 +135,18 @@ void
 Request::set_header_initialized(bool value)
 {
 	this->_headers_initialized = value;
+}
+
+void
+Request::set_start_line_initilized(bool value)
+{
+	this->_start_line_initialized = value;
+}
+
+void
+Request::set_request_finalized(bool value)
+{
+	this->_request_finalized = value;
 }
 
 bool
@@ -146,6 +165,13 @@ bool
 Request::is_request_finalized(void) const
 {
 	return this->_request_finalized;
+}
+
+bool
+Request::hadOctetInBody(char c)
+{
+	this->_body += c;
+	return true;
 }
 
 std::ostream&

@@ -11,14 +11,15 @@
 # include <arpa/inet.h>
 # include <unistd.h>
 # include <map>
-# include "RequestHandler.hpp"
+# include "Connection.hpp"
+# include "Buffer.hpp"
 # include "typedefs.hpp"
 
 # define DELAY		1
 # define BUFSIZE	2000
 # define PORT		8003
-
-typedef long fd_t;
+# define IP			"127.0.0.1"
+# define HOSTNAME	"w3bs0rv.com"
 
 class Server
 {
@@ -41,20 +42,19 @@ class Server
 	};
 
 	public:
-		Server(std::string, int, std::string, std::string);
+		Server(std::string, std::string, uint16_t, std::string, std::string);
 		virtual ~Server(void);
 
-		std::map<fd_t, RequestHandler*>	&getRefRequestHandlers();
-		std::map<fd_t, RequestHandler*>	getRequestHandlers() const;
+		std::map<fd_t, Connection*> &getRefConnections(void);
+		std::map<fd_t, Connection*> getConnections(void) const;
 
-		fd_t				listenSocket()
-							throw(Server::ListenException);
-		bool				isThereConnectionRequest();
-		void				createConnection();
-		void				watchInput();
+		fd_t				listenSocket(void);
+		bool				isThereConnectionRequest(void);
+		void				createConnection(void);
+		void				watchInput(void);
 
-		static void			setFdset();
-		static void			initFdset();
+		static void			setFdset(void);
+		static void			initFdset(void);
 
 		static fd_t			max_fd;
 		static fd_set		read_fds;
@@ -63,23 +63,21 @@ class Server
 
 	private:
 		std::string						_name;
-		int								_port;
+		std::string						_ip;
+		uint16_t						_port;
 		std::string 					_access_logs_path;
 		std::string 					_error_logs_path;
 		fd_t							_listen_fd;
-		std::vector<fd_t>				_connections_fd;
-		std::map<fd_t, RequestHandler*>	_request_handlers;
+		std::map<fd_t, Connection*>		_connections;
 
 		void				transferToBuffer(fd_t connection_fd, char *buf);
-		void				recvSend();
+		void				recvSend(void);
 		bool				isThereSomethingToRead(fd_t);
 		void				addWatchedFd(fd_t);
 		void				delWatchedFd(fd_t);
-		void				delConnection(void);
 
 		Server(void);
 		Server(Server const &src);
-		Server				&operator=(Server const &rhs);
 };
 
 #endif

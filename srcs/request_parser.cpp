@@ -2,136 +2,216 @@
 #include "Server.hpp"
 
 bool
-is_end_line(std::string &line, int index)
+isEndSection(std::string &line, int index)
 {
-	if (line[index] == '\r')
+	if (RequestHandler::isEndLine(line, index))
 	{
-		if (line[index + 1] == '\n')
-			return true;
-	}
-	return false;
-}
-
-bool
-is_end_section(std::string &line, int index)
-{
-	if (is_end_line(line, index))
-	{
-		if (is_end_line(line, index + 2))
+		if (RequestHandler::isEndLine(line, index + 2))
 			return true;
 	}
 	return false;
 }
 
 int
-parse_method_token(std::string &raw_request, Request *request)
+parseMethodToken(RequestHandler &rh)
 {
 	int index = 0;
 	std::string method_token;
 
-	while (raw_request[index] && raw_request[index] != ' ')
+	while (rh.getBuffer()[index] && rh.getBuffer()[index] != ' ')
 	{
-		method_token += raw_request[index];
+		method_token += rh.getBuffer()[index];
 		index++;
 	}
-	request->set_method_token(method_token);
+	rh.getRequest()->set_method_token(method_token);
 	return index + NEXT_SPACE_TOKEN;
 }
 
 int
-parse_request_URI(std::string &raw_request, Request *request, int position)
+parseRequestURI(RequestHandler &rh, int position)
 {
 	int index = position;
 	std::string request_URI;
 
-	while (raw_request[index] && raw_request[index] != ' ')
+	while (rh.getBuffer()[index] && rh.getBuffer()[index] != ' ')
 	{
-		request_URI += raw_request[index];
+		request_URI += rh.getBuffer()[index];
 		index++;
 	}
-	request->set_request_URI(request_URI);
+	rh.getRequest()->set_request_URI(request_URI);
 	return index + NEXT_SPACE_TOKEN;
 }
 
 int
-parse_http_version(std::string &raw_request, Request *request, int position)
+parseHttpVersion(RequestHandler &rh, int position)
 {
 	int index = position;
 	std::string http_version;
 
-	while (raw_request[index] && !is_end_line(raw_request, index))
+	while (rh.getBuffer()[index] && !RequestHandler::isEndLine(rh.getBuffer(), index))
 	{
-		http_version += raw_request[index];
+		http_version += rh.getBuffer()[index];
 		index++;
 	}
-	request->set_http_version(http_version);
+	rh.getRequest()->set_http_version(http_version);
 	return index + CRLF;
 }
 
 int
-parse_start_line(std::string &raw_request, Request *request)
+parseStartLine(RequestHandler &rh)
 {
 	int request_position = 0;
 
-	request_position = parse_method_token(raw_request, request);
-	request_position = parse_request_URI(raw_request, request, request_position);
-	request_position = parse_http_version(raw_request, request, request_position);
+	request_position = parseMethodToken(rh);
+	request_position = parseRequestURI(rh, request_position);
+	request_position = parseHttpVersion(rh, request_position);
+	rh.getRequest()->set_start_line_initilized(true);
 	return request_position;
 }
 
 int
-get_one_header(std::string &raw_request, Request *request, int position)
+getOneHeader(RequestHandler &rh, int position)
 {
 	int index = position;
 	std::string key;
 	std::string value;
 
-	while (raw_request[index] && raw_request[index] != ':')
+	while (rh.getBuffer()[index] && rh.getBuffer()[index] != ':')
 	{
-		key += raw_request[index];
+		key += rh.getBuffer()[index];
 		index++;
 	}
-	index += CRLF;
-	while (raw_request[index] && !is_end_line(raw_request, index))
+	index += 2;
+	while (rh.getBuffer()[index] && !RequestHandler::isEndLine(rh.getBuffer(), index))
 	{
-		value += raw_request[index];
+		value += rh.getBuffer()[index];
 		index++;
 	}
-	request->set_header(key, value);
+	rh.getRequest()->set_header(key, value);
+	if (isEndSection(rh.getBuffer(), index))
+	{
+		rh.getRequest()->set_header_initialized(true);
+		index += CRLF;
+	}
 	return index + CRLF;
 }
 
-int
-parse_headers(std::string &raw_request, Request *request, int position)
+bool
+has_body(RequestHandler &rh)
 {
-	int index = position;
+	std::stringstream ss;
+	int content_length;
 
-	while (raw_request[index] && !is_end_section(raw_request, index))
-		index = get_one_header(raw_request, request, index);
-	return index + CRLFCRLF;
+	ss << rh.getRequest()->get_header_value("Content-Length");
+	ss >> content_length;
+	if (content_length == 0 || rh.getRequest()->get_header_value("Transfer-Encoding") != "chunked")
+		return false;
+	return true;
 }
 
 int
-parse_request(std::string &raw_request, Request *request, int raw_request_index)
+parseHeaders(RequestHandler &rh)
 {
+	int index = rh.getIdx();
 
-	if (request->get_header_value("Transfer-Encoding") != "chunked")
-	{
-		raw_request_index = parse_start_line(raw_request, request);
-		raw_request_index = parse_headers(raw_request, request, raw_request_index);
-	}
-	return raw_request_index;
+	index = getOneHeader(rh, index);
+	if (rh.getRequest()->is_headers_initialized() == true)
+		rh.getRequest()->set_request_finalized(!has_body(rh));
+	return index;
 }
 
 bool
 is_complete_line(std::string &line, int idx)
 {
-	for (size_t i = idx; i < line.length(); i++)
+	size_t i = idx;
+
+	while (i < line.length())
 	{
-		if (is_end_line(line, i))
+		if (RequestHandler::isEndLine(line, i))
 			return true;
+		i++;
 	}
+	if (i == line.length())
+		return true;
 	return false;
+}
+
+int
+getBodyWithContentLength(RequestHandler &rh, int index)
+{
+	std::stringstream ss;
+	std::string body;
+	int content_length;
+
+	ss << rh.getRequest()->get_header_value("Content-Length");
+	ss >> content_length;
+	body.assign(rh.getBuffer(), index, content_length);
+	rh.getRequest()->set_body(body);
+	rh.getRequest()->set_request_finalized(true);
+	return index + content_length;
+}
+
+int
+getChunkOfBody(RequestHandler &rh, int index)
+{
+	std::string tmp(rh.getRequest()->get_body());
+	std::string body;
+	int sublen = 0;
+	while(rh.getBuffer()[index])
+	{
+		index++;
+		sublen++;
+	}
+	body.assign(rh.getBuffer(), rh.getIdx(), sublen);
+	tmp += body;
+	rh.getRequest()->set_body(tmp);
+	return index;
+}
+
+int
+parseBody(RequestHandler &rh)
+{
+	int index = rh.getIdx();
+	
+	if (rh.getRequest()->get_header_value("Content-Length") != "0")
+		return getBodyWithContentLength(rh, index);
+	else if (rh.getRequest()->get_header_value("Transfer-Encoding") == "chunked")
+	{
+		if (rh.getBuffer()[index] == 0)
+		{
+			rh.getRequest()->set_request_finalized(true);
+			return index;
+		}
+		index = getChunkOfBody(rh, index);
+	}
+	else
+	{
+		std::string body;
+		int sublen = 0;
+		while (rh.getBuffer()[index] && !isEndSection(rh.getBuffer(), index))
+		{
+			index++;
+			sublen++;
+		}
+		body.assign(rh.getBuffer(), rh.getIdx(), sublen);
+		rh.getRequest()->set_body(body);
+		rh.getRequest()->set_request_finalized(true);
+	}
+	return index;
+}
+
+void print_buffer(std::string str) // for debug purpose
+{
+	 std::cout << "BUFFER : ";
+	 for(size_t i = 0; i < str.length(); i++)
+	 {
+	 	if (str[i] == '\r')
+	 		std::cout << "\\r";
+	 	else if (str[i] == '\n')
+	 		std::cout << "\\n";
+	 	else
+	 		std::cout << str[i];
+	 }
 }
 
 int
@@ -139,13 +219,22 @@ parseRequest(std::map<fd_t, RequestHandler*>::iterator requesthandler, Server *s
 {
 	(void)server;
 
-	std::cout << "Buffer :" << std::endl << requesthandler->second->getBuffer() << std::endl;
+	if (requesthandler->second->getRequest()->is_request_finalized() == true)
+		return 1;
 	if (is_complete_line(requesthandler->second->getBuffer(), requesthandler->second->getIdx()))
-		std::cout << "Parsing the line tututuuuuu...." << std::endl;
-	else
 	{
-		std::cout << "0 complete line founded in buffer waiting for next chunk..." << std::endl;
-		return 0;
+		if (requesthandler->second->getRequest()->is_start_line_initialized() == false)
+			requesthandler->second->setIdx(parseStartLine(*requesthandler->second));
+		else if (requesthandler->second->getRequest()->is_headers_initialized() == false)
+			requesthandler->second->setIdx(parseHeaders(*requesthandler->second));
+		else if (requesthandler->second->getRequest()->is_request_finalized() == false)
+		{
+			requesthandler->second->setIdx(parseBody(*requesthandler->second));
+		}
+		requesthandler->second->clearBuffer(requesthandler->second->getIdx());
+		std::cout << "Complete line detected" << std::endl;
 	}
+	else
+		return 0;
 	return 0;
 }

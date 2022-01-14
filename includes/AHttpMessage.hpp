@@ -28,16 +28,19 @@ class AHttpMessage
 
 		typedef std::map<std::string, std::string> hash_map;
 
-		hash_map 	_headers;
-		char		*_body;
+		hash_map 		_headers;
+		std::string		_body;
 
 	public:
 
 		virtual void
-		set_body(char *body) = 0;
+		set_body(std::string body) = 0;
 
 		virtual void
 		set_header(std::string const &key, std::string const &value) = 0;
+
+		std::string &
+		get_body(void);
 
 		void
 		print_message(std::ostream &flux) const;

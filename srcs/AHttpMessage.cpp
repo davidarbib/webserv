@@ -10,11 +10,17 @@ AHttpMessage::print_message(std::ostream &flux) const
 		flux << it->first << ": " << it->second << std::endl;
 	}
 	flux << "---------------------" << "Body :" << "---------------------" << std::endl;
-	if (this->_body)
+	if (!this->_body.empty())
 	{
 		for (int i = 0; this->_body[i]; i++)
 			flux << this->_body[i];
 	}
+}
+
+std::string &
+AHttpMessage::get_body(void)
+{
+	return this->_body;
 }
 
 std::string const
