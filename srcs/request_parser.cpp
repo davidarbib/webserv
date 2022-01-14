@@ -1,5 +1,4 @@
 #include "request_parser.hpp"
-#include "Server.hpp"
 
 bool
 isEndSection(std::string &line, int index)
@@ -215,23 +214,27 @@ void print_buffer(std::string str) // for debug purpose
 }
 
 int
-parseRequest(std::map<fd_t, RequestHandler*>::iterator requesthandler, Server *server)
+parseRequest(Connection *raw_request, Server &server, TicketsType &tickets, ReqHandlersType &request_handler)
 {
-	(void)server;
+	RequestHandler rh(raw_request);
 
-	if (requesthandler->second->getRequest()->isRequestFinalized() == true)
+	if (rh.getRequest()->isRequestFinalized() == true)
 		return 1;
-	if (is_complete_line(requesthandler->second->getBuffer(), requesthandler->second->getIdx()))
+	if (is_complete_line(rh.getBuffer(), rh.getIdx()))
 	{
-		if (requesthandler->second->getRequest()->iStartLineInitialized() == false)
-			requesthandler->second->setIdx(parseStartLine(*requesthandler->second));
-		else if (requesthandler->second->getRequest()->isHeadersInitialized() == false)
-			requesthandler->second->setIdx(parseHeaders(*requesthandler->second));
-		else if (requesthandler->second->getRequest()->isRequestFinalized() == false)
+		if (rh.getRequest()->iStartLineInitialized() == false)
+			rh.setIdx(parseStartLine(rh));
+		else if (rh.getRequest()->isHeadersInitialized() == false)
+			rh.setIdx(parseHeaders(rh));
+		else if (rh.getRequest()->isRequestFinalized() == false)
+			rh.setIdx(parseBody(rh));
+		rh.clearBuffer(rh.getIdx());
+		if (rh.getRequest()->isRequestFinalized() == true)
 		{
-			requesthandler->second->setIdx(parseBody(*requesthandler->second));
+			Ticket my_ticket(*raw_request, rh.getRequest(), server);
+			tickets.push(my_ticket);
+			request_handler.insert(std::make_pair(raw_request->getSocketFd(), rh));
 		}
-		requesthandler->second->clearBuffer(requesthandler->second->getIdx());
 		std::cout << "Complete line detected" << std::endl;
 	}
 	else

@@ -1,19 +1,14 @@
 #include "webserv.hpp"
 
-typedef std::queue<Ticket>						TicketsType;
-typedef std::vector<Server*>					ServersType;
-typedef std::map<fd_t, RequestHandler>			ReqHandlersType;
-
 int handleRequestBuffers(Server &server, TicketsType &tickets,
 							ReqHandlersType &request_handlers)
 {
-	//int ret;
-
+	int ret;
 	if (server.getRefConnections().size() == 0)
 		return 0;
-	//std::map<fd_t, Connection*>::iterator it = server.getRefConnections().begin();
-	//for (; it != server.getRefConnections().end(); it++)
-	//	ret = parseRequest(it->second, server, tickets, request_handlers);
+	std::map<fd_t, Connection*>::iterator it = server.getRefConnections().begin();
+	for (; it != server.getRefConnections().end(); it++)
+		ret = parseRequest(it->second, server, tickets, request_handlers);
 	return 0;
 }
 

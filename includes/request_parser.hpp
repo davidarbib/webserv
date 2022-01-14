@@ -6,6 +6,7 @@
 #include "RequestHandler.hpp"
 #include <sstream>
 #include <string>
+#include "webserv.hpp"
 
 #define NEXT_SPACE_TOKEN 1
 #define CRLF 2
@@ -36,7 +37,7 @@ int
 parseBody(RequestHandler &rh);
 
 int
-parseRequest(std::map<fd_t, RequestHandler*>::iterator raw_request, Server *server);
+parseRequest(Connection *raw_request, Server &server, TicketsType &tickets, ReqHandlersType &RequestHandler);
 
 int
 getBodyWithContentLength(RequestHandler &rh, int index);
