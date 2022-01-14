@@ -50,28 +50,6 @@ Server::listenSocket()
 	return _listen_fd;
 }
 
-bool				
-Server::isThereConnectionRequest(void)
-{
-	if (FD_ISSET(_listen_fd, &Server::read_fds))
-		return 1;
-	return 0;
-}
-
-void 
-Server::addWatchedFd(fd_t fd)
-{
-	FD_SET(fd, &Server::origin_fds);
-	if (fd > Server::max_fd)
-		Server::max_fd = fd;
-}
-
-void
-Server::delWatchedFd(fd_t fd)
-{
-	FD_CLR(fd, &Server::origin_fds);
-}
-
 void
 Server::createConnection(void)
 {
@@ -134,6 +112,28 @@ Server::watchInput()
 			connection_it++;
 		}
 	}
+}
+
+bool				
+Server::isThereConnectionRequest(void)
+{
+	if (FD_ISSET(_listen_fd, &Server::read_fds))
+		return 1;
+	return 0;
+}
+
+void 
+Server::addWatchedFd(fd_t fd)
+{
+	FD_SET(fd, &Server::origin_fds);
+	if (fd > Server::max_fd)
+		Server::max_fd = fd;
+}
+
+void
+Server::delWatchedFd(fd_t fd)
+{
+	FD_CLR(fd, &Server::origin_fds);
 }
 
 bool

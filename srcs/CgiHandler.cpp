@@ -1,9 +1,8 @@
 #include "CgiHandler.hpp"
 
-CgiHandler::CgiHandler(Request &request)
+CgiHandler::CgiHandler(Request &request, std::string* pgm_path, std::string *script_path)
+: _pgm_path(pgm_path), _script_path(script_path)
 {
-	std::string resource_test = "index.php";
-
 	//(void)request;
 	request_line startline = request.getStartLine();
 	(void)startline;
@@ -12,20 +11,29 @@ CgiHandler::CgiHandler(Request &request)
 	addCgiEnv("CONTENT_LENGTH", request.get_header_value("Content-Length"));
 	addCgiEnv("CONTENT_TYPE", request.get_header_value("Content-Type"));
 	addCgiEnv("GATEWAY_INTERFACE", "CGI/1.1");
-	addCgiEnv("PATH_INFO", resource_test);
-	addCgiEnv("PATH_TRANSLATED", resource_test);
+	addCgiEnv("PATH_INFO", *_script_path);
+	addCgiEnv("PATH_TRANSLATED", *_script_path);
 	addCgiEnv("QUERY_STRING", extractQuery(startline.request_URI));
 	//addCgiEnv("REMOTE_ADDR", "");
 	//addCgiEnv("REMOTE_HOST", ""); 
 	//addCgiEnv("REMOTE_IDENT", "");
 	//addCgiEnv("REMOTE_USER", "");
 	addCgiEnv("REQUEST_METHOD", startline.method_token);
-	addCgiEnv("SCRIPT_NAME", resource_test);
+	//addCgiEnv("REQUEST_METHOD", "POST");
+	addCgiEnv("SCRIPT_NAME", *_script_path);
 	//addCgiEnv("SERVER_NAME", "");
 	//addCgiEnv("SERVER_PORT", "");
 	//addCgiEnv("SERVER_PROTOCOL", "");
 	//addCgiEnv("SERVER_SOFTWARE", "");
 	addCgiEnv("REDIRECT_STATUS", "200");
+
+	_sender = __tmpfile64__();
+	_receiver = __tmpfile64__();
+	
+	std::string& body = request.get_body();
+	int ret = write(fileno(_sender), body.c_str(), body.size()); //TODO Exception handlin
+	std::cout << "write ret : " << ret << std::endl;
+	rewind(_sender);
 }
 
 CgiHandler::~CgiHandler(void)
@@ -81,10 +89,70 @@ CgiHandler::getCgiEnv(void)
 	return env;
 }
 
+/*
 void
 CgiHandler::sendCgi(void)
 {
+	int tocgi_pipe[2];
+	int towebserv_pipe[2];
+	char *argv[3];
+	char *const *env = getCgiEnv();	
 
+	argv[0] = const_cast<char*>(_pgm_path->c_str());
+	argv[1] = const_cast<char*>(_script_path->c_str());
+	argv[2] = NULL;
+
+	__pipe__(tocgi_pipe);
+	__pipe__(towebserv_pipe);
+	pid_t pid = __fork__();	
+	if (pid == 0)
+	{
+		__dup2__(tocgi_pipe[0], STDIN_FILENO);
+		__dup2__(towebserv_pipe[1], STDOUT_FILENO);
+		close(tocgi_pipe[1]);
+		close(towebserv_pipe[0]);
+		__execve__(_pgm_path->c_str(), argv, env);
+	}
+	else
+	{
+		__dup2__(tocgi_pipe[1], STDIN_FILENO);
+		__dup2__(towebserv_pipe[0], STDOUT_FILENO);
+		
+		close(tocgi_pipe[0]);
+		close(towebserv_pipe[1]);
+	}
+}
+*/
+
+void
+CgiHandler::sendCgi(void)
+{
+	char *argv[3];
+	char *const *env = getCgiEnv();	
+
+	argv[0] = const_cast<char*>(_pgm_path->c_str());
+	argv[1] = const_cast<char*>(_script_path->c_str());
+	argv[2] = NULL;
+
+	std::cout << argv[0] << std::endl;
+	pid_t pid = __fork__();	
+	if (pid == 0)
+	{
+		__dup2__(fileno(_sender), STDIN_FILENO);
+		__dup2__(fileno(_receiver), STDOUT_FILENO);
+		__execve__(_pgm_path->c_str(), argv, env);
+	}
+	else
+	{
+		waitpid(pid, NULL, 0);
+	}
+	rewind(_receiver);
+}
+
+FILE *
+CgiHandler::getCgiResponse(void)
+{
+	return _receiver;
 }
 
 //send env variables from request parser
@@ -120,5 +188,5 @@ CgiHandler::sendCgi(void)
  * "SERVER_PORT" =
  * "SERVER_PROTOCOL" =
  * "SERVER_SOFTWARE" = 
- * + for php : "REDIRECT_STATUS" = 200 ( mb its a Hack !! search more perenne solution)
+ * + for php cgi : "REDIRECT_STATUS" = 200
 */

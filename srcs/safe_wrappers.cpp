@@ -9,6 +9,21 @@ _fork_(void)
 	return pid;
 }
 
+pid_t
+__fork__(void)
+{
+	try
+	{
+		return _fork_();
+	}
+	catch (ForkException &e)
+	{
+		std::cout << e.what() << std::endl;
+		perror("");
+	}
+	return -1;
+}
+
 void
 _pipe_(int *fds)
 {
@@ -18,8 +33,82 @@ _pipe_(int *fds)
 }
 
 void
+__pipe__(int *fds)
+{
+	try
+	{
+		_pipe_(fds);
+	}
+	catch (PipeException &e)
+	{
+		std::cout << e.what() << std::endl;
+		perror("");
+	}
+}
+
+void
 _execve_(const char *pathname, char *const argv[], char *const envp[])
 {
 	if (execve(pathname, argv, envp) < 0)
 		throw ExecveException();
+}
+
+void
+__execve__(const char *pathname, char *const argv[], char *const envp[])
+{
+	try
+	{
+		_execve_(pathname, argv, envp);
+	}
+	catch (ExecveException &e)
+	{
+		std::cout << e.what() << std::endl;
+		perror("execve");
+	}
+}
+
+void
+_dup2_(int oldfd, int newfd)
+{
+	int ret = dup2(oldfd, newfd);
+	if (ret < 0)
+		throw DupException();
+}
+
+void
+__dup2__(int oldfd, int newfd)
+{
+	try
+	{
+		_dup2_(oldfd, newfd);
+	}
+	catch (DupException &e)
+	{
+		std::cout << e.what() << std::endl;
+		perror("dup2");
+	}
+}
+
+FILE *
+_tmpfile64_( void )
+{
+	FILE *file = tmpfile64();
+	if (!file)
+		throw TmpFileException();
+	return file;
+}
+
+FILE *
+__tmpfile64__( void )
+{
+	try
+	{
+		return _tmpfile64_();
+	}
+	catch (TmpFileException &e)
+	{
+		std::cout << e.what() << std::endl;
+		perror("tmpfile64");
+	}
+	return NULL;
 }
