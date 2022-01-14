@@ -6,7 +6,7 @@
 #    By: lnezonde <lnezonde@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/11/06 14:53:36 by darbib            #+#    #+#              #
-#    Updated: 2022/01/13 16:18:05 by lnezonde         ###   ########.fr        #
+#    Updated: 2022/01/14 11:19:42 by darbib           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -53,7 +53,7 @@ SRC = AHttpMessage.cpp \
 	  Response.cpp \
 	  Server.cpp \
 	  request_parser.cpp \
-	  webserv.cpp \
+	  main.cpp \
 	  Config.cpp \
 	  ConfigUtils.cpp \
 	  ConfigServer.cpp \

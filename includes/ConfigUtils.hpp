@@ -1,5 +1,5 @@
-#ifndef UTILS_HPP
-# define UTILS_HPP
+#ifndef CONFIGUTILS_HPP
+# define CONFIGUTILS_HPP
 
 # include <string>
 # include <string.h>
@@ -7,7 +7,6 @@
 # include <iostream>
 # include <fstream>
 # include <sstream>
-
 
 std::string
 parse(std::string const &confFile, int pos_start);
