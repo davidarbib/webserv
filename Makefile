@@ -6,7 +6,7 @@
 #    By: lnezonde <lnezonde@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/11/06 14:53:36 by darbib            #+#    #+#              #
-#    Updated: 2022/01/14 11:27:12 by darbib           ###   ########.fr        #
+#    Updated: 2022/01/14 11:36:48 by darbib           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -53,7 +53,6 @@ SRC = AHttpMessage.cpp \
 	  Response.cpp \
 	  Server.cpp \
 	  request_parser.cpp \
-	  main.cpp \
 	  Config.cpp \
 	  ConfigUtils.cpp \
 	  ConfigServer.cpp \
@@ -66,7 +65,7 @@ SRC = AHttpMessage.cpp \
 ifeq ($(CGI_UT), 1)
 	SRC += main_cgi.cpp
 else
-	SRC += webserv.cpp
+	SRC += main.cpp
 endif
 
 #TEST_SRC = main_test.cpp
