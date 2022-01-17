@@ -216,17 +216,15 @@ void print_buffer(std::string str) // for debug purpose
 int
 parseRequest(Connection *raw_request, Server &server, TicketsType &tickets, ReqHandlersType &request_handlers)
 {
-	RequestHandler rh(raw_request);
-	if (request_handlers.count(raw_request->getSocketFd()) == 0) {
-		std::cout << "Trying to create a pair" << std::endl;
-		std::pair<fd_t, RequestHandler> my_pair = std::make_pair(raw_request->getSocketFd(), rh);
-		rh.getBuffer();
-		std::cout << "init pair ok" << std::endl;
-		request_handlers.insert(my_pair);
-		std::cout << "insert in map OK" << std::endl;
-	}
+	Request *request = new Request();
+	RequestHandler rh(request, raw_request);
+	if (request_handlers.count(raw_request->getSocketFd()) == 0)
+		request_handlers.insert(std::make_pair(raw_request->getSocketFd(), rh));
 	else
+	{
+		delete request;
 		RequestHandler rh = request_handlers.find(raw_request->getSocketFd())->second;
+	}
 	if (rh.getRequest()->isRequestFinalized() == true)
 		return 1;
 	if (is_complete_line(rh.getBuffer(), rh.getIdx()))
