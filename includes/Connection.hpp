@@ -13,8 +13,6 @@ class Connection
 	public:
 		Connection(fd_t, unsigned long, unsigned short);
 		~Connection(void);
-		Connection	&
-		operator=(Connection const &rhs);
 
 		/*
 		** getters return ip and port in host format
@@ -47,6 +45,8 @@ class Connection
 
 	private:
 		Connection(Connection const &src);
+		Connection	&
+		operator=(Connection const &rhs);
 
 		/*
 		** ! _client_ip and _client_port are in network format

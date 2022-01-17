@@ -10,19 +10,6 @@ Connection::Connection(fd_t fd, unsigned long client_ip, unsigned short client_p
 Connection::~Connection(void)
 { }
 
-Connection	&
-Connection::operator=(Connection const &rhs)
-{
-	this->_socket_fd = rhs._socket_fd;
-	this->_client_ip = rhs._client_ip;
-	this->_client_port = rhs._client_port;
-	this->_client_ip_str = rhs._client_ip_str;
-	this->_client_port_str = rhs._client_port_str;
-	this->_in_buffer = rhs._in_buffer;
-	this->_out_buffer = rhs._out_buffer;
-	return *this;
-}
-
 fd_t			
 Connection::getSocketFd(void) const
 { return _socket_fd; }
