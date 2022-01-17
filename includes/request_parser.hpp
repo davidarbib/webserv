@@ -42,7 +42,7 @@ int
 parseBody(RequestHandler &rh);
 
 int
-parseRequest(Connection *raw_request, Server &server, TicketsType &tickets, ReqHandlersType &RequestHandler);
+parseRequest(Connection *raw_request, Server &server, TicketsType &tickets, ReqHandlersType &request_handlers);
 
 int
 getBodyWithContentLength(RequestHandler &rh, int index);

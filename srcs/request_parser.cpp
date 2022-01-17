@@ -214,10 +214,19 @@ void print_buffer(std::string str) // for debug purpose
 }
 
 int
-parseRequest(Connection *raw_request, Server &server, TicketsType &tickets, ReqHandlersType &request_handler)
+parseRequest(Connection *raw_request, Server &server, TicketsType &tickets, ReqHandlersType &request_handlers)
 {
 	RequestHandler rh(raw_request);
-
+	if (request_handlers.count(raw_request->getSocketFd()) == 0) {
+		std::cout << "Trying to create a pair" << std::endl;
+		std::pair<fd_t, RequestHandler> my_pair = std::make_pair(raw_request->getSocketFd(), rh);
+		rh.getBuffer();
+		std::cout << "init pair ok" << std::endl;
+		request_handlers.insert(my_pair);
+		std::cout << "insert in map OK" << std::endl;
+	}
+	else
+		RequestHandler rh = request_handlers.find(raw_request->getSocketFd())->second;
 	if (rh.getRequest()->isRequestFinalized() == true)
 		return 1;
 	if (is_complete_line(rh.getBuffer(), rh.getIdx()))
@@ -233,9 +242,7 @@ parseRequest(Connection *raw_request, Server &server, TicketsType &tickets, ReqH
 		{
 			Ticket my_ticket(*raw_request, rh.getRequest(), server);
 			tickets.push(my_ticket);
-			request_handler.insert(std::make_pair(raw_request->getSocketFd(), rh));
 		}
-		std::cout << "Complete line detected" << std::endl;
 	}
 	else
 		return 0;

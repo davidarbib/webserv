@@ -4,6 +4,7 @@ RequestHandler::RequestHandler(Connection *connection):
 	_request(new Request),
 	_connection(*connection)
 {
+	// this->_request = NULL;
 }
 
 RequestHandler::RequestHandler(RequestHandler const &src):
@@ -14,7 +15,8 @@ RequestHandler::RequestHandler(RequestHandler const &src):
 
 RequestHandler::~RequestHandler(void)
 {
-	delete this->_request;
+	// if (this->_request != NULL)
+		// delete this->_request;
 }
 
 void
