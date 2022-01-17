@@ -14,14 +14,14 @@ class Buffer
 
 		Buffer(Buffer const &src);
 
-		Buffer
-		&operator=(Buffer const &rhs);
-
 	public:
 
 		Buffer(void);
 
 		virtual	~Buffer(void);
+		
+		Buffer &
+		operator=(Buffer const &rhs);
 
 		void
 		setIdx(int);

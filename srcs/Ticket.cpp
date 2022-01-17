@@ -5,6 +5,11 @@ Ticket::Ticket(Connection const &connection, Request *request, Server const &ser
 {
 }
 
+Ticket::Ticket(Ticket const &src)
+: _connection(src._connection), _request(src._request), _server(src._server)
+{
+}
+
 Ticket::~Ticket(void)
 {
 }

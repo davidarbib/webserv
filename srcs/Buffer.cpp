@@ -16,6 +16,14 @@ Buffer::~Buffer(void)
 {
 }
 
+Buffer &
+Buffer::operator=(Buffer const &rhs)
+{
+	this->_idx = rhs._idx;
+	this->_in_buffer = rhs._in_buffer;
+	return *this;
+}
+
 void
 Buffer::fillBuffer(char *raw_buffer)
 {

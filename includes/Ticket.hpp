@@ -13,6 +13,8 @@ class Ticket
 		Ticket(Connection const &connection, Request *request, Server const &server);
 		virtual	~Ticket(void);
 		
+		Ticket(Ticket const &src);
+		
 		Connection const &
 		getConnection(void) const;
 		
@@ -22,13 +24,13 @@ class Ticket
 		Server const &
 		getServer(void) const;
 
+		Ticket	&operator=(Ticket const &rhs);
+
 	private:
 		Connection const 	&_connection;
 		Request				*_request;
 		Server const 		&_server;
 
 		Ticket(void);
-		Ticket(Ticket const &src);
-		Ticket	&operator=(Ticket const &rhs);
 };
 #endif

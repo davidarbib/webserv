@@ -13,6 +13,8 @@ class Connection
 	public:
 		Connection(fd_t, unsigned long, unsigned short);
 		~Connection(void);
+		Connection	&
+		operator=(Connection const &rhs);
 
 		/*
 		** getters return ip and port in host format
@@ -44,7 +46,6 @@ class Connection
 		fillBuffer(char *buf);
 
 	private:
-		Connection	&operator=(Connection const &rhs);
 		Connection(Connection const &src);
 
 		/*

@@ -7,6 +7,11 @@
 #include <sstream>
 #include <string>
 #include "webserv.hpp"
+#include "Ticket.hpp"
+# include <queue>
+
+typedef std::queue<Ticket>						TicketsType;
+typedef std::map<fd_t, RequestHandler>			ReqHandlersType;
 
 #define NEXT_SPACE_TOKEN 1
 #define CRLF 2
