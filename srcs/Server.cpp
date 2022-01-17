@@ -122,6 +122,14 @@ Server::isThereConnectionRequest(void)
 	return 0;
 }
 
+bool
+Server::isWritePossible(fd_t fd)
+{
+	if (FD_ISSET(fd, &Server::write_fds))
+		return 1;
+	return 0;
+}
+
 void 
 Server::addWatchedFd(fd_t fd)
 {
