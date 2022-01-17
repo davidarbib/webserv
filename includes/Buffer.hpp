@@ -13,16 +13,15 @@ class Buffer
 		std::string				_in_buffer;
 
 		Buffer(Buffer const &src);
-
-		Buffer
-		&operator=(Buffer const &rhs);
+		Buffer &
+		operator=(Buffer const &rhs);
 
 	public:
 
 		Buffer(void);
 
 		virtual	~Buffer(void);
-
+		
 		void
 		setIdx(int);
 

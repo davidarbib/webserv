@@ -6,6 +6,12 @@
 #include "RequestHandler.hpp"
 #include <sstream>
 #include <string>
+#include "webserv.hpp"
+#include "Ticket.hpp"
+# include <queue>
+
+typedef std::queue<Ticket>						TicketsType;
+typedef std::map<fd_t, RequestHandler>			ReqHandlersType;
 
 #define NEXT_SPACE_TOKEN 1
 #define CRLF 2
@@ -36,7 +42,7 @@ int
 parseBody(RequestHandler &rh);
 
 int
-parseRequest(std::map<fd_t, RequestHandler*>::iterator raw_request, Server *server);
+parseRequest(Connection *raw_request, Server &server, TicketsType &tickets, ReqHandlersType &request_handlers);
 
 int
 getBodyWithContentLength(RequestHandler &rh, int index);

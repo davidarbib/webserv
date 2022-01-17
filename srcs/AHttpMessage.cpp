@@ -1,7 +1,7 @@
 #include "AHttpMessage.hpp"
 
 void
-AHttpMessage::print_message(std::ostream &flux) const
+AHttpMessage::printMessage(std::ostream &flux) const
 {
 	hash_map::const_iterator it;
 	flux << "---------------------" << "Headers :" << "---------------------" << std::endl;
@@ -18,13 +18,13 @@ AHttpMessage::print_message(std::ostream &flux) const
 }
 
 std::string &
-AHttpMessage::get_body(void)
+AHttpMessage::getBody(void)
 {
 	return this->_body;
 }
 
 std::string const
-AHttpMessage::get_date(void) const
+AHttpMessage::getDate(void) const
 {
 	time_t 		raw_time;
 	struct 		tm *ptm;

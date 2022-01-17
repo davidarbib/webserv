@@ -5,10 +5,10 @@ Request::Request(void) : _response(),
 						 _headers_initialized(false),
 						 _request_finalized(false) 
 {
-	this->set_header("Content-Length", "0");
-	this->set_header("Transfer-Encoding", std::string());
+	this->setHeader("Content-Length", "0");
+	this->setHeader("Transfer-Encoding", std::string());
 	this->_body = std::string();
-	this->init_method_list();
+	this->initMethodList();
 }
 
 Request::Request(Request & cpy)
@@ -28,39 +28,39 @@ Request::operator=(Request const &src)
 Request::~Request(void) {}
 
 void
-Request::set_method_token(std::string const &method_token)
+Request::setMethodToken(std::string const &method_token)
 {
-	if (this->is_allowed_method(method_token) == true)
+	if (this->isAllowedMethod(method_token) == true)
 		this->_start_line.method_token = method_token;
 }
 
 void
-Request::set_request_URI(std::string const &request_URI)
+Request::setRequestURI(std::string const &request_URI)
 {
 	this->_start_line.request_URI = request_URI;
 }
 
 void
-Request::set_http_version(std::string const &http_version)
+Request::setHttpVersion(std::string const &http_version)
 {
 	this->_start_line.http_version = http_version;
 	this->_start_line_initialized = true;
 }
 
 void
-Request::set_body(std::string body)
+Request::setBody(std::string body)
 {
 	this->_body = body;
 }
 
 void
-Request::set_header(std::string const &key, std::string const &value)
+Request::setHeader(std::string const &key, std::string const &value)
 {
 	this->_headers[key] = value;
 }
 
 void
-Request::init_method_list(void)
+Request::initMethodList(void)
 {
 	this->_method_list[0] = "GET";
 	this->_method_list[1] = "POST";
@@ -69,7 +69,7 @@ Request::init_method_list(void)
 }
 
 bool
-Request::is_allowed_method(std::string const &method) const
+Request::isAllowedMethod(std::string const &method) const
 {
 	for (int i = 0; i < METHOD_NB; i++)
 	{
@@ -80,7 +80,7 @@ Request::is_allowed_method(std::string const &method) const
 }
 
 bool
-Request::is_valid_method(std::string const &method) const
+Request::isValidMethod(std::string const &method) const
 {
 	for (size_t i = 0; i < method.length(); i++)
 	{
@@ -91,12 +91,12 @@ Request::is_valid_method(std::string const &method) const
 }
 
 void
-Request::print_message(std::ostream &flux) const
+Request::printMessage(std::ostream &flux) const
 {
 	flux << "---------------------" << "Start line :" << "---------------------" << std::endl;
 	if (this->_start_line_initialized)
 		flux << this->_start_line.method_token << " " << this->_start_line.request_URI << " " << this->_start_line.http_version << std::endl;
-	AHttpMessage::print_message(flux);
+	AHttpMessage::printMessage(flux);
 }
 
 bool
@@ -132,37 +132,37 @@ Request::get_response(void)
 }
 
 void
-Request::set_header_initialized(bool value)
+Request::setHeaderInitialized(bool value)
 {
 	this->_headers_initialized = value;
 }
 
 void
-Request::set_start_line_initilized(bool value)
+Request::setStartLineInitialized(bool value)
 {
 	this->_start_line_initialized = value;
 }
 
 void
-Request::set_request_finalized(bool value)
+Request::setRequestFinalized(bool value)
 {
 	this->_request_finalized = value;
 }
 
 bool
-Request::is_start_line_initialized(void) const
+Request::iStartLineInitialized(void) const
 {
 	return this->_start_line_initialized;
 }
 
 bool
-Request::is_headers_initialized(void) const
+Request::isHeadersInitialized(void) const
 {
 	return this->_headers_initialized;
 }
 
 bool
-Request::is_request_finalized(void) const
+Request::isRequestFinalized(void) const
 {
 	return this->_request_finalized;
 }
@@ -177,6 +177,6 @@ Request::hadOctetInBody(char c)
 std::ostream&
 operator<<(std::ostream &flux, Request const &request)
 {
-	request.print_message(flux);
+	request.printMessage(flux);
 	return flux;
 }

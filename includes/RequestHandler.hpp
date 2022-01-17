@@ -21,7 +21,7 @@ class RequestHandler
 
 	public:
 
-		RequestHandler(Connection *connection);
+		RequestHandler(Request *request, Connection *connection);
 
 		RequestHandler(RequestHandler const &src);
 

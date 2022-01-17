@@ -1,17 +1,14 @@
-#include "Server.hpp"
-#include "request_parser.hpp"
-#include "RequestHandler.hpp"
-#include <deque>
+#include "webserv.hpp"
 
-int handleRequestBuffers(Server &server)
+int handleRequestBuffers(Server &server, TicketsType &tickets,
+							ReqHandlersType &request_handlers)
 {
-	//int ret;
-
+	int ret;
 	if (server.getRefConnections().size() == 0)
 		return 0;
-	//std::map<fd_t, Connection*>::iterator it = server.getRefConnections().begin();
-	//for (; it != server.getRefConnections().end(); it++)
-	//	ret = parseRequest(it->second->getInBuffer(), server);
+	std::map<fd_t, Connection*>::iterator it = server.getRefConnections().begin();
+	for (; it != server.getRefConnections().end(); it++)
+		ret = parseRequest(it->second, server, tickets, request_handlers);
 	return 0;
 }
 
@@ -19,9 +16,10 @@ int main(int ac, char **av)
 {
 	(void)ac;
 	(void)av;
-	struct timeval		tv;
-	std::vector<Server*> servers;
-	std::deque<RequestHandler> request_handlers;
+	struct timeval				tv;
+	ServersType					servers;
+	ReqHandlersType				request_handlers;
+	TicketsType					tickets;
 
 	Server::max_fd = 0;
 	Server::initFdset();
@@ -39,7 +37,7 @@ int main(int ac, char **av)
 		if (servers[0]->isThereConnectionRequest())
 			servers[0]->createConnection();
 		servers[0]->watchInput();
-		handleRequestBuffers(*servers[0]);
+		handleRequestBuffers(*servers[0], tickets, request_handlers);
 		//writes
 	}
 	return 0;

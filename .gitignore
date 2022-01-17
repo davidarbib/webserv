@@ -4,6 +4,8 @@
 **/*.o
 **/*webserv*
 
+.vscode
+
 # Prerequisites
 *.d
 

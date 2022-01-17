@@ -22,31 +22,31 @@ class Response : public AHttpMessage
 		virtual ~Response(void);
 
 		void
-		set_protocol_version(std::string const &protocol_version);
+		setProtocolVersion(std::string const &protocol_version);
 
 		void
-		set_status_code(int status_code);
+		setStatusCode(int status_code);
 
 		void
-		set_reason_phrase(std::string const &reason_phrase);
+		setReasonPhrase(std::string const &reason_phrase);
 
 		void
-		set_body(std::string body);
+		setBody(std::string body);
 
 		void
-		set_header(std::string const &key, std::string const &value);
+		setHeader(std::string const &key, std::string const &value);
 
 		void
-		print_message(std::ostream &flux) const;
+		printMessage(std::ostream &flux) const;
 
 		void
-		bad_request(void);
+		badRequest(void);
 
 		void
-		method_not_allowed(void);
+		methodNotAllowed(void);
 
 		void
-		not_found(void);
+		notFound(void);
 };
 
 std::ostream &

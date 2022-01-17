@@ -34,19 +34,19 @@ class AHttpMessage
 	public:
 
 		virtual void
-		set_body(std::string body) = 0;
+		setBody(std::string body) = 0;
 
 		virtual void
-		set_header(std::string const &key, std::string const &value) = 0;
+		setHeader(std::string const &key, std::string const &value) = 0;
 
 		std::string &
-		get_body(void);
+		getBody(void);
 
 		void
-		print_message(std::ostream &flux) const;
+		printMessage(std::ostream &flux) const;
 
 		std::string const
-		get_date(void) const;
+		getDate(void) const;
 
 };
 

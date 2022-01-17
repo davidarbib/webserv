@@ -20,13 +20,13 @@ class Request : public AHttpMessage
 		bool			_request_finalized;
 
 		void
-		init_method_list(void);
+		initMethodList(void);
 
 		bool
-		is_allowed_method(std::string const &method) const;
+		isAllowedMethod(std::string const &method) const;
 
 		bool
-		is_valid_method(std::string const &method) const;
+		isValidMethod(std::string const &method) const;
 
 	public:
 
@@ -37,40 +37,40 @@ class Request : public AHttpMessage
 		virtual ~Request(void);
 
 		void
-		set_method_token(std::string const &method_token);
+		setMethodToken(std::string const &method_token);
 
 		void
-		set_request_URI(std::string const &request_URI);
+		setRequestURI(std::string const &request_URI);
 
 		void
-		set_http_version(std::string const &http_version);
+		setHttpVersion(std::string const &http_version);
 
 		void
-		set_body(std::string body);
+		setBody(std::string body);
 
 		void
-		set_header(std::string const &key, std::string const &value);
+		setHeader(std::string const &key, std::string const &value);
 
 		void
-		print_message(std::ostream &flux) const;
+		printMessage(std::ostream &flux) const;
 
 		void
-		set_start_line_initilized(bool value);
+		setStartLineInitialized(bool value);
 
 		void
-		set_header_initialized(bool value);
+		setHeaderInitialized(bool value);
 
 		void
-		set_request_finalized(bool value);
+		setRequestFinalized(bool value);
 
 		bool
-		is_start_line_initialized(void) const;
+		iStartLineInitialized(void) const;
 
 		bool
-		is_headers_initialized(void) const;
+		isHeadersInitialized(void) const;
 
 		bool
-		is_request_finalized(void) const;
+		isRequestFinalized(void) const;
 
 		bool
 		has_body(void) const;

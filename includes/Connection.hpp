@@ -44,8 +44,9 @@ class Connection
 		fillBuffer(char *buf);
 
 	private:
-		Connection	&operator=(Connection const &rhs);
 		Connection(Connection const &src);
+		Connection	&
+		operator=(Connection const &rhs);
 
 		/*
 		** ! _client_ip and _client_port are in network format
@@ -65,6 +66,30 @@ class Connection
 
 		void
 		makePortStr(void);
+
+		friend bool
+		operator<(Connection const &lhs, Connection const &rhs)
+		{ return lhs._socket_fd < rhs._socket_fd; }
+
+		friend bool
+		operator<=(Connection const &lhs, Connection const &rhs)
+		{ return lhs._socket_fd <= rhs._socket_fd; }
+
+		friend bool
+		operator>(Connection const &lhs, Connection const &rhs)
+		{ return lhs._socket_fd > rhs._socket_fd; }
+
+		friend bool
+		operator>=(Connection const &lhs, Connection const &rhs)
+		{ return lhs._socket_fd >= rhs._socket_fd; }
+
+		friend bool
+		operator==(Connection const &lhs, Connection const &rhs)
+		{ return lhs._socket_fd == rhs._socket_fd; }
+
+		friend bool
+		operator!=(Connection const &lhs, Connection const &rhs)
+		{ return lhs._socket_fd != rhs._socket_fd; }
 };
 
 #endif
