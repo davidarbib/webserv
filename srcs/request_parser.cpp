@@ -103,7 +103,7 @@ has_body(RequestHandler &rh)
 
 	ss << rh.getRequest()->get_header_value("Content-Length");
 	ss >> content_length;
-	if (content_length == 0 || rh.getRequest()->get_header_value("Transfer-Encoding") != "chunked")
+	if (content_length == 0 && rh.getRequest()->get_header_value("Transfer-Encoding") != "chunked")
 		return false;
 	return true;
 }
@@ -216,15 +216,15 @@ void print_buffer(std::string str) // for debug purpose
 int
 parseRequest(Connection *raw_request, Server &server, TicketsType &tickets, ReqHandlersType &request_handlers)
 {
-	Request *request = new Request();
-	RequestHandler rh(request, raw_request);
-	if (request_handlers.count(raw_request->getSocketFd()) == 0)
-		request_handlers.insert(std::make_pair(raw_request->getSocketFd(), rh));
-	else
+	ReqHandlersType::iterator it = request_handlers.find(raw_request->getSocketFd());
+	if (it == request_handlers.end())
 	{
-		delete request;
-		RequestHandler rh = request_handlers.find(raw_request->getSocketFd())->second;
+		Request *request = new Request();
+		RequestHandler new_rh(request, raw_request);
+		request_handlers.insert(std::make_pair(raw_request->getSocketFd(), new_rh));
+		return 0;
 	}
+	RequestHandler &rh = it->second;
 	if (rh.getRequest()->isRequestFinalized() == true)
 		return 1;
 	if (is_complete_line(rh.getBuffer(), rh.getIdx()))
@@ -238,6 +238,8 @@ parseRequest(Connection *raw_request, Server &server, TicketsType &tickets, ReqH
 		rh.clearBuffer(rh.getIdx());
 		if (rh.getRequest()->isRequestFinalized() == true)
 		{
+			//UNCOMENT TO SEE REQUEST INFOS
+			// std::cout << *rh.getRequest() << std::endl;
 			Ticket my_ticket(*raw_request, rh.getRequest(), server);
 			tickets.push(my_ticket);
 		}
