@@ -23,24 +23,28 @@ quickresponse(TicketsType &tickets) //TODO copy, modify and integrate and delete
 	std::string response;
 	std::stringstream stream;
 	
-	stream << "HTTP/1.1 200 OK" << CRLF_S;
-	stream << "Content-Length: 2" << CRLF_S;
-	stream << "Content-Type: text/plain" << CRLF_S;
-	stream << CRLF_S << CRLF_S;
-	stream << "cc" << CRLF_S;
+	stream << "HTTP/1.1 200 OK";
+	stream << CRLF_S;
+	stream << "Content-Length: 2";
+	stream << CRLF_S;
+	stream << "Content-Type: text/plain";
+	stream << CRLF_S;
+	stream << CRLF_S;
+	stream << "cc";
+	stream << CRLF_S;
+	stream << CRLF_S;
 
 	stream >> response;
-
-	//Date: Mon, 27 Jul 2009 12:28:53 GMT
-	//Last-Modified: Wed, 22 Jul 2009 19:15:56 GMT
-	//Vary: Accept-Encoding
 
 	while (!tickets.empty())
 	{
 		Ticket &current_ticket = tickets.front();
 		Connection const &connection = current_ticket.getConnection();
 		if (current_ticket.getServer().isWritePossible(connection.getSocketFd()))
-			write(connection.getSocketFd(), response.c_str(), 1000);
+		{
+			int ret = write(connection.getSocketFd(), response.c_str(), 1000);
+			std::cout << "ret : " << ret << std::endl;
+		}
 		tickets.pop();
 	}
 }
