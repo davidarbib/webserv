@@ -33,6 +33,9 @@ Server::listenSocket()
 	_listen_fd = socket(AF_INET, SOCK_STREAM, 0);
 	if (_listen_fd == -1)
 		throw ListenException();
+	int enable = 1;		
+	if (setsockopt(_listen_fd, SOL_SOCKET, SO_REUSEADDR, &enable, sizeof(int)) < 0)
+		throw ListenException();
 	if (fcntl(_listen_fd, F_SETFL, O_NONBLOCK) == -1)
 		throw ListenException();
 	if (_listen_fd > Server::max_fd)
