@@ -2,6 +2,7 @@
 #include "request_parser.hpp"
 #include "RequestHandler.hpp"
 #include <deque>
+#include <stdio.h>
 
 int handleRequestBuffers(Server &server, TicketsType &tickets,
 							ReqHandlersType &request_handlers)
@@ -20,29 +21,18 @@ int handleRequestBuffers(Server &server, TicketsType &tickets,
 void
 quickresponse(TicketsType &tickets) //TODO copy, modify and integrate and delete after debug
 {
-	std::string response;
-	std::stringstream stream;
+	char s[120];
 	
-	stream << "HTTP/1.1 200 OK";
-	stream << CRLF_S;
-	stream << "Content-Length: 2";
-	stream << CRLF_S;
-	stream << "Content-Type: text/plain";
-	stream << CRLF_S;
-	stream << CRLF_S;
-	stream << "cc";
-	stream << CRLF_S;
-	stream << CRLF_S;
-
-	stream >> response;
-
+	memset(s, 0, 120);
+	sprintf(s, "HTTP/1.1 200 OK%sContent-Length: 2%sContent-Type: text/plain%s%scc%s%s", 
+			CRLF_S, CRLF_S, CRLF_S, CRLF_S, CRLF_S, CRLF_S);
 	while (!tickets.empty())
 	{
 		Ticket &current_ticket = tickets.front();
 		Connection const &connection = current_ticket.getConnection();
 		if (current_ticket.getServer().isWritePossible(connection.getSocketFd()))
 		{
-			int ret = write(connection.getSocketFd(), response.c_str(), 1000);
+			int ret = write(connection.getSocketFd(), s, strlen(s));
 			std::cout << "ret : " << ret << std::endl;
 		}
 		tickets.pop();
@@ -72,7 +62,10 @@ int main(int ac, char **av)
 		Server::setFdset();
 		select(Server::max_fd + 1, &Server::read_fds, &Server::write_fds, NULL, &tv);
 		if (servers[0]->isThereConnectionRequest())
+		{
+			std::cout << "connection requested" << std::endl;
 			servers[0]->createConnection();
+		}
 		servers[0]->watchInput(request_handlers);
 		handleRequestBuffers(*servers[0], tickets, request_handlers);
 		quickresponse(tickets);

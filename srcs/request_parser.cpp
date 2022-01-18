@@ -232,12 +232,19 @@ parseRequest(Connection *raw_request, Server &server, TicketsType &tickets, ReqH
 		if (rh.getRequest()->iStartLineInitialized() == false)
 			rh.setIdx(parseStartLine(rh));
 		else if (rh.getRequest()->isHeadersInitialized() == false)
+		{
+			std::cout << "start line initialized" << std::endl; //TODO
 			rh.setIdx(parseHeaders(rh));
+		}
 		else if (rh.getRequest()->isRequestFinalized() == false)
+		{
+			std::cout << "headers initialized" << std::endl; //TODO
 			rh.setIdx(parseBody(rh));
+		}
 		rh.clearBuffer(rh.getIdx());
 		if (rh.getRequest()->isRequestFinalized() == true)
 		{
+			std::cout << "request finalized" << std::endl; //TODO
 			//UNCOMENT TO SEE REQUEST INFOS
 			std::cout << *rh.getRequest() << std::endl;
 			Ticket my_ticket(*raw_request, rh.getRequest(), server);

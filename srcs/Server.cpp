@@ -101,6 +101,7 @@ Server::watchInput(std::map<fd_t, RequestHandler> &request_handlers)
 			continue ;
 		}
 		int recvret = recv(connection_it->first, buf, BUFSIZE, 0);
+		std::cout << "recvret : " << recvret << std::endl;
 		if (recvret == 0)
 		{
 			delWatchedFd(connection_it->first);
