@@ -49,6 +49,12 @@ Connection::fillBuffer(char *buf)
 }
 
 void
+Connection::setPendingRequest(bool value)
+{
+	_pending_request = value;
+}
+
+void
 Connection::makeIpStr(void)
 {
 	char ip[INET_ADDRSTRLEN];

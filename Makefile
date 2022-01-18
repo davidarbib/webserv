@@ -6,7 +6,7 @@
 #    By: lnezonde <lnezonde@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/11/06 14:53:36 by darbib            #+#    #+#              #
-#    Updated: 2022/01/14 11:36:48 by darbib           ###   ########.fr        #
+#    Updated: 2022/01/14 19:07:59 by darbib           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -65,6 +65,8 @@ SRC = AHttpMessage.cpp \
 
 ifeq ($(CGI_UT), 1)
 	SRC += main_cgi.cpp
+else ifeq ($(SIEGE), 1)
+	SRC += main_siege.cpp
 else
 	SRC += main.cpp
 endif
