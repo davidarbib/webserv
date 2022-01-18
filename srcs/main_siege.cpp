@@ -3,35 +3,22 @@
 #include "RequestHandler.hpp"
 #include <deque>
 
-int handleRequestBuffers(Server &server)
+int handleRequestBuffers(Server &server, TicketsType &tickets,
+							ReqHandlersType &request_handlers)
 {
-	//int ret;
-
+	int ret;
 	if (server.getRefConnections().size() == 0)
 		return 0;
-	//std::map<fd_t, Connection*>::iterator it = server.getRefConnections().begin();
-	//for (; it != server.getRefConnections().end(); it++)
-	//	ret = parseRequest(it->second->getInBuffer(), server);
+	std::map<fd_t, Connection*>::iterator it = server.getRefConnections().begin();
+	for (; it != server.getRefConnections().end(); it++)
+		ret = parseRequest(it->second, server, tickets, request_handlers);
 	return 0;
-}
-
-bool
-quickparser(Buffer &buffer) // TODO debug purpose only, problem for big request
-{
-	for (unsigned long i = 0; i < buffer.getBuffer().size() - CRLFCRLF; i++)
-	{
-		if (isEndSection(buffer.getBuffer(), i))
-			return true;
-		else
-			buffer.getBuffer()[i] = 0;
-	}
-	return false;
 }
 
 #define CRLF_S "\r\n"
 
 void
-quickresponse(Server &server) //TODO copy, modify and integrate and delete after debug
+quickresponse(TicketsType &tickets) //TODO copy, modify and integrate and delete after debug
 {
 	std::string response;
 	std::stringstream stream;
@@ -48,21 +35,13 @@ quickresponse(Server &server) //TODO copy, modify and integrate and delete after
 	//Last-Modified: Wed, 22 Jul 2009 19:15:56 GMT
 	//Vary: Accept-Encoding
 
-	if (server.getRefConnections().size() == 0)
-		return ;
-	std::map<fd_t, Connection*>::iterator it = server.getRefConnections().begin();
-	for(; it != server.getRefConnections().end(); it++)
-	{	
-		Connection* connection = it->second;
-	//	connection->setPendingRequest(quickparser(connection->getInBuffer()));
-
-	//	if (connection->_pending_request 
-	//		&& server.isWritePossible(connection->getSocketFd()))
-		if (server.isWritePossible(connection->getSocketFd()))
-		{
-			write(connection->getSocketFd(), response.c_str(), 1000);
-			connection->setPendingRequest(false);
-		}
+	while (!tickets.empty())
+	{
+		Ticket &current_ticket = tickets.front();
+		Connection const &connection = current_ticket.getConnection();
+		if (current_ticket.getServer().isWritePossible(connection.getSocketFd()))
+			write(connection.getSocketFd(), response.c_str(), 1000);
+		tickets.pop();
 	}
 }
 
@@ -71,8 +50,9 @@ int main(int ac, char **av)
 	(void)ac;
 	(void)av;
 	struct timeval				tv;
-	std::vector<Server*>		servers;
-	std::deque<RequestHandler>	request_handlers;
+	ServersType					servers;
+	ReqHandlersType				request_handlers;
+	TicketsType					tickets;
 
 	Server::max_fd = 0;
 	Server::initFdset();
@@ -90,8 +70,8 @@ int main(int ac, char **av)
 		if (servers[0]->isThereConnectionRequest())
 			servers[0]->createConnection();
 		servers[0]->watchInput();
-		//handleRequestBuffers(*servers[0]);
-		quickresponse(*servers[0]);
+		handleRequestBuffers(*servers[0], tickets, request_handlers);
+		quickresponse(tickets);
 		//writes
 	}
 	return 0;

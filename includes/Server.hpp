@@ -55,7 +55,7 @@ class Server
 		isThereConnectionRequest(void);
 
 		bool
-		isWritePossible(fd_t);
+		isWritePossible(fd_t) const;
 
 		void
 		createConnection(void);

@@ -30,7 +30,7 @@ CgiHandler::CgiHandler(Request &request, std::string* pgm_path, std::string *scr
 	_sender = __tmpfile64__();
 	_receiver = __tmpfile64__();
 	
-	std::string& body = request.get_body();
+	std::string& body = request.getBody();
 	int ret = write(fileno(_sender), body.c_str(), body.size()); //TODO Exception handlin
 	std::cout << "write ret : " << ret << std::endl;
 	rewind(_sender);

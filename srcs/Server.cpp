@@ -123,7 +123,7 @@ Server::isThereConnectionRequest(void)
 }
 
 bool
-Server::isWritePossible(fd_t fd)
+Server::isWritePossible(fd_t fd) const
 {
 	if (FD_ISSET(fd, &Server::write_fds))
 		return 1;
