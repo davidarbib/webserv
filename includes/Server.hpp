@@ -14,6 +14,7 @@
 # include "Connection.hpp"
 # include "Buffer.hpp"
 # include "typedefs.hpp"
+# include "RequestHandler.hpp"
 
 # define DELAY		1
 # define BUFSIZE	2000
@@ -61,7 +62,7 @@ class Server
 		createConnection(void);
 
 		void
-		watchInput(void);
+		watchInput(std::map<fd_t, RequestHandler> &);
 
 		static void
 		setFdset(void);

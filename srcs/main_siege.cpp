@@ -69,7 +69,7 @@ int main(int ac, char **av)
 		select(Server::max_fd + 1, &Server::read_fds, &Server::write_fds, NULL, &tv);
 		if (servers[0]->isThereConnectionRequest())
 			servers[0]->createConnection();
-		servers[0]->watchInput();
+		servers[0]->watchInput(request_handlers);
 		handleRequestBuffers(*servers[0], tickets, request_handlers);
 		quickresponse(tickets);
 		//writes

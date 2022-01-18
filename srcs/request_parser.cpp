@@ -242,6 +242,7 @@ parseRequest(Connection *raw_request, Server &server, TicketsType &tickets, ReqH
 			// std::cout << *rh.getRequest() << std::endl;
 			Ticket my_ticket(*raw_request, rh.getRequest(), server);
 			tickets.push(my_ticket);
+			rh.attachNewRequest();
 		}
 	}
 	else

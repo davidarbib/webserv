@@ -86,7 +86,7 @@ Server::transferToBuffer(fd_t connection_fd, char *buf)
 }
 
 void
-Server::watchInput()
+Server::watchInput(std::map<fd_t, RequestHandler> &request_handlers)
 {
 	char buf[BUFSIZE];
 	memset(reinterpret_cast<void*>(buf), 0, BUFSIZE);
@@ -106,6 +106,7 @@ Server::watchInput()
 			delWatchedFd(connection_it->first);
 			close(connection_it->first);
 			_connections.erase(connection_it);
+			request_handlers.erase(connection_it->first);
 			connection_it = _connections.begin();
 		}
 		else

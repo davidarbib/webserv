@@ -70,3 +70,9 @@ RequestHandler::clearBuffer(int index)
 {
 	_connection.getInBuffer().clearBuffer(index);
 }
+
+void
+RequestHandler::attachNewRequest(void)
+{
+	_request = new Request();
+}
