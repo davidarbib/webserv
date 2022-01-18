@@ -3,9 +3,13 @@
 
 #include <iostream>
 #include "AHttpMessage.hpp"
+#include <sstream>
+#include <fstream>
 
 #define HTTP_VERSION "HTTP/1.1"
 #define SERVER_VERSION "webserv/1.0.0"
+#define CRLF_str "\r\n"
+#define CRLFCRLF_str "\r\n\r\n"
 
 class Response : public AHttpMessage
 {
@@ -47,6 +51,9 @@ class Response : public AHttpMessage
 
 		void
 		notFound(void);
+
+		std::string
+		serialize_response(void);
 };
 
 std::ostream &

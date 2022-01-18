@@ -31,7 +31,7 @@ class AHttpMessage
 		hash_map 		_headers;
 		std::string		_body;
 
-	public:
+	public :
 
 		virtual void
 		setBody(std::string body) = 0;

@@ -30,6 +30,9 @@ int main(int ac, char **av)
 	tv.tv_sec = DELAY;
 	tv.tv_usec = 0;
 
+	Response rep_test;
+	rep_test.notFound();
+	std::cout << rep_test.serialize_response() << std::endl;
 	while (1)
 	{
 		Server::setFdset();

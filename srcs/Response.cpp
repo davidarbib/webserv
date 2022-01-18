@@ -108,6 +108,44 @@ Response::notFound(void)
 	}
 }
 
+std::string
+Response::serialize_response(void)
+{
+	std::stringstream status_line;
+
+	status_line << _start_line.protocol_version;
+	status_line << " ";
+	status_line << _start_line.status_code;
+	status_line << " ";
+	status_line << _start_line.reason_phrase.append(CRLF_str);
+	std::string serialized(status_line.str());
+
+	hash_map::iterator it = _headers.begin();
+	while (it != _headers.end())
+	{
+		serialized += it->first;
+		serialized += ": ";
+		serialized += it->second;
+		serialized += CRLF_str;
+		it++;
+	}
+	serialized += CRLF_str;
+	if (_headers.count("Content-Length") != 0)
+	{
+		std::ifstream html_file("./srcs/html/404.html");
+		if (html_file)
+		{
+			std::string line;
+			while (getline(html_file, line))
+				serialized += line;
+			html_file.close();
+		}
+		else
+			std::cout << "Error when trying to get the response body" << std::endl;
+	}
+	return serialized;
+}
+
 std::ostream &
 operator<<(std::ostream &flux, Response const &response)
 {

@@ -7,6 +7,7 @@
 # include "Ticket.hpp"
 # include <deque>
 # include <queue>
+#include "Response.hpp"
 
 typedef std::queue<Ticket>						TicketsType;
 typedef std::vector<Server*>					ServersType;
