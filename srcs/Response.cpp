@@ -102,8 +102,8 @@ Response::notFound(void)
 		this->_headers["Server"] = SERVER_VERSION;
 		this->_headers["Date"] = getDate();
 		this->_headers["Content-Type"] = "text/html";
-		this->_headers["Content-Length"] = "42";
 		this->_headers["Connection"] = "keep-alive";
+		buildBody("./srcs/html/404.html");
 		this->_error_lock = true;
 	}
 }
@@ -130,20 +130,28 @@ Response::serialize_response(void)
 		it++;
 	}
 	serialized += CRLF_str;
-	if (_headers.count("Content-Length") != 0)
-	{
-		std::ifstream html_file("./srcs/html/404.html");
-		if (html_file)
-		{
-			std::string line;
-			while (getline(html_file, line))
-				serialized += line;
-			html_file.close();
-		}
-		else
-			std::cout << "Error when trying to get the response body" << std::endl;
-	}
+	serialized += _body;
 	return serialized;
+}
+
+void
+Response::buildBody(std::string const& path)
+{
+	std::ifstream web_page(path.c_str());
+	int size = 0;
+	if (web_page)
+	{
+		std::string line;
+		while (getline(web_page, line))
+			_body += line;
+		size = _body.length();
+		std::stringstream s;
+		s << size;
+		this->_headers["Content-Length"] =  s.str();
+		web_page.close();
+	}
+	else
+		return ;
 }
 
 std::ostream &

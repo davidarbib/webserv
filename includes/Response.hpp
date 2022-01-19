@@ -44,6 +44,9 @@ class Response : public AHttpMessage
 		printMessage(std::ostream &flux) const;
 
 		void
+		buildBody(std::string const& path);
+
+		void
 		badRequest(void);
 
 		void
