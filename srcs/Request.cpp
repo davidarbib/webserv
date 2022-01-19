@@ -48,7 +48,7 @@ Request::setHttpVersion(std::string const &http_version)
 }
 
 void
-Request::setBody(std::string body)
+Request::setBody(std::string const& body)
 {
 	this->_body = body;
 }

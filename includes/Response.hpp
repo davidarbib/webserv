@@ -35,7 +35,7 @@ class Response : public AHttpMessage
 		setReasonPhrase(std::string const &reason_phrase);
 
 		void
-		setBody(std::string body);
+		setBody(std::string const& body);
 
 		void
 		setHeader(std::string const &key, std::string const &value);
