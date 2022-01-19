@@ -14,6 +14,7 @@
 # include "Connection.hpp"
 # include "Buffer.hpp"
 # include "typedefs.hpp"
+# include "ConfigServer.hpp"
 
 # define DELAY		1
 # define BUFSIZE	2000
@@ -42,7 +43,8 @@ class Server
 	};
 
 	public:
-		Server(std::string, std::string, uint16_t, std::string, std::string);
+		Server(std::string, std::string, uint16_t, std::string, std::string,
+				ConfigServer const &);
 		virtual ~Server(void);
 
 		std::map<fd_t, Connection*> &getRefConnections(void);
@@ -69,6 +71,9 @@ class Server
 		static void
 		initFdset(void);
 
+		ConfigServer & const
+		getConfig(void);
+
 		static fd_t			max_fd;
 		static fd_set		read_fds;
 		static fd_set 		write_fds;
@@ -82,6 +87,7 @@ class Server
 		std::string 					_error_logs_path;
 		fd_t							_listen_fd;
 		std::map<fd_t, Connection*>		_connections;
+		ConfigServer const				&_config;
 
 		void
 		transferToBuffer(fd_t connection_fd, char *buf);

@@ -102,7 +102,7 @@ ConfigServer::setErrorPages(std::string const &error_pages)
 }
 
 void
-ConfigServer::setMax_body(std::string const &max_body)
+ConfigServer::setMaxBody(std::string const &max_body)
 {
 	if (max_body == "")
 		throw("Wrong max_body rule format, missing body size.");
@@ -150,7 +150,7 @@ ConfigServer::getErrorPages() const {
 }
 
 int
-ConfigServer::getMax_body() const {
+ConfigServer::getMaxBody() const {
 	return (this->_max_body);
 }
 

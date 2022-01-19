@@ -44,7 +44,7 @@ public:
 	setErrorPages(std::string const &error_pages);
 	
 	void
-	setMax_body(std::string const &max_body);
+	setMaxBody(std::string const &max_body);
 
 	void
 	setLocations(std::string const &locations);
@@ -63,7 +63,7 @@ public:
 	getErrorPages() const;
 
 	int
-	getMax_body() const;
+	getMaxBody() const;
 
 	std::vector<ServerLocations>
 	getLocations() const;
@@ -77,4 +77,5 @@ private:
 
 	std::vector<ServerLocations> 	_locations;
 };
+
 #endif

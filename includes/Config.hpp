@@ -30,6 +30,7 @@ public:
 	void	setServers(std::string confFile);
 
 	//GETTERS
-	std::vector<ConfigServer>	getServers() const;
+	std::vector<ConfigServer> &
+	getServers() const;
 };
 #endif
