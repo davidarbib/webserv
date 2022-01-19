@@ -88,6 +88,7 @@ Response::methodNotAllowed(void)
 		this->_headers["Content-Type"] = "text/html";
 		this->_headers["Content-Length"] = "42";
 		this->_headers["Connection"] = "keep-alive";
+		buildBody("./srcs/html/405.html");
 		this->_error_lock = true;
 	}
 }

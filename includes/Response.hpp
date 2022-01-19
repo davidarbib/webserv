@@ -18,6 +18,9 @@ class Response : public AHttpMessage
 		status_line	_start_line;
 		bool		_error_lock;
 
+		void
+		buildBody(std::string const& path);
+
 	public:
 		Response(void);
 		Response(Response &cpy);
@@ -42,9 +45,6 @@ class Response : public AHttpMessage
 
 		void
 		printMessage(std::ostream &flux) const;
-
-		void
-		buildBody(std::string const& path);
 
 		void
 		badRequest(void);
