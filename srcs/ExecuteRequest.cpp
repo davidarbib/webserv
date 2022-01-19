@@ -1,4 +1,4 @@
-#include "executeRequest.hpp"
+#include "ExecuteRequest.hpp"
 
 ExecuteRequest::ExecuteRequest(Request *request)
 {
@@ -14,9 +14,9 @@ ExecuteRequest::ExecuteRequest(ExecuteRequest &cpy)
 }
 
 ExecuteRequest &
-ExecuteRequest::operator=(ExecuteRequest &cpy)
+ExecuteRequest::operator=(ExecuteRequest const& src)
 {
-    _request = cpy.request;
+    _request = src._request;
     return *this;
 }
 
@@ -52,4 +52,20 @@ ExecuteRequest::isValidMethod(std::string const &method) const
 			return false;
 	}
 	return true;
+}
+
+int
+ExecuteRequest::delete_method(void)
+{
+    std::string uri = _request->getStartLine().request_URI;
+    std::string deleted_path("./trash/");
+    std::ifstream in(uri.c_str(), std::ios::in | std::ios::binary);
+    if (in)
+    {
+        std::ofstream out(deleted_path.append(uri).c_str(), std::ios::out | std::ios::binary);
+        out << in.rdbuf();
+        std::remove(uri.c_str());
+        return 200;
+    }
+    return 404;
 }

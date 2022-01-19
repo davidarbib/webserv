@@ -55,7 +55,8 @@ SRC = AHttpMessage.cpp \
 	  CgiHandler.cpp \
 	  Buffer.cpp \
 	  Connection.cpp \
-	  Ticket.cpp
+	  Ticket.cpp \
+	  ExecuteRequest.cpp
 
 ifeq ($(CGI_UT), 1)
 	SRC += main_cgi.cpp
