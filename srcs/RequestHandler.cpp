@@ -2,14 +2,16 @@
 
 RequestHandler::RequestHandler(Request *request, Connection *connection):
 	_request(request),
-	_connection(*connection)
+	_connection(*connection),
+	_a_header_are_parsed(false)
 {
 
 }
 
 RequestHandler::RequestHandler(RequestHandler const &src):
 	_request(src._request),
-	_connection(src._connection)
+	_connection(src._connection),
+	_a_header_are_parsed(src._a_header_are_parsed)
 {
 }
 
@@ -75,4 +77,16 @@ void
 RequestHandler::attachNewRequest(void)
 {
 	_request = new Request();
+}
+
+bool
+RequestHandler::getHeaderAreParsed(void) const
+{
+	return _a_header_are_parsed;
+}
+
+void
+RequestHandler::setHeaderAreParsed(bool value)
+{
+	_a_header_are_parsed = value;
 }

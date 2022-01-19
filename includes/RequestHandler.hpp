@@ -13,6 +13,7 @@ class RequestHandler
 
 		Request					*_request;
 		Connection				&_connection;
+		bool					_a_header_are_parsed;
 
 		RequestHandler
 		&operator=(RequestHandler const &rhs);
@@ -53,6 +54,12 @@ class RequestHandler
 
 		void
 		attachNewRequest(void);
+
+		bool
+		getHeaderAreParsed(void) const;
+
+		void
+		setHeaderAreParsed(bool value);
 };
 
 #endif

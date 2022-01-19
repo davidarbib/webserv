@@ -75,6 +75,7 @@ getOneHeader(RequestHandler &rh, int position)
 	std::string key;
 	std::string value;
 
+		rh.setHeaderAreParsed(false);
 	while (rh.getBuffer()[index] && rh.getBuffer()[index] != ':')
 	{
 		key += rh.getBuffer()[index];
@@ -92,6 +93,7 @@ getOneHeader(RequestHandler &rh, int position)
 		rh.getRequest()->setHeaderInitialized(true);
 		index += CRLF;
 	}
+	rh.setHeaderAreParsed(true);
 	return index + CRLF;
 }
 
@@ -251,6 +253,13 @@ parseRequest(Connection *raw_request, Server &server, TicketsType &tickets, ReqH
 			tickets.push(my_ticket);
 			rh.attachNewRequest();
 		}
+	}
+	else if (rh.getHeaderAreParsed() == true)
+	{
+		std::cout << "OUAIS OUAIS OUAIssss" << std::endl;
+		rh.setHeaderAreParsed(false);
+		// rh.getRequest()->setHeaderInitialized(true);
+		// index += CRLF;
 	}
 	else
 		return 0;
