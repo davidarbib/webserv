@@ -9,6 +9,11 @@
 #include <cstdio>
 
 #define METHOD_NB 3
+#define OK 200
+#define ACCEPTED 202
+#define NO_CONTENT 204
+#define NOT_FOUND 404
+#define NOT_ALLOWED 405
 
 class ExecuteRequest
 {
@@ -37,7 +42,8 @@ class ExecuteRequest
 
         // get / delete / post exec
 
-        int delete_method(void);
+        int
+        delete_method(void);
 };
 
 #endif

@@ -65,7 +65,8 @@ ExecuteRequest::delete_method(void)
         std::ofstream out(deleted_path.append(uri).c_str(), std::ios::out | std::ios::binary);
         out << in.rdbuf();
         std::remove(uri.c_str());
-        return 200;
+        return OK;
     }
-    return 404;
+    else
+        return NOT_FOUND;
 }
