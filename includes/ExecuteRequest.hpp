@@ -43,7 +43,7 @@ class ExecuteRequest
         // get / delete / post exec
 
         int
-        delete_method(void);
+        deleteMethod(void);
 };
 
 #endif

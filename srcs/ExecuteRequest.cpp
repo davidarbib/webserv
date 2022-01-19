@@ -16,7 +16,6 @@ ExecuteRequest::ExecuteRequest(ExecuteRequest &cpy)
 ExecuteRequest &
 ExecuteRequest::operator=(ExecuteRequest const& src)
 {
-    _request = src._request;
     return *this;
 }
 
@@ -55,7 +54,7 @@ ExecuteRequest::isValidMethod(std::string const &method) const
 }
 
 int
-ExecuteRequest::delete_method(void)
+ExecuteRequest::deleteMethod(void)
 {
     std::string uri = _request->getStartLine().request_URI;
     std::string deleted_path("./trash/");

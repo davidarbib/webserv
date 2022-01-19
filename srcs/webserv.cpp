@@ -12,6 +12,14 @@ int handleRequestBuffers(Server &server, TicketsType &tickets,
 	return 0;
 }
 
+Response &processRequest(TicketsType &tickets)
+{
+	while (tickets.empty() == false)
+	{
+		
+	}
+}
+
 int main(int ac, char **av)
 {
 	(void)ac;
