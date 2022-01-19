@@ -1,7 +1,6 @@
 #include "Request.hpp"
 
-Request::Request(void) : _response(), 
-						 _start_line_initialized(false),
+Request::Request(void) : _start_line_initialized(false),
 						 _headers_initialized(false),
 						 _request_finalized(false) 
 {
@@ -122,13 +121,6 @@ const request_line
 Request::getStartLine(void) const
 {	
 	return this->_start_line;
-}
-
-Response
-Request::get_response(void)
-{
-	Response response(this->_response);
-	return response;
 }
 
 void

@@ -14,7 +14,6 @@ class Request : public AHttpMessage
 
 		std::string 	_method_list[METHOD_NB];
 		request_line 	_start_line;
-		Response 		_response;
 		bool			_start_line_initialized;
 		bool			_headers_initialized;
 		bool			_request_finalized;
@@ -83,9 +82,6 @@ class Request : public AHttpMessage
 
 		const request_line
 		getStartLine(void) const;
-
-		Response
-		get_response(void);
 };
 
 std::ostream &
