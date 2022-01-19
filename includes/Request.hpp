@@ -6,26 +6,14 @@
 #include "AHttpMessage.hpp"
 #include "Response.hpp"
 
-#define METHOD_NB 4
-
 class Request : public AHttpMessage
 {
 	private:
 
-		std::string 	_method_list[METHOD_NB];
 		request_line 	_start_line;
 		bool			_start_line_initialized;
 		bool			_headers_initialized;
 		bool			_request_finalized;
-
-		void
-		initMethodList(void);
-
-		bool
-		isAllowedMethod(std::string const &method) const;
-
-		bool
-		isValidMethod(std::string const &method) const;
 
 	public:
 
