@@ -14,7 +14,6 @@
 # include "Connection.hpp"
 # include "Buffer.hpp"
 # include "typedefs.hpp"
-# include "RequestHandler.hpp"
 
 # define DELAY		1
 # define BUFSIZE	2000
@@ -49,26 +48,13 @@ class Server
 		std::map<fd_t, Connection*> &getRefConnections(void);
 		std::map<fd_t, Connection*> getConnections(void) const;
 
-		fd_t
-		listenSocket(void);
+		fd_t				listenSocket(void);
+		bool				isThereConnectionRequest(void);
+		void				createConnection(void);
+		void				watchInput(void);
 
-		bool
-		isThereConnectionRequest(void);
-
-		bool
-		isWritePossible(fd_t) const;
-
-		void
-		createConnection(void);
-
-		void
-		watchInput(std::map<fd_t, RequestHandler> &);
-
-		static void
-		setFdset(void);
-
-		static void
-		initFdset(void);
+		static void			setFdset(void);
+		static void			initFdset(void);
 
 		static fd_t			max_fd;
 		static fd_set		read_fds;
@@ -84,20 +70,11 @@ class Server
 		fd_t							_listen_fd;
 		std::map<fd_t, Connection*>		_connections;
 
-		void
-		transferToBuffer(fd_t connection_fd, char *buf);
-
-		void
-		recvSend(void);
-
-		bool
-		isThereSomethingToRead(fd_t);
-
-		void
-		addWatchedFd(fd_t);
-
-		void
-		delWatchedFd(fd_t);
+		void				transferToBuffer(fd_t connection_fd, char *buf);
+		void				recvSend(void);
+		bool				isThereSomethingToRead(fd_t);
+		void				addWatchedFd(fd_t);
+		void				delWatchedFd(fd_t);
 
 		Server(void);
 		Server(Server const &src);

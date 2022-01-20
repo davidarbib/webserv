@@ -3,13 +3,12 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: lnezonde <lnezonde@student.42.fr>          +#+  +:+       +#+         #
+#    By: darbib <darbib@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/11/06 14:53:36 by darbib            #+#    #+#              #
-#    Updated: 2022/01/14 19:07:59 by darbib           ###   ########.fr        #
+#    Updated: 2022/01/09 19:14:39 by darbib           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
-
 SHELL = /bin/zsh
 
 BLUE = 		'\033[0;34m'
@@ -53,11 +52,6 @@ SRC = AHttpMessage.cpp \
 	  Response.cpp \
 	  Server.cpp \
 	  request_parser.cpp \
-	  Config.cpp \
-	  ConfigUtils.cpp \
-	  ConfigServer.cpp \
-	  ServerLocations.cpp \
-	  safe_wrappers.cpp \
 	  CgiHandler.cpp \
 	  Buffer.cpp \
 	  Connection.cpp \
@@ -66,10 +60,8 @@ SRC = AHttpMessage.cpp \
 
 ifeq ($(CGI_UT), 1)
 	SRC += main_cgi.cpp
-else ifeq ($(SIEGE), 1)
-	SRC += main_siege.cpp
 else
-	SRC += main.cpp
+	SRC += webserv.cpp
 endif
 
 #TEST_SRC = main_test.cpp

@@ -50,9 +50,6 @@ class RequestHandler
 
 		void
 		clearBuffer(int);
-
-		void
-		attachNewRequest(void);
 };
 
 #endif

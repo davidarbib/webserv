@@ -42,11 +42,6 @@ class Connection
 		
 		void
 		fillBuffer(char *buf);
-		
-		void
-		setPendingRequest(bool value); //TODO delete
-
-		bool			_pending_request; //TODO delete after debug 
 
 	private:
 		Connection(Connection const &src);
