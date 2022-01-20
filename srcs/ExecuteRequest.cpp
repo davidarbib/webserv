@@ -16,6 +16,7 @@ ExecuteRequest::ExecuteRequest(ExecuteRequest &cpy)
 ExecuteRequest &
 ExecuteRequest::operator=(ExecuteRequest const& src)
 {
+    (void)src;
     return *this;
 }
 

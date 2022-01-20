@@ -12,12 +12,11 @@ int handleRequestBuffers(Server &server, TicketsType &tickets,
 	return 0;
 }
 
-Response &processRequest(TicketsType &tickets)
+Response processRequest(TicketsType &tickets)
 {
-	while (tickets.empty() == false)
-	{
-		
-	}
+	(void)tickets;
+	Response response;
+	return response;
 }
 
 int main(int ac, char **av)
