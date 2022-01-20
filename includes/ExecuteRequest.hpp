@@ -12,6 +12,7 @@
 #define OK 200
 #define ACCEPTED 202
 #define NO_CONTENT 204
+#define BAD_REQUEST 400
 #define NOT_FOUND 404
 #define NOT_ALLOWED 405
 
@@ -20,9 +21,7 @@ class ExecuteRequest
 
     private:
         std::string 	_method_list[METHOD_NB];
-        Request         *_request;
-
-        ExecuteRequest(void);
+        int             _status_code;
 
         void
 		initMethodList(void);
@@ -34,16 +33,23 @@ class ExecuteRequest
 		isValidMethod(std::string const &method) const;
 
     public:
-        ExecuteRequest(Request *request);
+        ExecuteRequest(void);
         ExecuteRequest(ExecuteRequest &cpy);
         ExecuteRequest &
         operator=(ExecuteRequest const& src);
         virtual ~ExecuteRequest(void);
 
+        int
+        getStatusCode(void) const;
+
+        Response
+        generateResponse(void);
+        
+
         // get / delete / post exec
 
-        int
-        deleteMethod(void);
+        void
+        deleteMethod(std::string const& URI);
 };
 
 #endif

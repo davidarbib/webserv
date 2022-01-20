@@ -14,8 +14,23 @@ int handleRequestBuffers(Server &server, TicketsType &tickets,
 
 Response processRequest(TicketsType &tickets)
 {
-	(void)tickets;
+	ExecuteRequest executor;
 	Response response;
+	while (!tickets.empty())
+	{
+		if (tickets.front().getRequest().getStartLine().method_token == "DELETE")
+		{
+			executor.deleteMethod(tickets.front().getRequest().getStartLine().request_URI);
+			std::cout << "STATUS CODE : " << executor.getStatusCode() << std::endl;
+			response = executor.generateResponse();
+		}
+		else
+		{
+			response.methodNotAllowed();
+		}
+		std::cout << response.serialize_response() << std::endl;
+		tickets.pop();
+	}
 	return response;
 }
 
@@ -37,9 +52,6 @@ int main(int ac, char **av)
 	tv.tv_sec = DELAY;
 	tv.tv_usec = 0;
 
-	Response rep_test;
-	rep_test.notFound();
-	std::cout << rep_test.serialize_response() << std::endl;
 	while (1)
 	{
 		Server::setFdset();
@@ -48,6 +60,7 @@ int main(int ac, char **av)
 			servers[0]->createConnection();
 		servers[0]->watchInput();
 		handleRequestBuffers(*servers[0], tickets, request_handlers);
+		processRequest(tickets);
 		//writes
 	}
 	return 0;

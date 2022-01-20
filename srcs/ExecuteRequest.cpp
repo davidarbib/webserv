@@ -1,9 +1,7 @@
 #include "ExecuteRequest.hpp"
 
-ExecuteRequest::ExecuteRequest(Request *request)
+ExecuteRequest::ExecuteRequest() : _status_code(0)
 {
-    _request = new Request();
-    _request = request;
     initMethodList();
 }
 
@@ -55,9 +53,37 @@ ExecuteRequest::isValidMethod(std::string const &method) const
 }
 
 int
-ExecuteRequest::deleteMethod(void)
+ExecuteRequest::getStatusCode(void) const
 {
-    std::string uri = _request->getStartLine().request_URI;
+    return _status_code;
+}
+
+Response
+ExecuteRequest::generateResponse(void)
+{
+    Response response;
+
+    switch(_status_code)
+    {
+        case BAD_REQUEST:
+            response.badRequest();
+            break;
+        case NOT_FOUND:
+            response.notFound();
+            break;
+        case NOT_ALLOWED:
+            response.methodNotAllowed();
+            break;
+        default:
+            std::cout << "response not define yet" << std::endl;
+    }
+    return response;
+}
+
+void
+ExecuteRequest::deleteMethod(std::string const& URI)
+{
+    std::string uri = "./" + URI;
     std::string deleted_path("./trash/");
     std::ifstream in(uri.c_str(), std::ios::in | std::ios::binary);
     if (in)
@@ -65,8 +91,8 @@ ExecuteRequest::deleteMethod(void)
         std::ofstream out(deleted_path.append(uri).c_str(), std::ios::out | std::ios::binary);
         out << in.rdbuf();
         std::remove(uri.c_str());
-        return OK;
+        _status_code = OK;
+        return ;
     }
-    else
-        return NOT_FOUND;
+    _status_code = NOT_FOUND;
 }
