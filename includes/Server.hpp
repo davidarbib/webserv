@@ -45,6 +45,7 @@ class Server
 	public:
 		Server(std::string, std::string, uint16_t, std::string, std::string,
 				ConfigServer const &);
+
 		virtual ~Server(void);
 
 		std::map<fd_t, Connection*> &getRefConnections(void);
@@ -71,8 +72,8 @@ class Server
 		static void
 		initFdset(void);
 
-		ConfigServer & const
-		getConfig(void);
+		ConfigServer const &
+		getConfig(void) const;
 
 		static fd_t			max_fd;
 		static fd_set		read_fds;
@@ -80,11 +81,8 @@ class Server
 		static fd_set 		origin_fds;
 
 	private:
-		std::string						_name;
 		std::string						_ip;
 		uint16_t						_port;
-		std::string 					_access_logs_path;
-		std::string 					_error_logs_path;
 		fd_t							_listen_fd;
 		std::map<fd_t, Connection*>		_connections;
 		ConfigServer const				&_config;

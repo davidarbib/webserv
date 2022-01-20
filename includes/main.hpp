@@ -10,7 +10,7 @@
 # include <queue>
 
 typedef std::queue<Ticket>						TicketsType;
-typedef std::vector<Server*>					ServersType;
+typedef std::vector<Server>						ServersType;
 typedef std::map<fd_t, RequestHandler>			ReqHandlersType;
 
 #endif

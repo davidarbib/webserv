@@ -2,13 +2,13 @@
 
 Server::Server(std::string name, std::string ip, unsigned short port,
 				std::string access_logs_path, std::string error_logs_path,
-				ConfigServer const &config);
+				ConfigServer const &config)
 :	_name(name),
 	_ip(ip),
 	_port(port),
 	_access_logs_path(access_logs_path),
 	_error_logs_path(error_logs_path),
-	_config(conf)
+	_config(config)
 {
 }
 
@@ -28,8 +28,8 @@ Server::getConnections(void) const
 	return _connections;
 }
 
-ConfigServer & const
-getConfig(void)
+ConfigServer const &
+Server::getConfig(void) const
 {
 	return _config;
 }
