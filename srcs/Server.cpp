@@ -33,6 +33,9 @@ Server::listenSocket()
 	_listen_fd = socket(AF_INET, SOCK_STREAM, 0);
 	if (_listen_fd == -1)
 		throw ListenException();
+	int enable = 1;		
+	if (setsockopt(_listen_fd, SOL_SOCKET, SO_REUSEADDR, &enable, sizeof(int)) < 0)
+		throw ListenException();
 	if (fcntl(_listen_fd, F_SETFL, O_NONBLOCK) == -1)
 		throw ListenException();
 	if (_listen_fd > Server::max_fd)
@@ -48,28 +51,6 @@ Server::listenSocket()
 	listen(_listen_fd, 1);
 	addWatchedFd(_listen_fd);
 	return _listen_fd;
-}
-
-bool				
-Server::isThereConnectionRequest(void)
-{
-	if (FD_ISSET(_listen_fd, &Server::read_fds))
-		return 1;
-	return 0;
-}
-
-void 
-Server::addWatchedFd(fd_t fd)
-{
-	FD_SET(fd, &Server::origin_fds);
-	if (fd > Server::max_fd)
-		Server::max_fd = fd;
-}
-
-void
-Server::delWatchedFd(fd_t fd)
-{
-	FD_CLR(fd, &Server::origin_fds);
 }
 
 void
@@ -105,7 +86,7 @@ Server::transferToBuffer(fd_t connection_fd, char *buf)
 }
 
 void
-Server::watchInput()
+Server::watchInput(std::map<fd_t, RequestHandler> &request_handlers)
 {
 	char buf[BUFSIZE];
 	memset(reinterpret_cast<void*>(buf), 0, BUFSIZE);
@@ -125,6 +106,7 @@ Server::watchInput()
 			delWatchedFd(connection_it->first);
 			close(connection_it->first);
 			_connections.erase(connection_it);
+			request_handlers.erase(connection_it->first);
 			connection_it = _connections.begin();
 		}
 		else
@@ -134,6 +116,36 @@ Server::watchInput()
 			connection_it++;
 		}
 	}
+}
+
+bool				
+Server::isThereConnectionRequest(void)
+{
+	if (FD_ISSET(_listen_fd, &Server::read_fds))
+		return 1;
+	return 0;
+}
+
+bool
+Server::isWritePossible(fd_t fd) const
+{
+	if (FD_ISSET(fd, &Server::write_fds))
+		return 1;
+	return 0;
+}
+
+void 
+Server::addWatchedFd(fd_t fd)
+{
+	FD_SET(fd, &Server::origin_fds);
+	if (fd > Server::max_fd)
+		Server::max_fd = fd;
+}
+
+void
+Server::delWatchedFd(fd_t fd)
+{
+	FD_CLR(fd, &Server::origin_fds);
 }
 
 bool

@@ -112,8 +112,10 @@ int
 parseHeaders(RequestHandler &rh)
 {
 	int index = rh.getIdx();
-
-	index = getOneHeader(rh, index);
+	if (rh.isEndLine(rh.getBuffer(), index))
+		rh.getRequest()->setHeaderInitialized(true);
+	else
+		index = getOneHeader(rh, index);
 	if (rh.getRequest()->isHeadersInitialized() == true)
 		rh.getRequest()->setRequestFinalized(!has_body(rh));
 	return index;
@@ -130,8 +132,6 @@ is_complete_line(std::string &line, int idx)
 			return true;
 		i++;
 	}
-	if (i == line.length())
-		return true;
 	return false;
 }
 
@@ -242,9 +242,8 @@ parseRequest(Connection *raw_request, Server &server, TicketsType &tickets, ReqH
 			// std::cout << *rh.getRequest() << std::endl;
 			Ticket my_ticket(*raw_request, rh.getRequest(), server);
 			tickets.push(my_ticket);
+			rh.attachNewRequest();
 		}
 	}
-	else
-		return 0;
 	return 0;
 }
