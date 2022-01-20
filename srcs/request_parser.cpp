@@ -75,9 +75,6 @@ getOneHeader(RequestHandler &rh, int position)
 	std::string key;
 	std::string value;
 
-	if (rh.getBuffer()[rh.getIdx()] == 0)
-		return index;
-	rh.setHeaderAreParsed(false);
 	while (rh.getBuffer()[index] && rh.getBuffer()[index] != ':')
 	{
 		key += rh.getBuffer()[index];
@@ -95,7 +92,6 @@ getOneHeader(RequestHandler &rh, int position)
 		rh.getRequest()->setHeaderInitialized(true);
 		index += CRLF;
 	}
-	rh.setHeaderAreParsed(true);
 	return index + CRLF;
 }
 
@@ -116,8 +112,10 @@ int
 parseHeaders(RequestHandler &rh)
 {
 	int index = rh.getIdx();
-
-	index = getOneHeader(rh, index);
+	if (rh.isEndLine(rh.getBuffer(), index))
+		rh.getRequest()->setHeaderInitialized(true);
+	else
+		index = getOneHeader(rh, index);
 	if (rh.getRequest()->isHeadersInitialized() == true)
 		rh.getRequest()->setRequestFinalized(!has_body(rh));
 	return index;
@@ -234,37 +232,20 @@ parseRequest(Connection *raw_request, Server &server, TicketsType &tickets, ReqH
 		if (rh.getRequest()->iStartLineInitialized() == false)
 			rh.setIdx(parseStartLine(rh));
 		else if (rh.getRequest()->isHeadersInitialized() == false)
-		{
-			std::cout << "header line initialized" << std::endl; //TODO
 			rh.setIdx(parseHeaders(rh));
-		}
 		else if (rh.getRequest()->isRequestFinalized() == false)
-		{
-			std::cout << "parsing body" << std::endl; //TODO
 			rh.setIdx(parseBody(rh));
-		}
-		// print_buffer(rh.getBuffer());
 		rh.clearBuffer(rh.getIdx());
 		if (rh.getRequest()->isRequestFinalized() == true)
 		{
-			std::cout << "request finalized" << std::endl; //TODO
 			//UNCOMENT TO SEE REQUEST INFOS
-			std::cout << *rh.getRequest() << std::endl;
+			// std::cout << *rh.getRequest() << std::endl;
 			Ticket my_ticket(*raw_request, rh.getRequest(), server);
 			tickets.push(my_ticket);
 			rh.attachNewRequest();
 		}
 	}
 	else
-	{
-		if (rh.getBuffer()[rh.getIdx() - 4] == '\r' && rh.getBuffer()[rh.getIdx() - 3] == '\n')
-		{
-			std::cout << "WALLAH C FINI WSH" << "PH" << std::endl; 
-			rh.getRequest()->setHeaderInitialized(true);
-			rh.incIdx(CRLF);
-			rh.setHeaderAreParsed(false);
-		}
 		return 0;
-	}
 	return 0;
 }
