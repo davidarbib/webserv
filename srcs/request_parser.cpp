@@ -75,7 +75,9 @@ getOneHeader(RequestHandler &rh, int position)
 	std::string key;
 	std::string value;
 
-		rh.setHeaderAreParsed(false);
+	if (rh.getBuffer()[rh.getIdx()] == 0)
+		return index;
+	rh.setHeaderAreParsed(false);
 	while (rh.getBuffer()[index] && rh.getBuffer()[index] != ':')
 	{
 		key += rh.getBuffer()[index];
@@ -132,8 +134,6 @@ is_complete_line(std::string &line, int idx)
 			return true;
 		i++;
 	}
-	if (i == line.length())
-		return true;
 	return false;
 }
 
@@ -235,14 +235,15 @@ parseRequest(Connection *raw_request, Server &server, TicketsType &tickets, ReqH
 			rh.setIdx(parseStartLine(rh));
 		else if (rh.getRequest()->isHeadersInitialized() == false)
 		{
-			std::cout << "start line initialized" << std::endl; //TODO
+			std::cout << "header line initialized" << std::endl; //TODO
 			rh.setIdx(parseHeaders(rh));
 		}
 		else if (rh.getRequest()->isRequestFinalized() == false)
 		{
-			std::cout << "headers initialized" << std::endl; //TODO
+			std::cout << "parsing body" << std::endl; //TODO
 			rh.setIdx(parseBody(rh));
 		}
+		// print_buffer(rh.getBuffer());
 		rh.clearBuffer(rh.getIdx());
 		if (rh.getRequest()->isRequestFinalized() == true)
 		{
@@ -254,14 +255,16 @@ parseRequest(Connection *raw_request, Server &server, TicketsType &tickets, ReqH
 			rh.attachNewRequest();
 		}
 	}
-	else if (rh.getHeaderAreParsed() == true)
-	{
-		std::cout << "OUAIS OUAIS OUAIssss" << std::endl;
-		rh.setHeaderAreParsed(false);
-		// rh.getRequest()->setHeaderInitialized(true);
-		// index += CRLF;
-	}
 	else
+	{
+		if (rh.getBuffer()[rh.getIdx() - 4] == '\r' && rh.getBuffer()[rh.getIdx() - 3] == '\n')
+		{
+			std::cout << "WALLAH C FINI WSH" << "PH" << std::endl; 
+			rh.getRequest()->setHeaderInitialized(true);
+			rh.incIdx(CRLF);
+			rh.setHeaderAreParsed(false);
+		}
 		return 0;
+	}
 	return 0;
 }
