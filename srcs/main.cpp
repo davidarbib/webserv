@@ -11,22 +11,6 @@ processArgs(int ac, char **av, Config &conf)
 	return 0;
 }
 
-int 
-processConfigFile(std::string &config_path, Config &conf)
-{	
-	conf.setServers(config_path);	
-	return 0;
-}
-
-int
-createServers(ServersType &servers, Config &conf)
-{
-	std::vector<ConfigServer> &configs = conf.getServers();
-	for (it = std::vector<ConfigServer>::iterator = configs.begin();
-			it != configs.end(); it++)
-		servers.push_back(Server("origin", IP, PORT, "/tmp/access", "/tmp/error", *it));
-}
-
 int
 handleRequestBuffers(ServerType &servers, TicketsType &tickets,
 							ReqHandlersType &request_handlers)
