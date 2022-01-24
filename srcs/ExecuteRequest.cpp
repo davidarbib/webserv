@@ -63,20 +63,7 @@ ExecuteRequest::generateResponse(void)
 {
     Response response;
 
-    switch(_status_code)
-    {
-        case BAD_REQUEST:
-            response.badRequest();
-            break;
-        case NOT_FOUND:
-            response.notFound();
-            break;
-        case NOT_ALLOWED:
-            response.methodNotAllowed();
-            break;
-        default:
-            std::cout << "response not define yet" << std::endl;
-    }
+    response.buildPreResponse(_status_code);
     return response;
 }
 

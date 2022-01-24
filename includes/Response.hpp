@@ -32,7 +32,6 @@ class Response : public AHttpMessage
 		static std::map<int, std::string>
 		fillResponseCodes(void);
 
-
 		void
 		setProtocolVersion(std::string const &protocol_version);
 
@@ -59,6 +58,9 @@ class Response : public AHttpMessage
 
 		void
 		notFound(void);
+
+		void
+		buildPreResponse(int code);
 
 		std::string
 		serialize_response(void);

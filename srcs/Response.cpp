@@ -108,6 +108,23 @@ Response::notFound(void)
 	}
 }
 
+void
+Response::buildPreResponse(int code)
+{
+	std::stringstream body_path;
+	this->_start_line.status_code = code;
+	this->_start_line.reason_phrase = Response::errors_code.find(code)->second;
+	this->_headers["Server"] = SERVER_VERSION;
+	this->_headers["Date"] = getDate();
+	this->_headers["Content-Type"] = "text/html";
+	this->_headers["Connection"] = "keep-alive";
+	this->_error_lock = true;
+	body_path << "./src/html/";
+	body_path << code;
+	body_path << ".html";
+	buildBody(body_path.str());
+}
+
 std::string
 Response::serialize_response(void)
 {

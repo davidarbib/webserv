@@ -22,7 +22,7 @@ Response processRequest(TicketsType &tickets)
 		{
 			executor.deleteMethod(tickets.front().getRequest().getStartLine().request_URI);
 			std::cout << "STATUS CODE : " << executor.getStatusCode() << std::endl;
-			response = executor.generateResponse();
+			// response = executor.generateResponse();
 		}
 		else
 		{
