@@ -68,6 +68,12 @@ ExecuteRequest::generateResponse(void)
 }
 
 void
+ExecuteRequest::setStatusCode(int status_code)
+{
+    this->_status_code = status_code;
+}
+
+void
 ExecuteRequest::deleteMethod(std::string const& URI)
 {
     std::string uri = "./" + URI;

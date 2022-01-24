@@ -42,6 +42,9 @@ class ExecuteRequest
         int
         getStatusCode(void) const;
 
+        void
+        setStatusCode(int status_code);
+
         Response
         generateResponse(void);
         

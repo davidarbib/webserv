@@ -23,6 +23,8 @@ Response processRequest(TicketsType &tickets)
 			executor.deleteMethod(tickets.front().getRequest().getStartLine().request_URI);
 			std::cout << "STATUS CODE : " << executor.getStatusCode() << std::endl;
 		}
+		else
+			executor.setStatusCode(405);
 		response = executor.generateResponse();
 		std::cout << response.serialize_response() << std::endl;
 		tickets.pop();
