@@ -134,6 +134,7 @@ std::map<int, std::string> Response::fillResponseCodes(void)
 {
 	std::map<int, std::string> codes;
 
+	codes.insert(std::make_pair(200, "OK"));
 	codes.insert(std::make_pair(400, "Bad Request"));
 	codes.insert(std::make_pair(401, "Unauthorized"));
 	codes.insert(std::make_pair(403, "Forbidden"));

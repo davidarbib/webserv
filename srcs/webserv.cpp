@@ -22,12 +22,8 @@ Response processRequest(TicketsType &tickets)
 		{
 			executor.deleteMethod(tickets.front().getRequest().getStartLine().request_URI);
 			std::cout << "STATUS CODE : " << executor.getStatusCode() << std::endl;
-			response = executor.generateResponse();
 		}
-		else
-		{
-			response.methodNotAllowed();
-		}
+		response = executor.generateResponse();
 		std::cout << response.serialize_response() << std::endl;
 		tickets.pop();
 	}
