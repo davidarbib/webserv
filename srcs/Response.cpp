@@ -160,3 +160,19 @@ operator<<(std::ostream &flux, Response const &response)
 	response.printMessage(flux);
 	return flux;
 }
+
+std::map<int, std::string> Response::fillResponseCodes(void)
+{
+	std::map<int, std::string> codes;
+
+	codes.insert(std::make_pair(400, "Bad Request"));
+	codes.insert(std::make_pair(401, "Unauthorized"));
+	codes.insert(std::make_pair(403, "Forbidden"));
+	codes.insert(std::make_pair(404, "Not Found"));
+	codes.insert(std::make_pair(405, "Not Allowed"));
+
+	return codes;
+}
+
+
+std::map<int, std::string> Response::errors_code = std::map<int, std::string>();

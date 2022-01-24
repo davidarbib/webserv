@@ -42,6 +42,7 @@ int main(int ac, char **av)
 	ServersType					servers;
 	ReqHandlersType				request_handlers;
 	TicketsType					tickets;
+	Response::errors_code = Response::fillResponseCodes();
 
 	Server::max_fd = 0;
 	Server::initFdset();

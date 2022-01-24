@@ -16,17 +16,22 @@ class Response : public AHttpMessage
 	private:
 
 		status_line	_start_line;
-		bool		_error_lock;
+		bool		_error_lock; 
 
 		void
 		buildBody(std::string const& path);
 
 	public:
+		static std::map<int, std::string> errors_code;
 		Response(void);
 		Response(Response &cpy);
 		Response &
 		operator=(Response const &src);
 		virtual ~Response(void);
+
+		static std::map<int, std::string>
+		fillResponseCodes(void);
+
 
 		void
 		setProtocolVersion(std::string const &protocol_version);
