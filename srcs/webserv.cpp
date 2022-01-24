@@ -21,10 +21,10 @@ Response processRequest(TicketsType &tickets)
 		if (tickets.front().getRequest().getStartLine().method_token == "DELETE")
 		{
 			executor.deleteMethod(tickets.front().getRequest().getStartLine().request_URI);
-			std::cout << "STATUS CODE : " << executor.getStatusCode() << std::endl;
 		}
 		else
 			executor.setStatusCode(405);
+		std::cout << "STATUS CODE : " << executor.getStatusCode() << std::endl;
 		response = executor.generateResponse();
 		std::cout << response.serialize_response() << std::endl;
 		tickets.pop();

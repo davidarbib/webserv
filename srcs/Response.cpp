@@ -71,7 +71,7 @@ Response::buildPreResponse(int code)
 	this->_headers["Content-Type"] = "text/html";
 	this->_headers["Connection"] = "keep-alive";
 	this->_error_lock = true;
-	body_path << "./src/html/";
+	body_path << "./srcs/html/";
 	body_path << code;
 	body_path << ".html";
 	buildBody(body_path.str());
