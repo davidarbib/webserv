@@ -51,15 +51,6 @@ class Response : public AHttpMessage
 		printMessage(std::ostream &flux) const;
 
 		void
-		badRequest(void);
-
-		void
-		methodNotAllowed(void);
-
-		void
-		notFound(void);
-
-		void
 		buildPreResponse(int code);
 
 		std::string

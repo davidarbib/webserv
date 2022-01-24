@@ -61,54 +61,6 @@ Response::printMessage(std::ostream &flux) const
 }
 
 void
-Response::badRequest(void)
-{
-	if (this->_error_lock == false)
-	{
-		this->_start_line.status_code = 400;
-		this->_start_line.reason_phrase = "Bad request";
-		this->_headers["Content-Type"] = "text/html";
-		this->_headers["Content-Length"] = "42";
-		this->_headers["Server"] = SERVER_VERSION;
-		this->_headers["Date"] = getDate();
-		this->_headers["Connection"] = "close";
-		this->_error_lock = true;
-	}
-}
-
-void
-Response::methodNotAllowed(void)
-{
-	if (this->_error_lock == false)
-	{
-		this->_start_line.status_code = 405;
-		this->_start_line.reason_phrase = "Not Allowed";
-		this->_headers["Server"] = SERVER_VERSION;
-		this->_headers["Date"] = getDate();
-		this->_headers["Content-Type"] = "text/html";
-		this->_headers["Connection"] = "keep-alive";
-		buildBody("./srcs/html/405.html");
-		this->_error_lock = true;
-	}
-}
-
-void
-Response::notFound(void)
-{
-	if (this->_error_lock == false)
-	{
-		this->_start_line.status_code = 404;
-		this->_start_line.reason_phrase = "Not Found";
-		this->_headers["Server"] = SERVER_VERSION;
-		this->_headers["Date"] = getDate();
-		this->_headers["Content-Type"] = "text/html";
-		this->_headers["Connection"] = "keep-alive";
-		buildBody("./srcs/html/404.html");
-		this->_error_lock = true;
-	}
-}
-
-void
 Response::buildPreResponse(int code)
 {
 	std::stringstream body_path;
