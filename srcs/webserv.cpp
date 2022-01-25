@@ -20,13 +20,9 @@ Response processRequest(TicketsType &tickets)
 	while (!tickets.empty())
 	{
 		if (tickets.front().getRequest().getStartLine().method_token == "DELETE")
-		{
 			body_path = executor.deleteMethod(tickets.front().getRequest().getStartLine().request_URI);
-		}
-		// else if (tickets.front().getRequest().getStartLine().method_token == "GET")
-		// {
-		// 	executor.getMethod(tickets.front().getRequest().getStartLine().request_URI);
-		// }
+		else if (tickets.front().getRequest().getStartLine().method_token == "GET")
+			body_path = executor.getMethod(tickets.front().getRequest().getStartLine().request_URI);
 		else
 		{
 			executor.setStatusCode(405);

@@ -49,7 +49,7 @@ class ExecuteRequest
 
         // get / delete / post exec
 
-        std::string const&
+        std::string
         getMethod(std::string const& URI);
 
         std::string

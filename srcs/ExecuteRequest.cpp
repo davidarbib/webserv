@@ -67,11 +67,26 @@ ExecuteRequest::setStatusCode(int status_code)
 std::string
 ExecuteRequest::buildBodyPath(void)
 {
-    std::stringstream body_path;
+    std::stringstream body_path;0
     body_path << "./srcs/html/";
 	body_path << _status_code;
 	body_path << ".html";
     return body_path.str();
+}
+
+std::string
+ExecuteRequest::getMethod(std::string const& URI)
+{
+    std::string uri = "./" + URI;
+    std::ifstream ressource(uri.c_str());
+    if (ressource)
+    {
+        _status_code = OK;
+        return uri;       
+    }
+    else
+        _status_code = NOT_FOUND;
+    return buildBodyPath();
 }
 
 std::string
