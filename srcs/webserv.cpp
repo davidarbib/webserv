@@ -16,16 +16,24 @@ Response processRequest(TicketsType &tickets)
 {
 	ExecuteRequest executor;
 	Response response;
+	std::string body_path;
 	while (!tickets.empty())
 	{
 		if (tickets.front().getRequest().getStartLine().method_token == "DELETE")
 		{
-			executor.deleteMethod(tickets.front().getRequest().getStartLine().request_URI);
+			body_path = executor.deleteMethod(tickets.front().getRequest().getStartLine().request_URI);
 		}
+		// else if (tickets.front().getRequest().getStartLine().method_token == "GET")
+		// {
+		// 	executor.getMethod(tickets.front().getRequest().getStartLine().request_URI);
+		// }
 		else
+		{
 			executor.setStatusCode(405);
+			body_path = executor.buildBodyPath();
+		}
 		std::cout << "STATUS CODE : " << executor.getStatusCode() << std::endl;
-		response = executor.generateResponse();
+		response.buildPreResponse(executor.getStatusCode(), body_path);
 		std::cout << response.serialize_response() << std::endl;
 		tickets.pop();
 	}

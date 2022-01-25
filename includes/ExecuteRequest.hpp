@@ -45,13 +45,14 @@ class ExecuteRequest
         void
         setStatusCode(int status_code);
 
-        Response
-        generateResponse(void);
-        
+        std::string buildBodyPath(void);
 
         // get / delete / post exec
 
-        void
+        std::string const&
+        getMethod(std::string const& URI);
+
+        std::string
         deleteMethod(std::string const& URI);
 };
 

@@ -58,22 +58,23 @@ ExecuteRequest::getStatusCode(void) const
     return _status_code;
 }
 
-Response
-ExecuteRequest::generateResponse(void)
-{
-    Response response;
-
-    response.buildPreResponse(_status_code);
-    return response;
-}
-
 void
 ExecuteRequest::setStatusCode(int status_code)
 {
     this->_status_code = status_code;
 }
 
-void
+std::string
+ExecuteRequest::buildBodyPath(void)
+{
+    std::stringstream body_path;
+    body_path << "./srcs/html/";
+	body_path << _status_code;
+	body_path << ".html";
+    return body_path.str();
+}
+
+std::string
 ExecuteRequest::deleteMethod(std::string const& URI)
 {
     std::string uri = "./" + URI;
@@ -85,7 +86,8 @@ ExecuteRequest::deleteMethod(std::string const& URI)
         out << in.rdbuf();
         std::remove(uri.c_str());
         _status_code = OK;
-        return ;
     }
-    _status_code = NOT_FOUND;
+    else
+        _status_code = NOT_FOUND;
+    return buildBodyPath();
 }

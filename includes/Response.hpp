@@ -51,7 +51,7 @@ class Response : public AHttpMessage
 		printMessage(std::ostream &flux) const;
 
 		void
-		buildPreResponse(int code);
+		buildPreResponse(int code, std::string const& body_path);
 
 		std::string
 		serialize_response(void);

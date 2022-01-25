@@ -61,9 +61,8 @@ Response::printMessage(std::ostream &flux) const
 }
 
 void
-Response::buildPreResponse(int code)
+Response::buildPreResponse(int code, std::string const& body_path)
 {
-	std::stringstream body_path;
 	this->_start_line.status_code = code;
 	this->_start_line.reason_phrase = Response::errors_code.find(code)->second;
 	this->_headers["Server"] = SERVER_VERSION;
@@ -71,10 +70,7 @@ Response::buildPreResponse(int code)
 	this->_headers["Content-Type"] = "text/html";
 	this->_headers["Connection"] = "keep-alive";
 	this->_error_lock = true;
-	body_path << "./srcs/html/";
-	body_path << code;
-	body_path << ".html";
-	buildBody(body_path.str());
+	buildBody(body_path);
 }
 
 std::string
