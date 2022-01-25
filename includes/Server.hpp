@@ -72,8 +72,8 @@ class Server
 		static void
 		initFdset(void);
 
-		ConfigServer const &
-		getConfig(void) const;
+		std::vector<ConfigServer&> &
+		getCandidateConfs(void) const;
 
 		static fd_t			max_fd;
 		static fd_set		read_fds;
@@ -82,10 +82,11 @@ class Server
 
 	private:
 		std::string						_ip;
-		uint16_t						_port;
+		std::string						_port;
+		uint16_t						_port_nb;
 		fd_t							_listen_fd;
 		std::map<fd_t, Connection*>		_connections;
-		ConfigServer const				&_config;
+		std::vector<ConfigServer&>		_candidate_confs;
 
 		void
 		transferToBuffer(fd_t connection_fd, char *buf);
