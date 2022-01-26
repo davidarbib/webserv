@@ -36,7 +36,7 @@ int set_server_config_test()
 	std::cout << "error_pages (codes): ";
 	print_vector(server.getErrorPages().errorCodes);
 	std::cout << "error_pages (path): " << server.getErrorPages().path << std::endl;
-	std::cout << "client_max_body_size: " << server.getMax_body() << std::endl << std::endl;
+	std::cout << "client_max_body_size: " << server.getMaxBody() << std::endl << std::endl;
 
 	location = server.getLocations().front();
 

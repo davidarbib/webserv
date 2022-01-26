@@ -40,7 +40,7 @@ Config::setServers(std::string confFile)
 
 //GETTERS
 
-std::vector<ConfigServer> &
+std::vector<ConfigServer> const &
 Config::getServers() const
 {
 	return (this->_servers);

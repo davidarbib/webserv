@@ -9,10 +9,7 @@
 # include <fstream>
 # include <sstream>
 # include <cstdlib>
-
 # include "ConfigServer.hpp"
-
-class ConfigServer;
 
 class Config {
 
@@ -30,7 +27,8 @@ public:
 	void	setServers(std::string confFile);
 
 	//GETTERS
-	std::vector<ConfigServer> &
+	std::vector<ConfigServer> const &
 	getServers() const;
 };
+
 #endif

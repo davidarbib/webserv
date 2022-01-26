@@ -1,18 +1,20 @@
 #include "config_handler.hpp"
 
-typedef std::multimap<HostPort, ServerConfig&> conf_mm;
-typedef std::vector<ServerConfig&> config_v;
-typedef std::vector<HostPort> hostport_v;
+typedef std::multimap<HostPort, ConfigServer>	conf_mm;
+typedef std::vector<ConfigServer>				config_v;
+typedef std::vector<HostPort>					hostport_v;
 
 int
 createCandidateConfigsList(conf_mm &hostport_configs,
 							hostport_v::iterator hostport, config_v &candidates)
 {
-	std::pair<conf_mm::iterator, conf_mm::iterator> range;
+	std::pair<conf_mm::iterator, conf_mm::iterator> candidates_conf_range;
 
-	range = hostport_configs.equal_range(*hostport);
-	for (
-	
+	candidates_conf_range = hostport_configs.equal_range(*hostport);
+	for (conf_mm::iterator it = candidates_conf_range.first;
+			it != candidates_conf_range.second; it++)
+		candidates.push_back(it->second);
+	return 0;
 }
 
 int
@@ -23,38 +25,51 @@ createServers(ServersType &servers, conf_mm &hostport_configs,
 			hostport != hostports.end(); hostport++)
 	{
 		config_v	candidate_configs;
-		createCandidateConfigsList(hostport_configs, candidates);
-		
+		createCandidateConfigsList(hostport_configs, hostport, candidate_configs);
+		servers.push_back(Server(hostport->getIp(), hostport->getPort(),
+									candidate_configs));	
 	}
+	return 0;
 }
 
 int
-classConfigs(conf_mm &hostport_configs, std::vector<HostPort> &hostports)
+classConfigs(Config &conf, conf_mm &hostport_configs,
+				std::vector<HostPort> &hostports)
 {
-	std::vector<ConfigServer> &configs = conf.getServers();
-	for (it = std::vector<ConfigServer>::iterator = configs.begin();
+	config_v const &configs = conf.getServers();
+	for (config_v::const_iterator it = configs.begin();
 			it != configs.end(); it++)
 	{
-		std::pair<HostPort, ServerConfig&> pair;
 		HostPort hostport = HostPort(it->getHost(), it->getPort());
-		pair = std::make_pair(hostport, *it);
-		hostport_configs.insert(pair);
+		hostport_configs.insert(std::make_pair(hostport, *it));
 		hostports.push_back(hostport);
 	}
+	return 0;
 }
 
 int 
-processConfigFile(std::string &config_path, Config &conf)
+processConfigFile(ServersType &servers, std::string &config_path, Config &conf)
 {	
 	conf_mm					hostport_configs;
 	std::vector<HostPort>	hostports;
 	std::vector<HostPort>	unique_hostports;
+	std::string				conf_file;
 
-	conf.setServers(config_path);
-	classConfigs(hostport_configs, hostports);
+	if ((conf_file = read_config(config_path)) == "")
+		return (-1);
+	try {
+		conf.setServers(conf_file);
+	}
+	catch(char const *error) {
+		std::cerr << "Error. Wrong configuration, please provide a valid \"webserv.conf\" file:" << std::endl;
+		std::cerr << error << std::endl;
+		return (-1);
+	}
+	//TODO config file error handling
+	classConfigs(conf, hostport_configs, hostports);
 	std::vector<HostPort>::iterator hp_end_it;
 	hp_end_it = std::unique_copy(hostports.begin(), hostports.end(),
-									unique_hostports.begin())
+									unique_hostports.begin());
 	createServers(servers, hostport_configs, hostports);
 	
 

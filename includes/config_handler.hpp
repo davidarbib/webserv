@@ -3,11 +3,12 @@
 
 # include "Config.hpp"
 # include "Server.hpp"
+# include "HostPort.hpp"
+# include <algorithm>
+
+typedef std::vector<Server>						ServersType;
 
 int 
-processConfigFile(std::string &config_path, Config &conf);
-
-int
-createServers(ServersType &servers, Config &conf);
+processConfigFile(ServersType &servers, std::string &config_path, Config &conf);
 
 #endif

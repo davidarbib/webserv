@@ -1,18 +1,21 @@
 #include "main.hpp"
 
 int 
-processArgs(int ac, char **av, Config &conf)
+processArgs(int ac, char **av, ServersType &servers, Config &conf)
 {
-	if (ac < 1)
-		std::string config_path = "default.conf";
+	std::string config_path;
+
+	std::cout << "ac : " << ac << std::endl;
+	if (ac < 2)
+		config_path = "default.conf";
 	else
-		std::string config_path = std::string(av[0]);
-	processConfigFile(config_path);
+		config_path = std::string(av[1]);
+	processConfigFile(servers, config_path, conf);
 	return 0;
 }
 
 int
-handleRequestBuffers(ServerType &servers, TicketsType &tickets,
+handleRequestBuffers(ServersType &servers, TicketsType &tickets,
 							ReqHandlersType &request_handlers)
 {
 	ServersType::iterator server = servers.begin();
@@ -23,7 +26,9 @@ handleRequestBuffers(ServerType &servers, TicketsType &tickets,
 			return 0;
 		std::map<fd_t, Connection*>::iterator it = server->getRefConnections().begin();
 		for (; it != server->getRefConnections().end(); it++)
-			ret = parseRequest(it->second, server->getConfig(), tickets, request_handlers);
+		{
+			ret = parseRequest(it->second, *server, tickets, request_handlers);
+		}
 	}
 	return 0;
 }
@@ -67,7 +72,7 @@ main(int ac, char **av)
 	Server::max_fd = 0;
 	Server::initFdset();
 
-	processArgs(ac, av, conf);
+	processArgs(ac, av, servers, config);
 	
 	listenNetwork(servers);
 

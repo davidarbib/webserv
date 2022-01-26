@@ -7,7 +7,7 @@
 class HostPort
 {
 	public:
-		HostPort(std::string, unsigned int);
+		HostPort(std::string, std::string);
 		HostPort(HostPort const &src);
 
 		virtual ~HostPort(void);
@@ -15,24 +15,24 @@ class HostPort
 		HostPort &
 		operator=(HostPort const &rhs);
 
-		std::string &
+		std::string const &
 		getIp(void) const;
-
-		unsigned short &
+		
+		std::string const &
 		getPort(void) const;
 
 	private:
 		HostPort(void);
 
 		std::string		_ip;
-		unsigned short	_port;
+		std::string		_port;
 	
 		friend bool
 		operator==(HostPort const &lhs, HostPort const &rhs)
 		{
-			if (lhs.ip == rhs.ip && lhs.port == rhs.port)
+			if (lhs._ip == rhs._ip && lhs._port == rhs._port)
 				return true;
-			return false
+			return false;
 		}
 
 		friend bool
@@ -44,22 +44,22 @@ class HostPort
 		friend bool
 		operator<(HostPort const &lhs, HostPort const &rhs)
 		{
-			if (std::less(lhs.ip, rhs.ip))
+			if (lhs._ip < rhs._ip)
 				return true;
-			if (lhs.ip == rhs.ip && std::less(lhs.port, rhs.port))
+			if (lhs._ip == rhs._ip && lhs._port < rhs._port)
 				return true;
-			return false
+			return false;
 			
 		}
 
 		friend bool
 		operator>(HostPort const &lhs, HostPort const &rhs)
 		{
-			if (std::less(rhs.ip, lhs.ip))
+			if (lhs._ip < rhs._ip)
 				return true;
-			if (lhs.ip == rhs.ip && std::less(rhs.port, lhs.port))
+			if (lhs._ip == rhs._ip && rhs._port < lhs._port)
 				return true;
-			return false
+			return false;
 		}
 
 		friend bool

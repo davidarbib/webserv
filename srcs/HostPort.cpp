@@ -1,12 +1,12 @@
 #include "HostPort.hpp"
 
-HostPort::HostPort(std::string ip, unsigned int port)
+HostPort::HostPort(std::string ip, std::string port)
 : _ip(ip), _port(port)
 {
 }
 
 HostPort::HostPort(HostPort const &src)
-: _ip(src.ip), _port(src.port)
+: _ip(src._ip), _port(src._port)
 {
 }
 
@@ -22,13 +22,13 @@ HostPort::operator=(HostPort const &rhs)
 	return *this;
 }
 
-std::string &
+std::string const &
 HostPort::getIp(void) const
 {
 	return _ip;
 }
 
-unsigned short &
+std::string const &
 HostPort::getPort(void) const
 {
 	return _port;

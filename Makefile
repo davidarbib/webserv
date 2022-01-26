@@ -6,7 +6,7 @@
 #    By: lnezonde <lnezonde@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/11/06 14:53:36 by darbib            #+#    #+#              #
-#    Updated: 2022/01/14 19:07:59 by darbib           ###   ########.fr        #
+#    Updated: 2022/01/26 21:27:14 by darbib           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -61,7 +61,9 @@ SRC = AHttpMessage.cpp \
 	  CgiHandler.cpp \
 	  Buffer.cpp \
 	  Connection.cpp \
-	  Ticket.cpp
+	  Ticket.cpp \
+	  HostPort.cpp \
+	  config_handler.cpp
 
 ifeq ($(CGI_UT), 1)
 	SRC += main_cgi.cpp

@@ -11,6 +11,7 @@
 # include <arpa/inet.h>
 # include <unistd.h>
 # include <map>
+# include <sstream>
 # include "Connection.hpp"
 # include "Buffer.hpp"
 # include "typedefs.hpp"
@@ -43,8 +44,9 @@ class Server
 	};
 
 	public:
-		Server(std::string, std::string, uint16_t, std::string, std::string,
-				ConfigServer const &);
+		Server(std::string, std::string, std::vector<ConfigServer>);
+		Server(void);
+		Server(Server const &src);
 
 		virtual ~Server(void);
 
@@ -72,8 +74,8 @@ class Server
 		static void
 		initFdset(void);
 
-		std::vector<ConfigServer&> &
-		getCandidateConfs(void) const;
+		std::vector<ConfigServer> &
+		getCandidateConfs(void);
 
 		static fd_t			max_fd;
 		static fd_set		read_fds;
@@ -84,9 +86,9 @@ class Server
 		std::string						_ip;
 		std::string						_port;
 		uint16_t						_port_nb;
+		std::vector<ConfigServer>		_candidate_confs;
 		fd_t							_listen_fd;
 		std::map<fd_t, Connection*>		_connections;
-		std::vector<ConfigServer&>		_candidate_confs;
 
 		void
 		transferToBuffer(fd_t connection_fd, char *buf);
@@ -103,8 +105,6 @@ class Server
 		void
 		delWatchedFd(fd_t);
 
-		Server(void);
-		Server(Server const &src);
 };
 
 #endif

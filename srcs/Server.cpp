@@ -1,14 +1,16 @@
 #include "Server.hpp"
 
-Server::Server(std::string name, std::string ip, unsigned short port,
-				std::string access_logs_path, std::string error_logs_path,
-				ConfigServer const &config)
-:	_name(name),
-	_ip(ip),
-	_port(port),
-	_access_logs_path(access_logs_path),
-	_error_logs_path(error_logs_path),
-	_config(config)
+Server::Server(std::string ip, std::string port, 
+				std::vector<ConfigServer> candidate_confs)
+: _ip(ip), _port(port), _candidate_confs(candidate_confs)
+{
+	std::stringstream stream;
+	stream << _port;
+	stream >> _port_nb;
+}
+
+Server::Server(Server const &src)
+: _ip(src._ip), _port(src._port), _candidate_confs(src._candidate_confs)
 {
 }
 
@@ -28,10 +30,10 @@ Server::getConnections(void) const
 	return _connections;
 }
 
-ConfigServer const &
-Server::getConfig(void) const
+std::vector<ConfigServer> &
+Server::getCandidateConfs(void)
 {
-	return _config;
+	return _candidate_confs;
 }
 
 fd_t
@@ -53,7 +55,7 @@ Server::listenSocket()
 	memset(reinterpret_cast<void*>(&sin), 0, sizeof(sockaddr_in));
 	sin.sin_addr.s_addr = inet_addr(_ip.c_str());
 	sin.sin_family = AF_INET;
-	sin.sin_port = htons(_port);
+	sin.sin_port = htons(_port_nb);
 
 	if (bind(_listen_fd, reinterpret_cast<sockaddr*>(&sin), sizeof(sin)) == -1)
 		throw ListenException();

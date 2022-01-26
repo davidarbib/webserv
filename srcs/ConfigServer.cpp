@@ -37,7 +37,7 @@ ConfigServer::setAll(std::string const &confFile)
 	if ((pos_start = confFile.find("error_pages")) != -1)
 		this->setErrorPages(parse(confFile, pos_start));
 	if ((pos_start = confFile.find("client_max_body_size")) != -1)
-		this->setMax_body(parse(confFile, pos_start));
+		this->setMaxBody(parse(confFile, pos_start));
 	if ((pos_start = confFile.find("location")) != -1)
 		this->setLocations(confFile);
 }
