@@ -4,13 +4,16 @@ Server::Server(std::string ip, std::string port,
 				std::vector<ConfigServer> candidate_confs)
 : _ip(ip), _port(port), _candidate_confs(candidate_confs)
 {
+	//int port_nb = std::atoi(_port.c_str());
+	//_port_nb = static_cast<uint16_t>(port_nb);
 	std::stringstream stream;
 	stream << _port;
 	stream >> _port_nb;
 }
 
 Server::Server(Server const &src)
-: _ip(src._ip), _port(src._port), _candidate_confs(src._candidate_confs)
+: _ip(src._ip), _port(src._port), _port_nb(src._port_nb),
+	_candidate_confs(src._candidate_confs)
 {
 }
 
@@ -52,6 +55,7 @@ Server::listenSocket()
 	memset(reinterpret_cast<void*>(&sin), 0, sizeof(sockaddr_in));
 	sin.sin_addr.s_addr = inet_addr(_ip.c_str());
 	sin.sin_family = AF_INET;
+	std::cout << "port : " << _port_nb << std::endl;
 	sin.sin_port = htons(_port_nb);
 
 	if (bind(_listen_fd, reinterpret_cast<sockaddr*>(&sin), sizeof(sin)) == -1)
@@ -147,10 +151,34 @@ Server::watchInput()
 	}
 }
 
+void
+Server::send()
+{
+	std::map<fd_t, Connection*>::iterator connection_it;
+	connection_it = _connections.begin();
+	for (; connection_it != _connections.end(); connection_it++)
+	{
+		fd_t fd = connection_it->second->getSocketFd();
+		if (isPossibleToWrite(fd))
+		{
+			write(fd, connection_it->second->getOutBufferData().c_str(), BUFSIZE); //TODO wrapper
+			connection_it->second->eatOutBufferData(BUFSIZE);
+		}
+	}
+}
+
 bool
 Server::isThereSomethingToRead(fd_t fd)
 {
 	if (FD_ISSET(fd, &Server::read_fds))
+		return 1;
+	return 0;
+}
+
+bool
+Server::isPossibleToWrite(fd_t fd)
+{
+	if (FD_ISSET(fd, &Server::write_fds))
 		return 1;
 	return 0;
 }

@@ -10,7 +10,7 @@ class Buffer
 	private:
 
 		int						_idx;
-		std::string				_in_buffer;
+		std::string				_buffer;
 
 		Buffer(Buffer const &src);
 		Buffer &
@@ -42,6 +42,11 @@ class Buffer
 
 		void
 		clearBuffer(int);
-};
+		
+		void
+		append(std::string);
 
+		void
+		eatData(size_t size);
+};
 #endif
