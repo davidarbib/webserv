@@ -136,6 +136,7 @@ std::map<int, std::string> Response::fillResponseCodes(void)
 	codes.insert(std::make_pair(403, "Forbidden"));
 	codes.insert(std::make_pair(404, "Not Found"));
 	codes.insert(std::make_pair(405, "Not Allowed"));
+	codes.insert(std::make_pair(505, "Version Not Supported"));
 
 	return codes;
 }

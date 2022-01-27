@@ -17,16 +17,20 @@ Response processRequest(TicketsType &tickets)
 	ExecuteRequest executor;
 	Response response;
 	std::string body_path;
-	while (!tickets.empty())
+	while (!tickets.empty() && tickets.front().getRequest().isRequestFinalized() == true)
 	{
-		if (tickets.front().getRequest().getStartLine().method_token == "DELETE")
-			body_path = executor.deleteMethod(tickets.front().getRequest().getStartLine().request_URI);
-		else if (tickets.front().getRequest().getStartLine().method_token == "GET")
-			body_path = executor.getMethod(tickets.front().getRequest().getStartLine().request_URI);
-		else
+		std::cout << "YO" << std::endl;
+		if (executor.isValidRequest(tickets.front().getRequest()) == true)
 		{
-			executor.setStatusCode(405);
-			body_path = executor.buildBodyPath();
+			if (tickets.front().getRequest().getStartLine().method_token == "DELETE")
+				body_path = executor.deleteMethod(tickets.front().getRequest().getStartLine().request_URI);
+			else if (tickets.front().getRequest().getStartLine().method_token == "GET")
+				body_path = executor.getMethod(tickets.front().getRequest().getStartLine().request_URI);
+			else
+			{
+				executor.setStatusCode(405);
+				body_path = executor.buildBodyPath();
+			}
 		}
 		std::cout << "STATUS CODE : " << executor.getStatusCode() << std::endl;
 		response.buildPreResponse(executor.getStatusCode(), body_path);
@@ -63,7 +67,7 @@ int main(int ac, char **av)
 			servers[0]->createConnection();
 		servers[0]->watchInput();
 		handleRequestBuffers(*servers[0], tickets, request_handlers);
-		processRequest(tickets);
+		// processRequest(tickets);
 		//writes
 	}
 	return 0;

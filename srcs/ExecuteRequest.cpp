@@ -64,10 +64,22 @@ ExecuteRequest::setStatusCode(int status_code)
     this->_status_code = status_code;
 }
 
+bool
+ExecuteRequest::isValidRequest(Request const& request)
+{
+    bool valid = true;
+    if (request.getStartLine().http_version != "HTTP/1.1")
+    {
+        _status_code = VERSION_NOT_SUPPORTED;
+        buildBodyPath();
+    }
+    return valid;
+}
+
 std::string
 ExecuteRequest::buildBodyPath(void)
 {
-    std::stringstream body_path;0
+    std::stringstream body_path;
     body_path << "./srcs/html/";
 	body_path << _status_code;
 	body_path << ".html";

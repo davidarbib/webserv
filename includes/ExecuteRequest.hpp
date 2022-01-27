@@ -15,6 +15,7 @@
 #define BAD_REQUEST 400
 #define NOT_FOUND 404
 #define NOT_ALLOWED 405
+#define VERSION_NOT_SUPPORTED 505
 
 class ExecuteRequest
 {
@@ -45,7 +46,11 @@ class ExecuteRequest
         void
         setStatusCode(int status_code);
 
-        std::string buildBodyPath(void);
+        bool
+        isValidRequest(Request const& request);
+
+        std::string
+        buildBodyPath(void);
 
         // get / delete / post exec
 
