@@ -47,12 +47,16 @@ SRC = AHttpMessage.cpp \
 	  Ticket.cpp \
 	  HostPort.cpp \
 	  config_handler.cpp \
+	  ConfigServer.cpp \
+	  ConfigUtils.cpp \
+	  Config.cpp \
+	  ServerLocations.cpp \
 	  ExecuteRequest.cpp
 
 ifeq ($(CGI_UT), 1)
 	SRC += main_cgi.cpp
 else
-	SRC += webserv.cpp
+	SRC += main.cpp
 endif
 
 #TEST_SRC = main_test.cpp
