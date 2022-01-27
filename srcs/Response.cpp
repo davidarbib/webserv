@@ -68,7 +68,9 @@ Response::buildPreResponse(int code, std::string const& body_path)
 	this->_headers["Server"] = SERVER_VERSION;
 	this->_headers["Date"] = getDate();
 	this->_headers["Content-Type"] = "text/html";
-	this->_headers["Connection"] = "keep-alive";
+	if (code != 400)
+		this->_headers["Connection"] = "keep-alive";
+	else this->_headers["Connection"] = "close";
 	this->_error_lock = true;
 	buildBody(body_path);
 }
@@ -140,6 +142,5 @@ std::map<int, std::string> Response::fillResponseCodes(void)
 
 	return codes;
 }
-
 
 std::map<int, std::string> Response::errors_code = std::map<int, std::string>();
