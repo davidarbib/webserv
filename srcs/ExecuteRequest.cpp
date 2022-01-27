@@ -71,9 +71,16 @@ ExecuteRequest::isValidRequest(Request const& request)
     if (request.getStartLine().http_version != "HTTP/1.1")
     {
         _status_code = VERSION_NOT_SUPPORTED;
-        buildBodyPath();
         valid = false;
     }
+    else if (request.getStartLine().method_token.empty() || request.getStartLine().request_URI.empty()
+    || request.getStartLine().http_version.empty() || request.get_header_value("Host").empty())
+    {
+        _status_code = BAD_REQUEST;
+        valid = false;
+    }
+    if (!valid)
+        buildBodyPath();
     return valid;
 }
 
