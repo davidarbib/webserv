@@ -72,6 +72,7 @@ ExecuteRequest::isValidRequest(Request const& request)
     {
         _status_code = VERSION_NOT_SUPPORTED;
         buildBodyPath();
+        valid = false;
     }
     return valid;
 }

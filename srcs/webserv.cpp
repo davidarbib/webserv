@@ -19,7 +19,6 @@ Response processRequest(TicketsType &tickets)
 	std::string body_path;
 	while (!tickets.empty() && tickets.front().getRequest().isRequestFinalized() == true)
 	{
-		std::cout << "YO" << std::endl;
 		if (executor.isValidRequest(tickets.front().getRequest()) == true)
 		{
 			if (tickets.front().getRequest().getStartLine().method_token == "DELETE")
@@ -67,7 +66,7 @@ int main(int ac, char **av)
 			servers[0]->createConnection();
 		servers[0]->watchInput();
 		handleRequestBuffers(*servers[0], tickets, request_handlers);
-		// processRequest(tickets);
+		processRequest(tickets);
 		//writes
 	}
 	return 0;
