@@ -33,6 +33,7 @@ handleRequestBuffers(ServersType &servers, TicketsType &tickets,
 	return 0;
 }
 
+<<<<<<< HEAD:srcs/main.cpp
 void
 handleConnectionRequest(ServersType &servers)
 {
@@ -60,14 +61,42 @@ listenNetwork(ServersType &servers)
 		server->listenSocket();
 }
 
-int
-main(int ac, char **av)
+Response processRequest(TicketsType &tickets)
+{
+	ExecuteRequest executor;
+	Response response;
+	std::string body_path;
+	while (!tickets.empty() && tickets.front().getRequest().isRequestFinalized() == true)
+	{
+		if (executor.isValidRequest(tickets.front().getRequest()) == true)
+		{
+			if (tickets.front().getRequest().getStartLine().method_token == "DELETE")
+				body_path = executor.deleteMethod(tickets.front().getRequest().getStartLine().request_URI);
+			else if (tickets.front().getRequest().getStartLine().method_token == "GET")
+				body_path = executor.getMethod(tickets.front().getRequest().getStartLine().request_URI);
+			else
+			{
+				executor.setStatusCode(405);
+				body_path = executor.buildBodyPath();
+			}
+		}
+		std::cout << "STATUS CODE : " << executor.getStatusCode() << std::endl;
+		response.buildPreResponse(executor.getStatusCode(), body_path);
+		std::cout << response.serialize_response() << std::endl;
+		tickets.pop();
+	}
+	return response;
+}
+
+
+int main(int ac, char **av)
 {
 	struct timeval				tv;
 	ServersType					servers;
 	ReqHandlersType				request_handlers;
 	TicketsType					tickets;
 	Config						config;
+	Response::errors_code = Response::fillResponseCodes();
 
 	Server::max_fd = 0;
 	Server::initFdset();
@@ -86,6 +115,7 @@ main(int ac, char **av)
 		handleConnectionRequest(servers);
 		networkInputToBuffers(servers);
 		handleRequestBuffers(servers, tickets, request_handlers);
+		processRequest(tickets);
 		//writes
 	}
 	return 0;

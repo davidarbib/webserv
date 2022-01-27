@@ -8,6 +8,8 @@
 # include "Ticket.hpp"
 # include <deque>
 # include <queue>
+#include "Response.hpp"
+#include "ExecuteRequest.hpp"
 
 typedef std::queue<Ticket>						TicketsType;
 typedef std::map<fd_t, RequestHandler>			ReqHandlersType;

@@ -53,26 +53,13 @@ class Server
 		std::map<fd_t, Connection*> &getRefConnections(void);
 		std::map<fd_t, Connection*> getConnections(void) const;
 
-		fd_t
-		listenSocket(void);
+		fd_t				listenSocket(void);
+		bool				isThereConnectionRequest(void);
+		void				createConnection(void);
+		void				watchInput(void);
 
-		bool
-		isThereConnectionRequest(void);
-
-		bool
-		isWritePossible(fd_t);
-
-		void
-		createConnection(void);
-
-		void
-		watchInput(void);
-
-		static void
-		setFdset(void);
-
-		static void
-		initFdset(void);
+		static void			setFdset(void);
+		static void			initFdset(void);
 
 		std::vector<ConfigServer> &
 		getCandidateConfs(void);
@@ -90,20 +77,11 @@ class Server
 		fd_t							_listen_fd;
 		std::map<fd_t, Connection*>		_connections;
 
-		void
-		transferToBuffer(fd_t connection_fd, char *buf);
-
-		void
-		recvSend(void);
-
-		bool
-		isThereSomethingToRead(fd_t);
-
-		void
-		addWatchedFd(fd_t);
-
-		void
-		delWatchedFd(fd_t);
+		void				transferToBuffer(fd_t connection_fd, char *buf);
+		void				recvSend(void);
+		bool				isThereSomethingToRead(fd_t);
+		void				addWatchedFd(fd_t);
+		void				delWatchedFd(fd_t);
 
 };
 

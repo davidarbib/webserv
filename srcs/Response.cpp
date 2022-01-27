@@ -41,7 +41,7 @@ Response::setReasonPhrase(std::string const &reason_phrase)
 }
 
 void
-Response::setBody(std::string body)
+Response::setBody(std::string const& body)
 {
 	this->_body = body;
 }
@@ -61,51 +61,64 @@ Response::printMessage(std::ostream &flux) const
 }
 
 void
-Response::badRequest(void)
+Response::buildPreResponse(int code, std::string const& body_path)
 {
-	if (this->_error_lock == false)
+	this->_start_line.status_code = code;
+	this->_start_line.reason_phrase = Response::errors_code.find(code)->second;
+	this->_headers["Server"] = SERVER_VERSION;
+	this->_headers["Date"] = getDate();
+	this->_headers["Content-Type"] = "text/html";
+	if (code != 400)
+		this->_headers["Connection"] = "keep-alive";
+	else this->_headers["Connection"] = "close";
+	this->_error_lock = true;
+	buildBody(body_path);
+}
+
+std::string
+Response::serialize_response(void)
+{
+	std::stringstream status_line;
+
+	status_line << _start_line.protocol_version;
+	status_line << " ";
+	status_line << _start_line.status_code;
+	status_line << " ";
+	status_line << _start_line.reason_phrase.append(CRLF_str);
+	std::string serialized(status_line.str());
+
+	hash_map::iterator it = _headers.begin();
+	while (it != _headers.end())
 	{
-		this->_start_line.status_code = 400;
-		this->_start_line.reason_phrase = "Bad request";
-		this->_headers["Content-Type"] = "text/html";
-		this->_headers["Content-Length"] = "42";
-		this->_headers["Server"] = SERVER_VERSION;
-		this->_headers["Date"] = getDate();
-		this->_headers["Connection"] = "close";
-		this->_error_lock = true;
+		serialized += it->first;
+		serialized += ": ";
+		serialized += it->second;
+		serialized += CRLF_str;
+		it++;
 	}
+	serialized += CRLF_str;
+	serialized += _body;
+	return serialized;
 }
 
 void
-Response::methodNotAllowed(void)
+Response::buildBody(std::string const& path)
 {
-	if (this->_error_lock == false)
+	std::ifstream web_page(path.c_str());
+	int size = 0;
+	if (web_page)
 	{
-		this->_start_line.status_code = 405;
-		this->_start_line.reason_phrase = "Not Allowed";
-		this->_headers["Server"] = SERVER_VERSION;
-		this->_headers["Date"] = getDate();
-		this->_headers["Content-Type"] = "text/html";
-		this->_headers["Content-Length"] = "42";
-		this->_headers["Connection"] = "keep-alive";
-		this->_error_lock = true;
+		std::string line;
+		while (getline(web_page, line))
+			_body += line;
+		size = _body.length();
+		std::stringstream s;
+		s << size;
+		this->_headers["Content-Length"] =  s.str();
+		web_page.close();
 	}
-}
-
-void
-Response::notFound(void)
-{
-	if (this->_error_lock == false)
-	{
-		this->_start_line.status_code = 404;
-		this->_start_line.reason_phrase = "Not Found";
-		this->_headers["Server"] = SERVER_VERSION;
-		this->_headers["Date"] = getDate();
-		this->_headers["Content-Type"] = "text/html";
-		this->_headers["Content-Length"] = "42";
-		this->_headers["Connection"] = "keep-alive";
-		this->_error_lock = true;
-	}
+	else
+		return ;
 }
 
 std::ostream &
@@ -114,3 +127,20 @@ operator<<(std::ostream &flux, Response const &response)
 	response.printMessage(flux);
 	return flux;
 }
+
+std::map<int, std::string> Response::fillResponseCodes(void)
+{
+	std::map<int, std::string> codes;
+
+	codes.insert(std::make_pair(200, "OK"));
+	codes.insert(std::make_pair(400, "Bad Request"));
+	codes.insert(std::make_pair(401, "Unauthorized"));
+	codes.insert(std::make_pair(403, "Forbidden"));
+	codes.insert(std::make_pair(404, "Not Found"));
+	codes.insert(std::make_pair(405, "Not Allowed"));
+	codes.insert(std::make_pair(505, "Version Not Supported"));
+
+	return codes;
+}
+
+std::map<int, std::string> Response::errors_code = std::map<int, std::string>();

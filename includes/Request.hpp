@@ -6,27 +6,14 @@
 #include "AHttpMessage.hpp"
 #include "Response.hpp"
 
-#define METHOD_NB 4
-
 class Request : public AHttpMessage
 {
 	private:
 
-		std::string 	_method_list[METHOD_NB];
 		request_line 	_start_line;
-		Response 		_response;
 		bool			_start_line_initialized;
 		bool			_headers_initialized;
 		bool			_request_finalized;
-
-		void
-		initMethodList(void);
-
-		bool
-		isAllowedMethod(std::string const &method) const;
-
-		bool
-		isValidMethod(std::string const &method) const;
 
 	public:
 
@@ -46,7 +33,7 @@ class Request : public AHttpMessage
 		setHttpVersion(std::string const &http_version);
 
 		void
-		setBody(std::string body);
+		setBody(std::string const& body);
 
 		void
 		setHeader(std::string const &key, std::string const &value);
@@ -83,9 +70,6 @@ class Request : public AHttpMessage
 
 		const request_line
 		getStartLine(void) const;
-
-		Response
-		get_response(void);
 };
 
 std::ostream &

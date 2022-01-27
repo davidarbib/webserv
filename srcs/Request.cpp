@@ -1,14 +1,12 @@
 #include "Request.hpp"
 
-Request::Request(void) : _response(), 
-						 _start_line_initialized(false),
+Request::Request(void) : _start_line_initialized(false),
 						 _headers_initialized(false),
 						 _request_finalized(false) 
 {
 	this->setHeader("Content-Length", "0");
 	this->setHeader("Transfer-Encoding", std::string());
 	this->_body = std::string();
-	this->initMethodList();
 }
 
 Request::Request(Request & cpy)
@@ -30,7 +28,6 @@ Request::~Request(void) {}
 void
 Request::setMethodToken(std::string const &method_token)
 {
-	if (this->isAllowedMethod(method_token) == true)
 		this->_start_line.method_token = method_token;
 }
 
@@ -48,7 +45,7 @@ Request::setHttpVersion(std::string const &http_version)
 }
 
 void
-Request::setBody(std::string body)
+Request::setBody(std::string const& body)
 {
 	this->_body = body;
 }
@@ -57,37 +54,6 @@ void
 Request::setHeader(std::string const &key, std::string const &value)
 {
 	this->_headers[key] = value;
-}
-
-void
-Request::initMethodList(void)
-{
-	this->_method_list[0] = "GET";
-	this->_method_list[1] = "POST";
-	this->_method_list[2] = "DELETE";
-	this->_method_list[3] = "PUT";
-}
-
-bool
-Request::isAllowedMethod(std::string const &method) const
-{
-	for (int i = 0; i < METHOD_NB; i++)
-	{
-		if (method == this->_method_list[i])
-			return true;
-	}
-	return false;
-}
-
-bool
-Request::isValidMethod(std::string const &method) const
-{
-	for (size_t i = 0; i < method.length(); i++)
-	{
-		if (std::isupper(method[i]) == 0)
-			return false;
-	}
-	return true;
 }
 
 void
@@ -122,13 +88,6 @@ const request_line
 Request::getStartLine(void) const
 {	
 	return this->_start_line;
-}
-
-Response
-Request::get_response(void)
-{
-	Response response(this->_response);
-	return response;
 }
 
 void
