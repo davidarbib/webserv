@@ -1,6 +1,6 @@
 #include "Ticket.hpp"
 
-Ticket::Ticket(Connection const &connection, Request *request, Server const &server)
+Ticket::Ticket(Connection &connection, Request *request, Server const &server)
 : _connection(connection), _request(request), _server(server)
 {
 }
@@ -14,8 +14,8 @@ Ticket::~Ticket(void)
 {
 }
 
-Connection const &
-Ticket::getConnection(void) const
+Connection &
+Ticket::getConnection(void)
 {
 	return _connection;
 }

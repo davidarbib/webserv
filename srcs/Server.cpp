@@ -158,6 +158,8 @@ Server::send()
 	connection_it = _connections.begin();
 	for (; connection_it != _connections.end(); connection_it++)
 	{
+		if (connection_it->second->getOutBufferData().size() == 0)
+			continue;
 		fd_t fd = connection_it->second->getSocketFd();
 		if (isPossibleToWrite(fd))
 		{

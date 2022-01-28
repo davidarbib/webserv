@@ -65,7 +65,7 @@ Buffer::clearBuffer(int index)
 }
 
 void
-Buffer::append(std::string message)
+Buffer::append(std::string const &message)
 {
 	_buffer += message;
 }

@@ -44,7 +44,7 @@ class Buffer
 		clearBuffer(int);
 		
 		void
-		append(std::string);
+		append(std::string const &message);
 
 		void
 		eatData(size_t size);
