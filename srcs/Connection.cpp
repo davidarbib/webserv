@@ -42,22 +42,10 @@ Connection::getOutBuffer(void)
 	return _out_buffer;
 }
 
-std::string &
-Connection::getOutBufferData(void)
-{
-	return _out_buffer.getBuffer();
-}
-
 void
 Connection::fillBuffer(char *buf)
 {
 	_in_buffer.fillBuffer(buf);	
-}
-
-void
-Connection::eatOutBufferData(int size)
-{
-	_out_buffer.eatData(size);
 }
 
 void
@@ -74,11 +62,4 @@ Connection::makePortStr(void)
 	std::stringstream stream;
 	stream << ntohs(_client_port);
 	stream >> _client_port_str;
-}
-
-Connection &
-operator<<(Connection &connection, std::string const & message)
-{
-	connection._out_buffer.append(message);
-	return connection;
 }

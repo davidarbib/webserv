@@ -39,15 +39,9 @@ class Connection
 
 		Buffer &
 		getOutBuffer(void);
-
-		std::string &
-		getOutBufferData(void);
 		
 		void
 		fillBuffer(char *buf);
-
-		void
-		eatOutBufferData(int);
 
 	private:
 		Connection(Connection const &src);
@@ -72,9 +66,6 @@ class Connection
 
 		void
 		makePortStr(void);
-
-		friend Connection &
-		operator<<(Connection &connection, std::string const & message);
 
 		friend bool
 		operator<(Connection const &lhs, Connection const &rhs)

@@ -60,14 +60,6 @@ listenNetwork(ServersType &servers)
 		server->listenSocket();
 }
 
-void
-sendToNetwork(ServersType &servers)
-{
-	ServersType::iterator server = servers.begin();
-	for (; server != servers.end(); server++)
-		server->send();
-}
-
 Response processRequest(TicketsType &tickets)
 {
 	ExecuteRequest executor;
@@ -99,6 +91,7 @@ Response processRequest(TicketsType &tickets)
 	return response;
 }
 
+
 int main(int ac, char **av)
 {
 	struct timeval				tv;
@@ -106,20 +99,12 @@ int main(int ac, char **av)
 	ReqHandlersType				request_handlers;
 	TicketsType					tickets;
 	Config						config;
-
 	Response::errors_code = Response::fillResponseCodes();
 
 	Server::max_fd = 0;
 	Server::initFdset();
 
-	
-	/* ------------ TODO for tests without configuration file ----------------*/
-	//processArgs(ac, av, servers, config);
-	(void)ac;
-	(void)av;
-	servers.push_back(Server("127.0.0.1", "8003", std::vector<ConfigServer>()));
-
-	/* -----------------------------------------------------------------------*/
+	processArgs(ac, av, servers, config);
 	
 	listenNetwork(servers);
 
@@ -134,7 +119,7 @@ int main(int ac, char **av)
 		networkInputToBuffers(servers);
 		handleRequestBuffers(servers, tickets, request_handlers);
 		processRequest(tickets);
-		sendToNetwork(servers);
+		//writes
 	}
 	return 0;
 }

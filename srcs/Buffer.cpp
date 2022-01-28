@@ -2,13 +2,13 @@
 
 Buffer::Buffer():
 	_idx(0),
-	_buffer("")
+	_in_buffer("")
 {
 }
 
 Buffer::Buffer(Buffer const &src):
 	_idx(0),
-	_buffer(src._buffer)
+	_in_buffer(src._in_buffer)
 {
 }
 
@@ -19,7 +19,7 @@ Buffer::~Buffer(void)
 void
 Buffer::fillBuffer(char *raw_buffer)
 {
-	this->_buffer += const_cast<char*>(raw_buffer);
+	this->_in_buffer += const_cast<char*>(raw_buffer);
 }
 
 void
@@ -43,7 +43,7 @@ Buffer::getIdx(void) const
 std::string &
 Buffer::getBuffer(void)
 {
-	return this->_buffer;
+	return this->_in_buffer;
 }
 
 bool
