@@ -2,13 +2,13 @@
 
 Buffer::Buffer():
 	_idx(0),
-	_in_buffer("")
+	_buffer("")
 {
 }
 
 Buffer::Buffer(Buffer const &src):
 	_idx(0),
-	_in_buffer(src._in_buffer)
+	_buffer(src._buffer)
 {
 }
 
@@ -19,7 +19,7 @@ Buffer::~Buffer(void)
 void
 Buffer::fillBuffer(char *raw_buffer)
 {
-	this->_in_buffer += const_cast<char*>(raw_buffer);
+	this->_buffer += const_cast<char*>(raw_buffer);
 }
 
 void
@@ -43,7 +43,7 @@ Buffer::getIdx(void) const
 std::string &
 Buffer::getBuffer(void)
 {
-	return this->_in_buffer;
+	return this->_buffer;
 }
 
 bool
@@ -61,5 +61,25 @@ void
 Buffer::clearBuffer(int index)
 {
 	for (int i = 0; i < index; i++)
-		this->_in_buffer[i] = 0;
+		this->_buffer[i] = 0;
+}
+
+void
+Buffer::append(std::string const &message)
+{
+	_buffer += message;
+}
+
+void
+Buffer::eatData(size_t size)
+{				
+	size_t count;
+	size_t current_size = _buffer.size();
+	if (size >= current_size)	
+		_buffer.clear();
+	else
+	{
+		count = current_size - size;
+		_buffer.assign(_buffer.substr(size, count)); 
+	}
 }
