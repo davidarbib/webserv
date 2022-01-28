@@ -60,6 +60,14 @@ listenNetwork(ServersType &servers)
 		server->listenSocket();
 }
 
+void
+sendToNetwork(ServersType &servers)
+{
+	ServersType::iterator server = servers.begin();
+	for (; server != servers.end(); server++)
+		server->send();
+}
+
 Response processRequest(TicketsType &tickets)
 {
 	ExecuteRequest executor;
@@ -72,7 +80,10 @@ Response processRequest(TicketsType &tickets)
 			if (tickets.front().getRequest().getStartLine().method_token == "DELETE")
 				body_path = executor.deleteMethod(tickets.front().getRequest().getStartLine().request_URI);
 			else if (tickets.front().getRequest().getStartLine().method_token == "GET")
+			{
+				std::cout << "GET requested" << std::cout;
 				body_path = executor.getMethod(tickets.front().getRequest().getStartLine().request_URI);
+			}
 			else
 			{
 				executor.setStatusCode(405);
@@ -81,12 +92,12 @@ Response processRequest(TicketsType &tickets)
 		}
 		std::cout << "STATUS CODE : " << executor.getStatusCode() << std::endl;
 		response.buildPreResponse(executor.getStatusCode(), body_path);
-		std::cout << response.serialize_response() << std::endl;
+		//std::cout << response.serialize_response() << std::endl;
+		tickets.front().getConnection() << response.serialize_response();
 		tickets.pop();
 	}
 	return response;
 }
-
 
 int main(int ac, char **av)
 {
@@ -95,12 +106,20 @@ int main(int ac, char **av)
 	ReqHandlersType				request_handlers;
 	TicketsType					tickets;
 	Config						config;
+
 	Response::errors_code = Response::fillResponseCodes();
 
 	Server::max_fd = 0;
 	Server::initFdset();
 
-	processArgs(ac, av, servers, config);
+	
+	/* ------------ TODO for tests without configuration file ----------------*/
+	//processArgs(ac, av, servers, config);
+	(void)ac;
+	(void)av;
+	servers.push_back(Server("127.0.0.1", "8003", std::vector<ConfigServer>()));
+
+	/* -----------------------------------------------------------------------*/
 	
 	listenNetwork(servers);
 
@@ -115,7 +134,7 @@ int main(int ac, char **av)
 		networkInputToBuffers(servers);
 		handleRequestBuffers(servers, tickets, request_handlers);
 		processRequest(tickets);
-		//writes
+		sendToNetwork(servers);
 	}
 	return 0;
 }
