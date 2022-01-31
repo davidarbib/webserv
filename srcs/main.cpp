@@ -45,11 +45,11 @@ handleConnectionRequest(ServersType &servers)
 }
 
 void
-networkInputToBuffers(ServersType &servers)
+networkInputToBuffers(ServersType &servers, ReqHandlersType &request_handlers)
 {
 	ServersType::iterator server = servers.begin();
 	for (; server != servers.end(); server++)
-		server->watchInput();
+		server->watchInput(request_handlers);
 }
 
 void
@@ -131,7 +131,7 @@ int main(int ac, char **av)
 		Server::setFdset();
 		select(Server::max_fd + 1, &Server::read_fds, &Server::write_fds, NULL, &tv);
 		handleConnectionRequest(servers);
-		networkInputToBuffers(servers);
+		networkInputToBuffers(servers, request_handlers);
 		handleRequestBuffers(servers, tickets, request_handlers);
 		processRequest(tickets);
 		sendToNetwork(servers);

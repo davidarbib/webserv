@@ -15,6 +15,7 @@
 # include <sstream>
 # include "Connection.hpp"
 # include "Buffer.hpp"
+# include "RequestHandler.hpp"
 # include "typedefs.hpp"
 # include "ConfigServer.hpp"
 
@@ -67,7 +68,7 @@ class Server
 		createConnection(void);
 
 		void
-		watchInput(void);
+		watchInput(std::map<fd_t, RequestHandler> &);
 
 		void
 		send();
