@@ -18,7 +18,7 @@ class Response : public AHttpMessage
 		status_line	_start_line;
 		bool		_error_lock; 
 
-		void
+		int
 		buildBody(std::string const& path);
 
 	public:

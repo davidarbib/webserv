@@ -229,7 +229,6 @@ parseRequest(Connection *raw_request, Server &server, TicketsType &tickets, ReqH
 		return 1;
 	if (is_complete_line(rh.getBuffer(), rh.getIdx()) && !rh.getBuffer().empty())
 	{
-		print_buffer(rh.getBuffer());
 		if (rh.getRequest()->iStartLineInitialized() == false)
 			rh.setIdx(parseStartLine(rh));
 		else if (rh.getRequest()->isHeadersInitialized() == false)
