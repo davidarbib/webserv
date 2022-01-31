@@ -68,15 +68,15 @@ bool
 ExecuteRequest::isValidRequest(Request const& request)
 {
     bool valid = true;
-    if (request.getStartLine().http_version != "HTTP/1.1")
-    {
-        _status_code = VERSION_NOT_SUPPORTED;
-        valid = false;
-    }
-    else if (request.getStartLine().method_token.empty() || request.getStartLine().request_URI.empty()
+    if (request.getStartLine().method_token.empty() || request.getStartLine().request_URI.empty()
     || request.getStartLine().http_version.empty() || request.get_header_value("Host").empty())
     {
         _status_code = BAD_REQUEST;
+        valid = false;
+    }
+    else if (request.getStartLine().http_version != "HTTP/1.1")
+    {
+        _status_code = VERSION_NOT_SUPPORTED;
         valid = false;
     }
     if (!valid)

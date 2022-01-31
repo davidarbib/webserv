@@ -227,7 +227,7 @@ parseRequest(Connection *raw_request, Server &server, TicketsType &tickets, ReqH
 	RequestHandler &rh = it->second;
 	if (rh.getRequest()->isRequestFinalized() == true)
 		return 1;
-	if (is_complete_line(rh.getBuffer(), rh.getIdx()))
+	if (is_complete_line(rh.getBuffer(), rh.getIdx()) && !rh.getBuffer().empty())
 	{
 		if (rh.getRequest()->iStartLineInitialized() == false)
 			rh.setIdx(parseStartLine(rh));
@@ -239,7 +239,7 @@ parseRequest(Connection *raw_request, Server &server, TicketsType &tickets, ReqH
 		if (rh.getRequest()->isRequestFinalized() == true)
 		{
 			//UNCOMENT TO SEE REQUEST INFOS
-			 std::cout << *rh.getRequest() << std::endl;
+			std::cout << *rh.getRequest() << std::endl;
 			Ticket my_ticket(*raw_request, rh.getRequest(), server);
 			tickets.push(my_ticket);
 		}

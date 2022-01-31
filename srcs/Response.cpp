@@ -1,6 +1,6 @@
 #include "Response.hpp"
 
-Response::Response(void) : _error_lock(false)
+Response::Response(void)
 {
 	this->_start_line.protocol_version = HTTP_VERSION;
 }
@@ -70,9 +70,13 @@ Response::buildPreResponse(int code, std::string const& body_path)
 	this->_headers["Content-Type"] = "text/html";
 	if (code != 400)
 		this->_headers["Connection"] = "keep-alive";
-	else this->_headers["Connection"] = "close";
-	this->_error_lock = true;
-	buildBody(body_path);
+	else
+		this->_headers["Connection"] = "close";
+	if (buildBody(body_path) == 0 && code == 200)
+	{
+		this->_start_line.status_code = 204;
+		this->_start_line.reason_phrase = Response::errors_code.find(204)->second;
+	}
 }
 
 std::string
@@ -101,7 +105,7 @@ Response::serialize_response(void)
 	return serialized;
 }
 
-void
+int
 Response::buildBody(std::string const& path)
 {
 	std::ifstream web_page(path.c_str());
@@ -114,11 +118,13 @@ Response::buildBody(std::string const& path)
 		size = _body.length();
 		std::stringstream s;
 		s << size;
-		this->_headers["Content-Length"] =  s.str();
+		if (size > 0)
+			this->_headers["Content-Length"] =  s.str();
 		web_page.close();
+		return size;
 	}
 	else
-		return ;
+		return 0;
 }
 
 std::ostream &
@@ -133,6 +139,7 @@ std::map<int, std::string> Response::fillResponseCodes(void)
 	std::map<int, std::string> codes;
 
 	codes.insert(std::make_pair(200, "OK"));
+	codes.insert(std::make_pair(204, "No Content"));
 	codes.insert(std::make_pair(400, "Bad Request"));
 	codes.insert(std::make_pair(401, "Unauthorized"));
 	codes.insert(std::make_pair(403, "Forbidden"));
