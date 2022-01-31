@@ -73,7 +73,6 @@ Response::buildPreResponse(int code, std::string const& body_path)
 	else
 		this->_headers["Connection"] = "close";
 	this->_error_lock = true;
-	// buildBody(body_path);
 	if (buildBody(body_path) == 0 && code == 200)
 	{
 		this->_start_line.status_code = 204;
