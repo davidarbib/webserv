@@ -80,17 +80,13 @@ Response processRequest(TicketsType &tickets)
 			if (tickets.front().getRequest().getStartLine().method_token == "DELETE")
 				body_path = executor.deleteMethod(tickets.front().getRequest().getStartLine().request_URI);
 			else if (tickets.front().getRequest().getStartLine().method_token == "GET")
-			{
-				std::cout << "GET requested" << std::cout;
 				body_path = executor.getMethod(tickets.front().getRequest().getStartLine().request_URI);
-			}
 			else
 			{
 				executor.setStatusCode(405);
 				body_path = executor.buildBodyPath();
 			}
 		}
-		std::cout << "STATUS CODE : " << executor.getStatusCode() << std::endl;
 		response.buildPreResponse(executor.getStatusCode(), body_path);
 		//std::cout << response.serialize_response() << std::endl;
 		tickets.front().getConnection() << response.serialize_response();
