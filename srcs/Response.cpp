@@ -1,6 +1,6 @@
 #include "Response.hpp"
 
-Response::Response(void) : _error_lock(false)
+Response::Response(void)
 {
 	this->_start_line.protocol_version = HTTP_VERSION;
 }
@@ -72,7 +72,6 @@ Response::buildPreResponse(int code, std::string const& body_path)
 		this->_headers["Connection"] = "keep-alive";
 	else
 		this->_headers["Connection"] = "close";
-	this->_error_lock = true;
 	if (buildBody(body_path) == 0 && code == 200)
 	{
 		this->_start_line.status_code = 204;
