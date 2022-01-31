@@ -75,12 +75,13 @@ Response processRequest(TicketsType &tickets)
 	std::string body_path;
 	while (!tickets.empty() && tickets.front().getRequest().isRequestFinalized() == true)
 	{
-		if (executor.isValidRequest(tickets.front().getRequest()) == true)
+		Ticket current(tickets.front());
+		if (executor.isValidRequest(current.getRequest()) == true)
 		{
-			if (tickets.front().getRequest().getStartLine().method_token == "DELETE")
-				body_path = executor.deleteMethod(tickets.front().getRequest().getStartLine().request_URI);
-			else if (tickets.front().getRequest().getStartLine().method_token == "GET")
-				body_path = executor.getMethod(tickets.front().getRequest().getStartLine().request_URI);
+			if (current.getRequest().getStartLine().method_token == "DELETE")
+				body_path = executor.deleteMethod(current.getRequest().getStartLine().request_URI);
+			else if (current.getRequest().getStartLine().method_token == "GET")
+				body_path = executor.getMethod(current.getRequest().getStartLine().request_URI);
 			else
 			{
 				executor.setStatusCode(405);
