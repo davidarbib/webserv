@@ -8,7 +8,7 @@ RECVSIZE = 1024
 def createMessage():
     message = 'GET / HTTP/1.1'
     message += CRLF
-    message += 'Host : webserv.com'
+    message += 'Host: webserv.com'
     message += CRLF
     message += CRLF
     return message
@@ -17,6 +17,7 @@ client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 client.connect((HOST, PORT))
 print('connected to ' + HOST + ':' + str(PORT))
 client.send(bytes(createMessage(), 'ascii'))
+print('request sent, waiting for response...')
 response = client.recv(RECVSIZE)
 print(response)
 client.close()
