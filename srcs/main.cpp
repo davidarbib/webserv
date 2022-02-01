@@ -68,6 +68,16 @@ sendToNetwork(ServersType &servers)
 		server->send();
 }
 
+ConfigServer getConfig(Ticket current)
+{
+	for (size_t i = 0; i < current.getServer().getCandidateConfs().size(); i++)
+	{
+		if (current.getServer().getCandidateConfs()[i].getName() == current.getRequest().get_header_value("Host"))
+			return current.getServer().getCandidateConfs()[i];
+	}
+	return ConfigServer();
+}
+
 Response processRequest(TicketsType &tickets)
 {
 	ExecuteRequest executor;
@@ -76,7 +86,8 @@ Response processRequest(TicketsType &tickets)
 	while (!tickets.empty() && tickets.front().getRequest().isRequestFinalized() == true)
 	{
 		Ticket current(tickets.front());
-		if (executor.isValidRequest(current.getRequest()) == true)
+		ConfigServer config = getConfig(current);
+		if (executor.isValidRequest(current.getRequest(), config) == true)
 		{
 			if (current.getRequest().getStartLine().method_token == "DELETE")
 				body_path = executor.deleteMethod(current.getRequest().getStartLine().request_URI);
@@ -114,7 +125,14 @@ int main(int ac, char **av)
 	//processArgs(ac, av, servers, config);
 	(void)ac;
 	(void)av;
-	servers.push_back(Server("127.0.0.1", "8003", std::vector<ConfigServer>()));
+	ConfigServer conf;
+	conf.setName("127.0.0.1:8003");
+	// conf.setHost("127.0.0.1:8003");
+	// conf.setPort("8003");
+	conf.setMaxBody("200");
+	std::vector<ConfigServer> configs;
+	configs.push_back(conf);
+	servers.push_back(Server("127.0.0.1", "8003", configs));
 
 	/* -----------------------------------------------------------------------*/
 	

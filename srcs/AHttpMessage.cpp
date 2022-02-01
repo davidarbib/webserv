@@ -17,8 +17,8 @@ AHttpMessage::printMessage(std::ostream &flux) const
 	}
 }
 
-std::string &
-AHttpMessage::getBody(void)
+std::string const&
+AHttpMessage::getBody(void) const
 {
 	return this->_body;
 }

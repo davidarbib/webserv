@@ -39,8 +39,8 @@ class AHttpMessage
 		virtual void
 		setHeader(std::string const &key, std::string const &value) = 0;
 
-		std::string &
-		getBody(void);
+		std::string const&
+		getBody(void) const;
 
 		void
 		printMessage(std::ostream &flux) const;

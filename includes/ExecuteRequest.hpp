@@ -3,6 +3,7 @@
 
 #include "Response.hpp"
 #include "Request.hpp"
+#include "ConfigServer.hpp"
 #include <fstream>
 #include <iostream>
 #include <ios>
@@ -15,6 +16,7 @@
 #define BAD_REQUEST 400
 #define NOT_FOUND 404
 #define NOT_ALLOWED 405
+#define PAYLOAD_TO_LARGE 413
 #define VERSION_NOT_SUPPORTED 505
 
 class ExecuteRequest
@@ -47,7 +49,7 @@ class ExecuteRequest
         setStatusCode(int status_code);
 
         bool
-        isValidRequest(Request const& request);
+        isValidRequest(Request const& request, ConfigServer const& config);
 
         std::string
         buildBodyPath(void);

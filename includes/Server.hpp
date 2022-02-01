@@ -79,8 +79,8 @@ class Server
 		static void
 		initFdset(void);
 
-		std::vector<ConfigServer> &
-		getCandidateConfs(void);
+		std::vector<ConfigServer> const&
+		getCandidateConfs(void) const;
 
 		static fd_t			max_fd;
 		static fd_set		read_fds;

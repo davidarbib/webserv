@@ -33,8 +33,8 @@ Server::getConnections(void) const
 	return _connections;
 }
 
-std::vector<ConfigServer> &
-Server::getCandidateConfs(void)
+std::vector<ConfigServer> const&
+Server::getCandidateConfs(void) const
 {
 	return _candidate_confs;
 }

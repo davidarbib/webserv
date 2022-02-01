@@ -65,7 +65,7 @@ ExecuteRequest::setStatusCode(int status_code)
 }
 
 bool
-ExecuteRequest::isValidRequest(Request const& request)
+ExecuteRequest::isValidRequest(Request const& request, ConfigServer const& config)
 {
     bool valid = true;
     if (request.getStartLine().method_token.empty() || request.getStartLine().request_URI.empty()
@@ -77,6 +77,11 @@ ExecuteRequest::isValidRequest(Request const& request)
     else if (request.getStartLine().http_version != "HTTP/1.1")
     {
         _status_code = VERSION_NOT_SUPPORTED;
+        valid = false;
+    }
+    else if ( static_cast<int>(request.getBody().size()) > config.getMaxBody())
+    {
+        _status_code = PAYLOAD_TO_LARGE;
         valid = false;
     }
     if (!valid)
