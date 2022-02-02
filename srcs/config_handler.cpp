@@ -52,7 +52,6 @@ processConfigFile(ServersType &servers, std::string &config_path, Config &conf)
 {	
 	conf_mm					hostport_configs;
 	std::vector<HostPort>	hostports;
-	std::vector<HostPort>	unique_hostports;
 	std::string				conf_file;
 
 	if ((conf_file = read_config(config_path)) == "")
@@ -67,12 +66,21 @@ processConfigFile(ServersType &servers, std::string &config_path, Config &conf)
 	}
 	//TODO config file error handling
 	classConfigs(conf, hostport_configs, hostports);
+	/* --------TODO debug -------- */
+	//HostPort debug_hostport = HostPort("127.0.0.1", "8003");
+	//hostports.push_back(debug_hostport);
+	//std::cout << hostports.size() << std::endl;
+	//std::cout << hostports.begin()->getIp() << std::endl;
+	//std::cout << hostports.begin()->getPort() << std::endl;
+	//std::cout << (hostports.begin() + 1)->getIp() << std::endl;
+	//std::cout << (hostports.begin() + 1)->getPort() << std::endl;
+	/* --------------------------- */
 	std::vector<HostPort>::iterator hp_end_it;
+	std::vector<HostPort>	unique_hostports(hostports.size());
 	hp_end_it = std::unique_copy(hostports.begin(), hostports.end(),
 									unique_hostports.begin());
-	createServers(servers, hostport_configs, hostports);
-	
-
+	unique_hostports.resize(std::distance(unique_hostports.begin(), hp_end_it));
+	createServers(servers, hostport_configs, unique_hostports);
 	return 0;
 }
 

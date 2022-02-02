@@ -7,7 +7,7 @@ processArgs(int ac, char **av, ServersType &servers, Config &conf)
 
 	std::cout << "ac : " << ac << std::endl;
 	if (ac < 2)
-		config_path = "default.conf";
+		config_path = "webserv.conf";
 	else
 		config_path = std::string(av[1]);
 	processConfigFile(servers, config_path, conf);
@@ -121,18 +121,19 @@ int main(int ac, char **av)
 	Server::initFdset();
 
 	
+	processArgs(ac, av, servers, config);
+
 	/* ------------ TODO for tests without configuration file ----------------*/
-	//processArgs(ac, av, servers, config);
-	(void)ac;
-	(void)av;
-	ConfigServer conf;
-	conf.setName("127.0.0.1:8003");
-	// conf.setHost("127.0.0.1:8003");
-	// conf.setPort("8003");
-	conf.setMaxBody("200");
-	std::vector<ConfigServer> configs;
-	configs.push_back(conf);
-	servers.push_back(Server("127.0.0.1", "8003", configs));
+	//(void)ac;
+	//(void)av;
+	//ConfigServer conf;
+	//conf.setName("127.0.0.1:8003");
+	//// conf.setHost("127.0.0.1:8003");
+	//// conf.setPort("8003");
+	//conf.setMaxBody("200");
+	//std::vector<ConfigServer> configs;
+	//configs.push_back(conf);
+	//servers.push_back(Server("127.0.0.1", "8003", configs));
 
 	/* -----------------------------------------------------------------------*/
 	

@@ -7,6 +7,7 @@
 class HostPort
 {
 	public:
+		HostPort(void);
 		HostPort(std::string, std::string);
 		HostPort(HostPort const &src);
 
@@ -22,8 +23,6 @@ class HostPort
 		getPort(void) const;
 
 	private:
-		HostPort(void);
-
 		std::string		_ip;
 		std::string		_port;
 	
