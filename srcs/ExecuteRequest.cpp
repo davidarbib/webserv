@@ -79,7 +79,7 @@ ExecuteRequest::isValidRequest(Request const& request, ConfigServer const& confi
         _status_code = VERSION_NOT_SUPPORTED;
         valid = false;
     }
-    else if ( static_cast<int>(request.getBody().size()) > config.getMaxBody())
+    else if (static_cast<int>(request.getBody().size()) > config.getMaxBody())
     {
         _status_code = PAYLOAD_TO_LARGE;
         valid = false;
