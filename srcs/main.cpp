@@ -76,7 +76,7 @@ getConfig(Ticket current)
 		if (current.getServer().getCandidateConfs()[i].getName() == current.getRequest().get_header_value("Host"))
 			return current.getServer().getCandidateConfs()[i];
 	}
-	return ConfigServer();
+	return current.getServer().getCandidateConfs()[0];
 }
 
 Response
