@@ -115,3 +115,16 @@ ExecuteRequest::deleteMethod(std::string const& URI, ConfigServer const& config)
         _status_code = NOT_FOUND;
     return buildBodyPath();
 }
+
+void
+ExecuteRequest::fillMethodNotImplemented(void)
+{
+    method_not_implemented[0] = "HEAD";
+    method_not_implemented[1] = "PUT";
+    method_not_implemented[2] = "CONNECT";
+    method_not_implemented[3] = "OPTIONS";
+    method_not_implemented[4] = "TRACE";
+    method_not_implemented[5] = "PATCH";
+}
+
+std::string ExecuteRequest::method_not_implemented[HTTP_METHOD_NOT_IMPLEMENTED_NB];

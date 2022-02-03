@@ -134,7 +134,8 @@ operator<<(std::ostream &flux, Response const &response)
 	return flux;
 }
 
-std::map<int, std::string> Response::fillResponseCodes(void)
+std::map<int, std::string>
+Response::fillResponseCodes(void)
 {
 	std::map<int, std::string> codes;
 
@@ -146,9 +147,10 @@ std::map<int, std::string> Response::fillResponseCodes(void)
 	codes.insert(std::make_pair(404, "Not Found"));
 	codes.insert(std::make_pair(405, "Not Allowed"));
 	codes.insert(std::make_pair(413, "Payload To Large"));
+	codes.insert(std::make_pair(501, "Not Implemented"));
 	codes.insert(std::make_pair(505, "Version Not Supported"));
 
 	return codes;
 }
 
-std::map<int, std::string> Response::errors_code = std::map<int, std::string>();
+std::map<int, std::string> Response::errors_code;

@@ -16,7 +16,9 @@
 #define NOT_FOUND 404
 #define NOT_ALLOWED 405
 #define PAYLOAD_TO_LARGE 413
+#define NOT_IMPLEMENTED 501
 #define VERSION_NOT_SUPPORTED 505
+#define HTTP_METHOD_NOT_IMPLEMENTED_NB 6
 
 class ExecuteRequest
 {
@@ -28,11 +30,15 @@ class ExecuteRequest
 		isAllowedMethod(std::string const &method, std::vector<std::string> method_allowed) const;
 
     public:
+        static std::string method_not_implemented[HTTP_METHOD_NOT_IMPLEMENTED_NB];
         ExecuteRequest(void);
         ExecuteRequest(ExecuteRequest &cpy);
         ExecuteRequest &
         operator=(ExecuteRequest const& src);
         virtual ~ExecuteRequest(void);
+
+        static void
+        fillMethodNotImplemented(void);
 
         int
         getStatusCode(void) const;
