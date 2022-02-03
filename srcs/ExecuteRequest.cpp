@@ -43,6 +43,17 @@ ExecuteRequest::setStatusCode(int status_code)
 }
 
 bool
+ExecuteRequest::isImplemented(std::string const& method) const
+{
+    for (int i = 0; i < HTTP_METHOD_NOT_IMPLEMENTED_NB; i++)
+    {
+        if (method == method_not_implemented[i])
+            return false;
+    }
+    return true;
+}
+
+bool
 ExecuteRequest::isValidRequest(Request const& request, ConfigServer const& config)
 {
     bool valid = true;
@@ -50,6 +61,11 @@ ExecuteRequest::isValidRequest(Request const& request, ConfigServer const& confi
     || request.getStartLine().http_version.empty() || request.get_header_value("Host").empty())
     {
         _status_code = BAD_REQUEST;
+        valid = false;
+    }
+    else if (!isImplemented(request.getStartLine().method_token))
+    {
+        _status_code = NOT_IMPLEMENTED;
         valid = false;
     }
     else if (request.getStartLine().http_version != "HTTP/1.1")
