@@ -1,13 +1,10 @@
 #include "ExecuteRequest.hpp"
 
 ExecuteRequest::ExecuteRequest() : _status_code(0)
-{
-    initMethodList();
-}
+{}
 
 ExecuteRequest::ExecuteRequest(ExecuteRequest &cpy)
 {
-    initMethodList();
     *this = cpy;
 }
 
@@ -22,34 +19,15 @@ ExecuteRequest::~ExecuteRequest(void)
 {
 }
 
-void
-ExecuteRequest::initMethodList(void)
-{
-	this->_method_list[0] = "GET";
-	this->_method_list[1] = "POST";
-	this->_method_list[2] = "DELETE";
-}
-
 bool
-ExecuteRequest::isAllowedMethod(std::string const &method) const
+ExecuteRequest::isAllowedMethod(std::string const &method, std::vector<std::string> method_allowed) const
 {
-	for (int i = 0; i < METHOD_NB; i++)
+	for (size_t i = 0; i < method_allowed.size(); i++)
 	{
-		if (method == this->_method_list[i])
+		if (method == method_allowed[i])
 			return true;
 	}
 	return false;
-}
-
-bool
-ExecuteRequest::isValidMethod(std::string const &method) const
-{
-	for (size_t i = 0; i < method.length(); i++)
-	{
-		if (std::isupper(method[i]) == 0)
-			return false;
-	}
-	return true;
 }
 
 int
@@ -82,6 +60,11 @@ ExecuteRequest::isValidRequest(Request const& request, ConfigServer const& confi
     else if (static_cast<int>(request.getBody().size()) > config.getMaxBody())
     {
         _status_code = PAYLOAD_TO_LARGE;
+        valid = false;
+    }
+    else if (!isAllowedMethod(request.getStartLine().method_token, config.getLocations()[0].getMethods()))
+    {
+        _status_code = NOT_ALLOWED;
         valid = false;
     }
     if (!valid)

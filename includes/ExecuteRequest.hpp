@@ -9,7 +9,6 @@
 #include <ios>
 #include <cstdio>
 
-#define METHOD_NB 3
 #define OK 200
 #define ACCEPTED 202
 #define NO_CONTENT 204
@@ -23,17 +22,10 @@ class ExecuteRequest
 {
 
     private:
-        std::string 	_method_list[METHOD_NB];
         int             _status_code;
 
-        void
-		initMethodList(void);
-
 		bool
-		isAllowedMethod(std::string const &method) const;
-
-		bool
-		isValidMethod(std::string const &method) const;
+		isAllowedMethod(std::string const &method, std::vector<std::string> method_allowed) const;
 
     public:
         ExecuteRequest(void);

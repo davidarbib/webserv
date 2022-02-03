@@ -93,11 +93,6 @@ Response processRequest(TicketsType &tickets)
 				body_path = executor.deleteMethod(current.getRequest().getStartLine().request_URI);
 			else if (current.getRequest().getStartLine().method_token == "GET")
 				body_path = executor.getMethod(current.getRequest().getStartLine().request_URI);
-			else
-			{
-				executor.setStatusCode(405);
-				body_path = executor.buildBodyPath();
-			}
 		}
 		response.buildPreResponse(executor.getStatusCode(), body_path);
 		//std::cout << response.serialize_response() << std::endl;
