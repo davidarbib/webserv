@@ -49,10 +49,10 @@ class ExecuteRequest
         // get / delete / post exec
 
         std::string
-        getMethod(std::string const& URI);
+        getMethod(std::string const& URI, ConfigServer const& config);
 
         std::string
-        deleteMethod(std::string const& URI);
+        deleteMethod(std::string const& URI, ConfigServer const& config);
 };
 
 #endif

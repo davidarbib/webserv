@@ -68,7 +68,8 @@ sendToNetwork(ServersType &servers)
 		server->send();
 }
 
-ConfigServer getConfig(Ticket current)
+ConfigServer
+getConfig(Ticket current)
 {
 	for (size_t i = 0; i < current.getServer().getCandidateConfs().size(); i++)
 	{
@@ -78,7 +79,8 @@ ConfigServer getConfig(Ticket current)
 	return ConfigServer();
 }
 
-Response processRequest(TicketsType &tickets)
+Response
+processRequest(TicketsType &tickets)
 {
 	ExecuteRequest executor;
 	Response response;
@@ -90,9 +92,9 @@ Response processRequest(TicketsType &tickets)
 		if (executor.isValidRequest(current.getRequest(), config) == true)
 		{
 			if (current.getRequest().getStartLine().method_token == "DELETE")
-				body_path = executor.deleteMethod(current.getRequest().getStartLine().request_URI);
+				body_path = executor.deleteMethod(current.getRequest().getStartLine().request_URI, config);
 			else if (current.getRequest().getStartLine().method_token == "GET")
-				body_path = executor.getMethod(current.getRequest().getStartLine().request_URI);
+				body_path = executor.getMethod(current.getRequest().getStartLine().request_URI, config);
 		}
 		response.buildPreResponse(executor.getStatusCode(), body_path);
 		//std::cout << response.serialize_response() << std::endl;
