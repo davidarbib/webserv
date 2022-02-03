@@ -37,7 +37,7 @@ class ExecuteRequest
         ExecuteRequest(void);
         ExecuteRequest(ExecuteRequest &cpy);
         ExecuteRequest &
-        operator=(ExecuteRequest const& src);
+        operator=(ExecuteRequest const &src);
         virtual ~ExecuteRequest(void);
 
         static void
@@ -50,18 +50,18 @@ class ExecuteRequest
         setStatusCode(int status_code);
 
         bool
-        isValidRequest(Request const& request, ConfigServer const& config);
+        isValidRequest(Request const &request, ConfigServer const &config);
 
         bool
-        isImplemented(std::string const& method) const;
+        isImplemented(std::string const &method) const;
 
         // get / delete / post exec
 
         std::string
-        getMethod(std::string const& URI, ConfigServer const& config);
+        getMethod(std::string const &URI, ConfigServer const &config);
 
         std::string
-        deleteMethod(std::string const& URI, ConfigServer const& config);
+        deleteMethod(std::string const &URI, ConfigServer const &config);
 };
 
 #endif

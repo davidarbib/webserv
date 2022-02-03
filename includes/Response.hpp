@@ -18,7 +18,7 @@ class Response : public AHttpMessage
 		status_line	_start_line; 
 
 		int
-		buildBody(std::string const& path);
+		buildBody(std::string const &path);
 
 	public:
 		static std::map<int, std::string> errors_code;
@@ -41,7 +41,7 @@ class Response : public AHttpMessage
 		setReasonPhrase(std::string const &reason_phrase);
 
 		void
-		setBody(std::string const& body);
+		setBody(std::string const &body);
 
 		void
 		setHeader(std::string const &key, std::string const &value);
@@ -50,7 +50,7 @@ class Response : public AHttpMessage
 		printMessage(std::ostream &flux) const;
 
 		void
-		buildPreResponse(int code, std::string const& body_path);
+		buildPreResponse(int code, std::string const &body_path);
 
 		std::string
 		serialize_response(void);

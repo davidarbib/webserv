@@ -68,7 +68,7 @@ sendToNetwork(ServersType &servers)
 		server->send();
 }
 
-ConfigServer
+ConfigServer const &
 getConfig(Ticket current)
 {
 	for (size_t i = 0; i < current.getServer().getCandidateConfs().size(); i++)
@@ -88,7 +88,7 @@ processRequest(TicketsType &tickets)
 	while (!tickets.empty() && tickets.front().getRequest().isRequestFinalized() == true)
 	{
 		Ticket current(tickets.front());
-		ConfigServer config = getConfig(current);
+		ConfigServer const& config = getConfig(current);
 		if (executor.isValidRequest(current.getRequest(), config) == true)
 		{
 			if (current.getRequest().getStartLine().method_token == "DELETE")
@@ -104,7 +104,8 @@ processRequest(TicketsType &tickets)
 	return response;
 }
 
-int main(int ac, char **av)
+int
+main(int ac, char **av)
 {
 	struct timeval				tv;
 	ServersType					servers;
