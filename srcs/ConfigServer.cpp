@@ -154,7 +154,7 @@ ConfigServer::getMaxBody() const {
 	return (this->_max_body);
 }
 
-std::vector<ServerLocations>
+std::vector<ServerLocations> const&
 ConfigServer::getLocations() const {
 	return (this->_locations);
 }

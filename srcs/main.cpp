@@ -79,6 +79,35 @@ getConfig(Ticket current)
 	return current.getServer().getCandidateConfs()[0];
 }
 
+size_t
+matchLocation(std::string const& location, std::string const& uri)
+{
+	size_t matching_len = 0;
+
+	while (matching_len < location.size() && matching_len < uri.size() && location[matching_len] == uri[matching_len])
+		matching_len++;
+	return matching_len;
+}
+
+ServerLocations const&
+getLocation(ConfigServer const& config, std::string const& uri)
+{
+	size_t max_match = 0;
+	size_t current_match = 0;
+	size_t matched_index = 0;
+	for (size_t i = 0; i < config.getLocations().size(); i++)
+	{
+		current_match = matchLocation(config.getLocations()[i].getpath(), uri);
+		if (current_match > max_match)
+		{
+			current_match = max_match;
+			matched_index = i;
+		}
+	}
+	return config.getLocations()[matched_index];
+}
+
+
 Response
 processRequest(TicketsType &tickets)
 {
@@ -89,6 +118,8 @@ processRequest(TicketsType &tickets)
 	{
 		Ticket current(tickets.front());
 		ConfigServer const& config = getConfig(current);
+		ServerLocations const& location = getLocation(config, current.getRequest().getStartLine().request_URI);
+		(void)location;
 		if (executor.isValidRequest(current.getRequest(), config) == true)
 		{
 			if (current.getRequest().getStartLine().method_token == "DELETE")

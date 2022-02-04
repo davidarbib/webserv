@@ -65,7 +65,7 @@ public:
 	int
 	getMaxBody() const;
 
-	std::vector<ServerLocations>
+	std::vector<ServerLocations> const&
 	getLocations() const;
 
 private:
