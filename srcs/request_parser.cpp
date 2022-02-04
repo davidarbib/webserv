@@ -83,6 +83,8 @@ getOneHeader(RequestHandler &rh, int position)
 	index += 2;
 	while (rh.getBuffer()[index] && !RequestHandler::isEndLine(rh.getBuffer(), index))
 	{
+		//std::cout << "len : " << rh.getBuffer().size() << std::endl;
+		//std::cout << "index : " << index << std::endl;
 		value += rh.getBuffer()[index];
 		index++;
 	}
@@ -232,14 +234,22 @@ parseRequest(Connection *raw_request, Server &server, TicketsType &tickets, ReqH
 		if (rh.getRequest()->iStartLineInitialized() == false)
 			rh.setIdx(parseStartLine(rh));
 		else if (rh.getRequest()->isHeadersInitialized() == false)
+		{
+			//print_buffer(rh.getBuffer()); // for debug purpose
+			//std::cout << *rh.getRequest() << std::endl;
 			rh.setIdx(parseHeaders(rh));
+		}
 		else if (rh.getRequest()->isRequestFinalized() == false)
+		{
+			//std::cout << "body parsing" << std::endl;
 			rh.setIdx(parseBody(rh));
-		rh.clearBuffer(rh.getIdx());
+		}
+		print_buffer(rh.getBuffer()); // for debug purpose
+		rh.clearBuffer();
 		if (rh.getRequest()->isRequestFinalized() == true)
 		{
 			//UNCOMENT TO SEE REQUEST INFOS
-			std::cout << *rh.getRequest() << std::endl;
+			//std::cout << *rh.getRequest() << std::endl;
 			Ticket my_ticket(*raw_request, rh.getRequest(), server);
 			tickets.push(my_ticket);
 		}

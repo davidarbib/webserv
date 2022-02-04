@@ -49,7 +49,7 @@ class RequestHandler
 		isEndLine(std::string &line, int index);
 
 		void
-		clearBuffer(int);
+		clearBuffer(void);
 };
 
 #endif
