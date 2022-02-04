@@ -54,7 +54,7 @@ ExecuteRequest::isImplemented(std::string const& method) const
 }
 
 bool
-ExecuteRequest::isValidRequest(Request const& request, ConfigServer const& config)
+ExecuteRequest::isValidRequest(Request const& request, ConfigServer const& config, ServerLocations const& location)
 {
     bool valid = true;
     if (request.getStartLine().method_token.empty() || request.getStartLine().request_URI.empty()
@@ -78,13 +78,11 @@ ExecuteRequest::isValidRequest(Request const& request, ConfigServer const& confi
         _status_code = PAYLOAD_TO_LARGE;
         valid = false;
     }
-    else if (!isAllowedMethod(request.getStartLine().method_token, config.getLocations()[0].getMethods()))
+    else if (!isAllowedMethod(request.getStartLine().method_token, location.getMethods()))
     {
         _status_code = NOT_ALLOWED;
         valid = false;
     }
-    if (!valid)
-        buildBodyPath();
     return valid;
 }
 

@@ -119,13 +119,15 @@ processRequest(TicketsType &tickets)
 		Ticket current(tickets.front());
 		ConfigServer const& config = getConfig(current);
 		ServerLocations const& location = getLocation(config, current.getRequest().getStartLine().request_URI);
-		if (executor.isValidRequest(current.getRequest(), config) == true)
+		if (executor.isValidRequest(current.getRequest(), config, location) == true)
 		{
 			if (current.getRequest().getStartLine().method_token == "DELETE")
 				body_path = executor.deleteMethod(current.getRequest().getStartLine().request_URI, config, location);
 			else if (current.getRequest().getStartLine().method_token == "GET")
 				body_path = executor.getMethod(current.getRequest().getStartLine().request_URI, config, location);
 		}
+		else
+			body_path = executor.buildBodyPath();
 		response.buildPreResponse(executor.getStatusCode(), body_path);
 		//std::cout << response.serialize_response() << std::endl;
 		tickets.front().getConnection() << response.serialize_response();

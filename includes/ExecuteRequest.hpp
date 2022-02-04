@@ -29,8 +29,6 @@ class ExecuteRequest
 		bool
 		isAllowedMethod(std::string const &method, std::vector<std::string> method_allowed) const;
 
-        std::string
-        buildBodyPath(void);
 
     public:
         static std::string method_not_implemented[HTTP_METHOD_NOT_IMPLEMENTED_NB];
@@ -50,11 +48,13 @@ class ExecuteRequest
         setStatusCode(int status_code);
 
         bool
-        isValidRequest(Request const &request, ConfigServer const &config);
+        isValidRequest(Request const &request, ConfigServer const &config, ServerLocations const& location);
 
         bool
         isImplemented(std::string const &method) const;
 
+        std::string
+        buildBodyPath(void);
         // get / delete / post exec
 
         std::string
