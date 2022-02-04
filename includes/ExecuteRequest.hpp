@@ -58,10 +58,10 @@ class ExecuteRequest
         // get / delete / post exec
 
         std::string
-        getMethod(std::string const &URI, ConfigServer const &config);
+        getMethod(std::string const &URI, ConfigServer const &config, ServerLocations const& location);
 
         std::string
-        deleteMethod(std::string const &URI, ConfigServer const &config);
+        deleteMethod(std::string const &URI, ConfigServer const &config, ServerLocations const& location);
 };
 
 #endif

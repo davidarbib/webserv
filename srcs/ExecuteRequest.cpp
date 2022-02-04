@@ -99,10 +99,10 @@ ExecuteRequest::buildBodyPath(void)
 }
 
 std::string
-ExecuteRequest::getMethod(std::string const& URI, ConfigServer const& config)
+ExecuteRequest::getMethod(std::string const& URI, ConfigServer const& config, ServerLocations const& location)
 {
-    std::string uri = config.getLocations()[0].getRoot() + URI;
-    std::cout << "URI :" << uri << std::endl;
+    (void)config;
+    std::string uri = location.getRoot() + URI;
     std::ifstream ressource(uri.c_str());
     if (ressource)
     {
@@ -115,9 +115,10 @@ ExecuteRequest::getMethod(std::string const& URI, ConfigServer const& config)
 }
 
 std::string
-ExecuteRequest::deleteMethod(std::string const& URI, ConfigServer const& config)
+ExecuteRequest::deleteMethod(std::string const& URI, ConfigServer const& config, ServerLocations const& location)
 {
-    std::string uri = config.getLocations()[0].getRoot() + URI;
+    (void)config;
+    std::string uri = location.getRoot() + URI;
     std::string deleted_path("./trash/");
     std::ifstream in(uri.c_str(), std::ios::in | std::ios::binary);
     if (in)

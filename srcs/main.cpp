@@ -100,7 +100,7 @@ getLocation(ConfigServer const& config, std::string const& uri)
 		current_match = matchLocation(config.getLocations()[i].getpath(), uri);
 		if (current_match > max_match)
 		{
-			current_match = max_match;
+			max_match = current_match;
 			matched_index = i;
 		}
 	}
@@ -119,13 +119,12 @@ processRequest(TicketsType &tickets)
 		Ticket current(tickets.front());
 		ConfigServer const& config = getConfig(current);
 		ServerLocations const& location = getLocation(config, current.getRequest().getStartLine().request_URI);
-		(void)location;
 		if (executor.isValidRequest(current.getRequest(), config) == true)
 		{
 			if (current.getRequest().getStartLine().method_token == "DELETE")
-				body_path = executor.deleteMethod(current.getRequest().getStartLine().request_URI, config);
+				body_path = executor.deleteMethod(current.getRequest().getStartLine().request_URI, config, location);
 			else if (current.getRequest().getStartLine().method_token == "GET")
-				body_path = executor.getMethod(current.getRequest().getStartLine().request_URI, config);
+				body_path = executor.getMethod(current.getRequest().getStartLine().request_URI, config, location);
 		}
 		response.buildPreResponse(executor.getStatusCode(), body_path);
 		//std::cout << response.serialize_response() << std::endl;
