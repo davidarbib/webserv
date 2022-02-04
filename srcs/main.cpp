@@ -107,7 +107,6 @@ getLocation(ConfigServer const& config, std::string const& uri)
 	return config.getLocations()[matched_index];
 }
 
-
 Response
 processRequest(TicketsType &tickets)
 {
