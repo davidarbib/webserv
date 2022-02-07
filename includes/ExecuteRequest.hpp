@@ -29,6 +29,9 @@ class ExecuteRequest
 		bool
 		isAllowedMethod(std::string const &method, std::vector<std::string> method_allowed) const;
 
+        std::string
+        autoindexPath(void) const;
+
 
     public:
         static std::string method_not_implemented[HTTP_METHOD_NOT_IMPLEMENTED_NB];

@@ -106,8 +106,19 @@ ExecuteRequest::buildBodyPath(ConfigServer const &config, std::string const& roo
 }
 
 std::string
+ExecuteRequest::autoindexPath(void) const
+{
+    return std::string("./autoindex.html");
+}
+
+std::string
 ExecuteRequest::getMethod(std::string const& URI, ConfigServer const& config, ServerLocations const& location)
 {
+    if (URI[URI.size() - 1] == '/' && location.getAuto_index() == 1)
+    {
+        _status_code = OK;
+        return autoindexPath();
+    }
     std::ifstream ressource;
     std::string uri = location.getRoot() + URI;
     if (URI == location.getpath())
