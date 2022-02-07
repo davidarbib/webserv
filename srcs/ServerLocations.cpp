@@ -52,7 +52,7 @@ void
 ServerLocations::setMethods(std::string const &methods)
 {
 	char *str;
-	std::string lst[3] = {"GET", "POST", "REMOVE"};
+	std::string lst[3] = {"GET", "POST", "DELETE"};
 	
 	if (methods == "")
 		throw("Wrong methods rule format, missing methods.");

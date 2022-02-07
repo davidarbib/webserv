@@ -100,15 +100,37 @@ std::string
 ExecuteRequest::getMethod(std::string const& URI, ConfigServer const& config, ServerLocations const& location)
 {
     (void)config;
+    std::ifstream ressource;
     std::string uri = location.getRoot() + URI;
-    std::ifstream ressource(uri.c_str());
+    if (URI == location.getpath())
+    {
+        for (size_t i = 0; i < location.getIndex().size(); i++)
+        {
+            uri = location.getRoot() + "/" + location.getIndex()[i];
+            ressource.open(uri, std::ifstream::in);
+            if (ressource.is_open())
+            {
+                _status_code = OK;
+                ressource.close();
+                return uri;
+            }
+        }
+        if (ressource.is_open() == false)
+            _status_code = NOT_FOUND;
+        ressource.close();
+        return buildBodyPath();
+    }
+    else
+        ressource.open(uri.c_str(), std::ifstream::in);
     if (ressource)
     {
         _status_code = OK;
+        ressource.close();
         return uri;       
     }
     else
         _status_code = NOT_FOUND;
+    ressource.close();
     return buildBodyPath();
 }
 
