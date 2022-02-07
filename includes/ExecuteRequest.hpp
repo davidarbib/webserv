@@ -12,6 +12,7 @@
 #define OK 200
 #define ACCEPTED 202
 #define NO_CONTENT 204
+#define MOVED_PERMANTLY 301
 #define BAD_REQUEST 400
 #define NOT_FOUND 404
 #define NOT_ALLOWED 405
@@ -31,7 +32,6 @@ class ExecuteRequest
 
         std::string
         autoindexPath(void) const;
-
 
     public:
         static std::string method_not_implemented[HTTP_METHOD_NOT_IMPLEMENTED_NB];
@@ -58,6 +58,9 @@ class ExecuteRequest
 
         std::string
         buildBodyPath(ConfigServer const &config, std::string const& root);
+
+        std::string
+        getRedirected(ServerLocations const& location, Response &response);
 
         // get / delete / post exec
 

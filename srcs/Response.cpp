@@ -72,10 +72,13 @@ Response::buildPreResponse(int code, std::string const& body_path)
 		this->_headers["Connection"] = "keep-alive";
 	else
 		this->_headers["Connection"] = "close";
-	if (buildBody(body_path) == 0 && code == 200)
+	if (buildBody(body_path) == 0)
 	{
-		this->_start_line.status_code = 204;
-		this->_start_line.reason_phrase = Response::errors_code.find(204)->second;
+		if (code == 200)
+		{
+			this->_start_line.reason_phrase = Response::errors_code.find(204)->second;
+			this->_start_line.status_code = 204;
+		}
 	}
 }
 
@@ -110,7 +113,7 @@ Response::buildBody(std::string const& path)
 {
 	std::ifstream web_page(path.c_str());
 	int size = 0;
-	if (web_page)
+	if (path.size() > 0 && web_page)
 	{
 		std::string line;
 		while (getline(web_page, line))
@@ -141,6 +144,7 @@ Response::fillResponseCodes(void)
 
 	codes.insert(std::make_pair(200, "OK"));
 	codes.insert(std::make_pair(204, "No Content"));
+	codes.insert(std::make_pair(301, "Moved permantly"));
 	codes.insert(std::make_pair(400, "Bad Request"));
 	codes.insert(std::make_pair(401, "Unauthorized"));
 	codes.insert(std::make_pair(403, "Forbidden"));

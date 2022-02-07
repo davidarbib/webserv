@@ -112,6 +112,14 @@ ExecuteRequest::autoindexPath(void) const
 }
 
 std::string
+ExecuteRequest::getRedirected(ServerLocations const& location, Response &response)
+{
+    _status_code = MOVED_PERMANTLY;
+    response.setHeader("Location", location.getRedir().to);
+    return std::string();
+}
+
+std::string
 ExecuteRequest::getMethod(std::string const& URI, ConfigServer const& config, ServerLocations const& location)
 {
     if (URI[URI.size() - 1] == '/' && location.getAuto_index() == 1)
@@ -145,7 +153,7 @@ ExecuteRequest::getMethod(std::string const& URI, ConfigServer const& config, Se
     {
         _status_code = OK;
         ressource.close();
-        return uri;       
+        return uri;
     }
     else
         _status_code = NOT_FOUND;

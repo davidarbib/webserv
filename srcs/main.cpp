@@ -120,7 +120,9 @@ processRequest(TicketsType &tickets)
 		ServerLocations const& location = getLocation(config, current.getRequest().getStartLine().request_URI);
 		if (executor.isValidRequest(current.getRequest(), config, location) == true)
 		{
-			if (current.getRequest().getStartLine().method_token == "DELETE")
+			if (location.getRedir().from == current.getRequest().getStartLine().request_URI)
+				body_path = executor.getRedirected(location, response);
+			else if (current.getRequest().getStartLine().method_token == "DELETE")
 				body_path = executor.deleteMethod(current.getRequest().getStartLine().request_URI, config, location);
 			else if (current.getRequest().getStartLine().method_token == "GET")
 				body_path = executor.getMethod(current.getRequest().getStartLine().request_URI, config, location);
@@ -128,7 +130,7 @@ processRequest(TicketsType &tickets)
 		else
 			body_path = executor.buildBodyPath(config, location.getRoot());
 		response.buildPreResponse(executor.getStatusCode(), body_path);
-		//std::cout << response.serialize_response() << std::endl;
+		// std::cout << response.serialize_response() << std::endl;
 		tickets.front().getConnection() << response.serialize_response();
 		tickets.pop();
 	}
