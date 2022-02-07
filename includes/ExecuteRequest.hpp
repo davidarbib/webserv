@@ -54,7 +54,7 @@ class ExecuteRequest
         isImplemented(std::string const &method) const;
 
         std::string
-        buildBodyPath(void);
+        buildBodyPath(ConfigServer const &config, std::string const& root);
 
         // get / delete / post exec
 

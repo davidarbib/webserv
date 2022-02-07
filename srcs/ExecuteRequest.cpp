@@ -87,19 +87,27 @@ ExecuteRequest::isValidRequest(Request const& request, ConfigServer const& confi
 }
 
 std::string
-ExecuteRequest::buildBodyPath(void)
+ExecuteRequest::buildBodyPath(ConfigServer const &config, std::string const& root)
 {
-    std::stringstream body_path;
-    body_path << "./srcs/html/";
-	body_path << _status_code;
-	body_path << ".html";
-    return body_path.str();
+    int error_code = 0;
+    std::stringstream ss;
+    for (size_t i = 0; i < config.getErrorPages().errorCodes.size(); i++)
+    {
+        ss << config.getErrorPages().errorCodes[i];
+        ss >> error_code;
+        ss.clear();
+        if (error_code == _status_code){
+            std::stringstream code_string;
+            code_string << _status_code;
+            return root + config.getErrorPages().path + code_string.str() + ".html";
+        }
+    }
+    return std::string();
 }
 
 std::string
 ExecuteRequest::getMethod(std::string const& URI, ConfigServer const& config, ServerLocations const& location)
 {
-    (void)config;
     std::ifstream ressource;
     std::string uri = location.getRoot() + URI;
     if (URI == location.getpath())
@@ -118,11 +126,11 @@ ExecuteRequest::getMethod(std::string const& URI, ConfigServer const& config, Se
         if (ressource.is_open() == false)
             _status_code = NOT_FOUND;
         ressource.close();
-        return buildBodyPath();
+        return buildBodyPath(config, location.getRoot());
     }
     else
         ressource.open(uri.c_str(), std::ifstream::in);
-    if (ressource)
+    if (ressource.is_open())
     {
         _status_code = OK;
         ressource.close();
@@ -131,13 +139,12 @@ ExecuteRequest::getMethod(std::string const& URI, ConfigServer const& config, Se
     else
         _status_code = NOT_FOUND;
     ressource.close();
-    return buildBodyPath();
+    return buildBodyPath(config, location.getRoot());
 }
 
 std::string
 ExecuteRequest::deleteMethod(std::string const& URI, ConfigServer const& config, ServerLocations const& location)
 {
-    (void)config;
     std::string uri = location.getRoot() + URI;
     std::string deleted_path("./trash/");
     std::ifstream in(uri.c_str(), std::ios::in | std::ios::binary);
@@ -150,7 +157,7 @@ ExecuteRequest::deleteMethod(std::string const& URI, ConfigServer const& config,
     }
     else
         _status_code = NOT_FOUND;
-    return buildBodyPath();
+    return buildBodyPath(config, location.getRoot());
 }
 
 void

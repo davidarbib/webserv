@@ -126,7 +126,7 @@ processRequest(TicketsType &tickets)
 				body_path = executor.getMethod(current.getRequest().getStartLine().request_URI, config, location);
 		}
 		else
-			body_path = executor.buildBodyPath();
+			body_path = executor.buildBodyPath(config, location.getRoot());
 		response.buildPreResponse(executor.getStatusCode(), body_path);
 		//std::cout << response.serialize_response() << std::endl;
 		tickets.front().getConnection() << response.serialize_response();
