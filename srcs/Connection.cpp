@@ -57,7 +57,8 @@ Connection::fillBuffer(char *buf)
 void
 Connection::eatOutBufferData(int size)
 {
-	_out_buffer.eatData(size);
+	_out_buffer.setIdx(size);
+	_out_buffer.clearBuffer();
 }
 
 void

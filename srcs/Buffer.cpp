@@ -86,20 +86,6 @@ Buffer::append(std::string const &message)
 	_buffer += message;
 }
 
-void
-Buffer::eatData(size_t size)
-{				
-	size_t count;
-	size_t current_size = _buffer.size();
-	if (size >= current_size)
-		clearBuffer();
-	else
-	{
-		count = current_size - size;
-		_buffer.assign(_buffer.substr(size, count)); 
-	}
-}
-
 bool
 Buffer::isEmpty(void)
 {
