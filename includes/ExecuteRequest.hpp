@@ -9,16 +9,6 @@
 #include <ios>
 #include <cstdio>
 
-#define OK 200
-#define ACCEPTED 202
-#define NO_CONTENT 204
-#define MOVED_PERMANTLY 301
-#define BAD_REQUEST 400
-#define NOT_FOUND 404
-#define NOT_ALLOWED 405
-#define PAYLOAD_TO_LARGE 413
-#define NOT_IMPLEMENTED 501
-#define VERSION_NOT_SUPPORTED 505
 #define HTTP_METHOD_NOT_IMPLEMENTED_NB 6
 
 class ExecuteRequest

@@ -67,16 +67,16 @@ Response::buildPreResponse(int code, std::string const& body_path)
 	this->_start_line.reason_phrase = Response::errors_code.find(code)->second;
 	this->_headers["Server"] = SERVER_VERSION;
 	this->_headers["Date"] = getDate();
-	if (code != 400)
+	if (code != BAD_REQUEST)
 		this->_headers["Connection"] = "keep-alive";
 	else
 		this->_headers["Connection"] = "close";
 	if (buildBody(body_path) == 0)
 	{
-		if (code == 200)
+		if (code == OK)
 		{
-			this->_start_line.reason_phrase = Response::errors_code.find(204)->second;
-			this->_start_line.status_code = 204;
+			this->_start_line.reason_phrase = Response::errors_code.find(NO_CONTENT)->second;
+			this->_start_line.status_code = NO_CONTENT;
 		}
 	}
 	else
@@ -143,17 +143,17 @@ Response::fillResponseCodes(void)
 {
 	std::map<int, std::string> codes;
 
-	codes.insert(std::make_pair(200, "OK"));
-	codes.insert(std::make_pair(204, "No Content"));
-	codes.insert(std::make_pair(301, "Moved permantly"));
-	codes.insert(std::make_pair(400, "Bad Request"));
-	codes.insert(std::make_pair(401, "Unauthorized"));
-	codes.insert(std::make_pair(403, "Forbidden"));
-	codes.insert(std::make_pair(404, "Not Found"));
-	codes.insert(std::make_pair(405, "Not Allowed"));
-	codes.insert(std::make_pair(413, "Payload To Large"));
-	codes.insert(std::make_pair(501, "Not Implemented"));
-	codes.insert(std::make_pair(505, "Version Not Supported"));
+	codes.insert(std::make_pair(OK, "OK"));
+	codes.insert(std::make_pair(NO_CONTENT, "No Content"));
+	codes.insert(std::make_pair(MOVED_PERMANTLY, "Moved permantly"));
+	codes.insert(std::make_pair(BAD_REQUEST, "Bad Request"));
+	codes.insert(std::make_pair(UNAUTHORIZED, "Unauthorized"));
+	codes.insert(std::make_pair(FORBIDDEN, "Forbidden"));
+	codes.insert(std::make_pair(NOT_FOUND, "Not Found"));
+	codes.insert(std::make_pair(NOT_ALLOWED, "Not Allowed"));
+	codes.insert(std::make_pair(PAYLOAD_TO_LARGE, "Payload To Large"));
+	codes.insert(std::make_pair(NOT_IMPLEMENTED, "Not Implemented"));
+	codes.insert(std::make_pair(VERSION_NOT_SUPPORTED, "Version Not Supported"));
 
 	return codes;
 }
