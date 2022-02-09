@@ -149,8 +149,9 @@ ExecuteRequest::getMethod(std::string const& URI, ConfigServer const& config, Se
     }
     else
         ressource.open(uri.c_str(), std::ifstream::in);
-    if (ressource.is_open())
+    if (ressource.is_open() && uri[uri.size() - 1] != '/')
     {
+        std::cout << uri << " is opened LOL" << std::endl;
         _status_code = OK;
         ressource.close();
         return uri;
