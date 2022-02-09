@@ -199,3 +199,5 @@ ExecuteRequest::fillMethodNotImplemented(void)
     method_not_implemented[4] = "TRACE";
     method_not_implemented[5] = "PATCH";
 }
+
+std::string ExecuteRequest::method_not_implemented[HTTP_METHOD_NOT_IMPLEMENTED_NB];
