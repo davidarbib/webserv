@@ -134,7 +134,7 @@ ExecuteRequest::getMethod(std::string const& URI, ConfigServer const& config, Se
         for (size_t i = 0; i < location.getIndex().size(); i++)
         {
             uri = location.getRoot() + "/" + location.getIndex()[i];
-            ressource.open(uri, std::ifstream::in);
+            ressource.open(uri.c_str(), std::ifstream::in);
             if (ressource.is_open())
             {
                 _status_code = OK;
@@ -151,7 +151,6 @@ ExecuteRequest::getMethod(std::string const& URI, ConfigServer const& config, Se
         ressource.open(uri.c_str(), std::ifstream::in);
     if (ressource.is_open() && uri[uri.size() - 1] != '/')
     {
-        std::cout << uri << " is opened LOL" << std::endl;
         _status_code = OK;
         ressource.close();
         return uri;
