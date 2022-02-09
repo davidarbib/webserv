@@ -67,7 +67,6 @@ Response::buildPreResponse(int code, std::string const& body_path)
 	this->_start_line.reason_phrase = Response::errors_code.find(code)->second;
 	this->_headers["Server"] = SERVER_VERSION;
 	this->_headers["Date"] = getDate();
-	this->_headers["Content-Type"] = "text/html";
 	if (code != 400)
 		this->_headers["Connection"] = "keep-alive";
 	else
@@ -80,6 +79,8 @@ Response::buildPreResponse(int code, std::string const& body_path)
 			this->_start_line.status_code = 204;
 		}
 	}
+	else
+		this->_headers["Content-Type"] = "text/html";
 }
 
 std::string
