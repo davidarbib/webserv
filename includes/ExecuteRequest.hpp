@@ -33,6 +33,9 @@ class ExecuteRequest
         std::string
         autoindexPath(void) const;
 
+        std::string
+        matchIndex(ServerLocations const &location, ConfigServer const &config, std::ifstream &ressource);
+
     public:
         static std::string method_not_implemented[HTTP_METHOD_NOT_IMPLEMENTED_NB];
         ExecuteRequest(void);

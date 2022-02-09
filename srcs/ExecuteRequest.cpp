@@ -120,6 +120,27 @@ ExecuteRequest::getRedirected(ServerLocations const& location, Response &respons
 }
 
 std::string
+ExecuteRequest::matchIndex(ServerLocations const &location, ConfigServer const &config, std::ifstream &ressource)
+{
+    std::string uri;    
+    for (size_t i = 0; i < location.getIndex().size(); i++)
+    {
+        uri = location.getRoot() + "/" + location.getIndex()[i];
+        ressource.open(uri.c_str(), std::ifstream::in);
+        if (ressource.is_open())
+        {
+            _status_code = OK;
+            ressource.close();
+            return uri;
+        }
+    }
+    if (ressource.is_open() == false)
+        _status_code = NOT_FOUND;
+    ressource.close();
+    return buildBodyPath(config, location.getRoot());
+}
+
+std::string
 ExecuteRequest::getMethod(std::string const& URI, ConfigServer const& config, ServerLocations const& location)
 {
     if (URI[URI.size() - 1] == '/' && location.getAuto_index() == 1)
@@ -130,23 +151,7 @@ ExecuteRequest::getMethod(std::string const& URI, ConfigServer const& config, Se
     std::ifstream ressource;
     std::string uri = location.getRoot() + URI;
     if (URI == location.getpath())
-    {
-        for (size_t i = 0; i < location.getIndex().size(); i++)
-        {
-            uri = location.getRoot() + "/" + location.getIndex()[i];
-            ressource.open(uri.c_str(), std::ifstream::in);
-            if (ressource.is_open())
-            {
-                _status_code = OK;
-                ressource.close();
-                return uri;
-            }
-        }
-        if (ressource.is_open() == false)
-            _status_code = NOT_FOUND;
-        ressource.close();
-        return buildBodyPath(config, location.getRoot());
-    }
+        return matchIndex(location, config, ressource);
     else
         ressource.open(uri.c_str(), std::ifstream::in);
     if (ressource.is_open() && uri[uri.size() - 1] != '/')
