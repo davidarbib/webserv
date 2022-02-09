@@ -2,8 +2,14 @@
 #include <unistd.h>
 
 void print_vector(std::vector<std::string> vector) {
-	for (std::vector<std::string>::iterator i = vector.begin(); i != vector.end(); ++i)
-	    std::cout << *i << ' ';
+	int i;
+
+	i = 0;
+	while (i < vector.size())
+	{
+		std::cout << vector[i] << " ";
+		i++;
+	}
 	std::cout << std::endl;
 }
 
@@ -28,8 +34,20 @@ int set_server_config_test()
 
 	server = conf.getServers().front();
 
-	std::cout << "--- Parsing server ---" << std::endl; 
-	
+	std::cout << "--- Parsing server ---" << std::endl;
+
+	std::cout << "name: " << server.getName() << std::endl;
+	std::cout << "host: " << server.getHost() << std::endl;
+	std::cout << "port: " << server.getPort() << std::endl;
+	std::cout << "error_pages (codes): ";
+	print_vector(server.getErrorPages().errorCodes);
+	std::cout << "error_pages (path): " << server.getErrorPages().path << std::endl;
+	std::cout << "client_max_body_size: " << server.getMax_body() << std::endl << std::endl;
+
+	server = conf.getServers().back();
+
+	std::cout << "--- Parsing server ---" << std::endl;
+
 	std::cout << "name: " << server.getName() << std::endl;
 	std::cout << "host: " << server.getHost() << std::endl;
 	std::cout << "port: " << server.getPort() << std::endl;
@@ -41,7 +59,21 @@ int set_server_config_test()
 	location = server.getLocations().front();
 
 	std::cout << "--- Parsing location ---" << std::endl;
-	
+
+	std::cout << "path: " << location.getpath() << std::endl;
+	std::cout << "methods: ";
+	print_vector(location.getMethods());
+	std::cout << "index: ";
+	print_vector(location.getIndex());
+	std::cout << "auto_index: " << location.getAuto_index() << std::endl;
+	std::cout << "redir (from): " << location.getRedir().from << std::endl;
+	std::cout << "redir (to): " << location.getRedir().to << std::endl;
+	std::cout << "cgi_path: " << location.getCgi_path() << std::endl;
+
+	location = server.getLocations().back();
+
+	std::cout << "--- Parsing location ---" << std::endl;
+
 	std::cout << "path: " << location.getpath() << std::endl;
 	std::cout << "methods: ";
 	print_vector(location.getMethods());
@@ -59,7 +91,7 @@ int	main(int ac, char **av)
 {
 	(void)ac;
 	(void)av;
-	
+
 	set_server_config_test();
 	return (0);
 }

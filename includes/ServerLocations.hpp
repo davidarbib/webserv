@@ -5,6 +5,7 @@
 # include <string.h>
 # include <vector>
 # include <iostream>
+# include <algorithm>
 
 # include "ConfigUtils.hpp"
 
@@ -64,7 +65,7 @@ public:
 
 	std::vector<std::string>
 	getIndex() const;
-	
+
 	std::string
 	getCgi_path() const;
 

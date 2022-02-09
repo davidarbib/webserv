@@ -42,7 +42,7 @@ public:
 
 	void
 	setErrorPages(std::string const &error_pages);
-	
+
 	void
 	setMax_body(std::string const &max_body);
 

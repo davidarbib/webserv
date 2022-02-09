@@ -1,7 +1,5 @@
 #include "ServerLocations.hpp"
 
-#include <algorithm>
-
 ServerLocations::ServerLocations(void) {
 	this->_auto_index = 0;
 }
@@ -15,9 +13,9 @@ ServerLocations::ServerLocations (ServerLocations const &src) {
 
 void
 ServerLocations::setAll(std::string const &confFile)
-{	
+{
 	int pos_start;
-	
+
 	if ((pos_start = confFile.find("location")) != -1)
 		this->setPath(parse(confFile, pos_start));
 	if ((pos_start = confFile.find("methods_allowed")) != -1)
@@ -48,12 +46,24 @@ ServerLocations::setPath(std::string const &path)
 		throw("Wrong location block format, missing root directive.");
 }
 
+static void print_vector(std::vector<std::string> vector) {
+	int i;
+
+	i = 0;
+	while (i < vector.size())
+	{
+		std::cout << vector[i] << " ";
+		i++;
+	}
+	std::cout << std::endl;
+}
+
 void
 ServerLocations::setMethods(std::string const &methods)
 {
 	char *str;
-	std::string lst[3] = {"GET", "POST", "REMOVE"};
-	
+	std::string lst[3] = {"GET", "POST", "DELETE"};
+
 	if (methods == "")
 		throw("Wrong methods rule format, missing methods.");
 	str = strtok((char *)&methods[0], " ");
@@ -62,7 +72,6 @@ ServerLocations::setMethods(std::string const &methods)
 		this->_methods.push_back(str);
 		str = strtok(NULL, " ");
 	}
-	
 	size_t i = 0;
 	while (i < this->_methods.size())
 	{
@@ -89,7 +98,7 @@ void
 ServerLocations::setIndex(std::string const &index)
 {
 	char *str;
-	
+
 	if (index == "")
 		throw("Wrong index rule format, missing index.");
 	str = strtok((char *)&index[0], " ");
@@ -120,7 +129,7 @@ void
 ServerLocations::setRedir(std::string const &redir)
 {
 	char *str;
-	
+
 	if (redir == "")
 		throw("Wrong redir rule format, missing redir.");
 	str = strtok((char *)&redir[0], " ");

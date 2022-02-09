@@ -54,7 +54,7 @@ void
 ConfigServer::setHost(std::string const &listen)
 {
 	int i = 0;
-	
+
 	if (listen == "")
 		throw("Wrong listen rule format, missing host/port.");
 	while (listen[i] && listen[i] != ':')
@@ -69,7 +69,7 @@ void
 ConfigServer::setPort(std::string const &listen)
 {
 	int i = 0;
-	
+
 	if (listen == "")
 		throw("Wrong listen rule format, missing host/port.");
 	while (listen[i] && listen[i] != ':')
@@ -87,6 +87,7 @@ ConfigServer::setErrorPages(std::string const &error_pages)
 
 	if (error_pages == "")
 		throw("Wrong error_pages rule format, missing error codes/path.");
+
 	str = strtok((char *)&error_pages[0], " ");
 	while (str && str[0] != '/')
 	{
@@ -114,13 +115,14 @@ ConfigServer::setLocations(std::string const &confFile)
 {
 	ServerLocations locations;
 	std::vector<std::string> blocks;
-	
+
 	size_t i = 0;
 	blocks = getBlocks(confFile, "location");
 	if (blocks.size() == 0)
 		throw("Wrong location block format, missing data.");
 	while (i < blocks.size())
 	{
+		locations = ServerLocations();
 		locations.setAll(blocks[i]);
 		this->_locations.push_back(locations);
 		i++;

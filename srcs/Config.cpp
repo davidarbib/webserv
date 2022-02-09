@@ -4,7 +4,6 @@ Config::Config(void) {
 }
 
 Config::~Config(void) {
-	
 }
 
 Config::Config (Config const &src) {
@@ -26,13 +25,14 @@ Config::setServers(std::string confFile)
 	ConfigServer servers;
 	std::vector<std::string> blocks;
 
-	
+
 	size_t i = 0;
 	blocks = getBlocks(confFile, "server");
 	if (blocks.size() == 0)
 		throw("Wrong server block format, missing data.");
 	while (i < blocks.size())
 	{
+		servers = ConfigServer();
 		servers.setAll(blocks[i]);
 		this->_servers.push_back(servers);
 		i++;
