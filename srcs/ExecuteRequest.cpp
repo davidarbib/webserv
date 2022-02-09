@@ -83,6 +83,11 @@ ExecuteRequest::isValidRequest(Request const& request, ConfigServer const& confi
         _status_code = NOT_ALLOWED;
         valid = false;
     }
+    else if (request.getStartLine().request_URI.size() > MAX_URI_SIZE)
+    {
+        _status_code = URI_TO_LONG;
+        valid = false;
+    }
     return valid;
 }
 
@@ -194,5 +199,3 @@ ExecuteRequest::fillMethodNotImplemented(void)
     method_not_implemented[4] = "TRACE";
     method_not_implemented[5] = "PATCH";
 }
-
-std::string ExecuteRequest::method_not_implemented[HTTP_METHOD_NOT_IMPLEMENTED_NB];

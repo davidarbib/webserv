@@ -10,6 +10,8 @@
 #define SERVER_VERSION "webserv/1.0.0"
 #define CRLF_str "\r\n"
 #define CRLFCRLF_str "\r\n\r\n"
+#define MAX_URI_SIZE 32000
+#define MAX_HEADER_SIZE 32000
 #define OK 200
 #define ACCEPTED 202
 #define NO_CONTENT 204
@@ -20,6 +22,7 @@
 #define NOT_FOUND 404
 #define NOT_ALLOWED 405
 #define PAYLOAD_TO_LARGE 413
+#define URI_TO_LONG 414
 #define NOT_IMPLEMENTED 501
 #define VERSION_NOT_SUPPORTED 505
 
