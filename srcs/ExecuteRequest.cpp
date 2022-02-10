@@ -52,6 +52,26 @@ ExecuteRequest::isValidMethod(std::string const &method) const
 	return true;
 }
 
+bool
+ExecuteRequest::isMultipartProcessing(Ticket const &ticket) const
+{
+	std::string content_type = ticket.getRequest().get_header_value("Content-Type");
+		return true;
+	return false;
+}
+
+void
+ExecuteRequest::processMultipart(Ticket const &ticket)
+{
+	std::string content_type = ticket.getRequest().get_header_value("Content-Type");
+	size_t xpos = content_type.find(MULTIPART);
+	if (xpos != 0)
+		throw std::exception();
+	std::string key = content_type.substr(std::string(MULTIPART).size());
+	std::string const &body = ticket.getRequest().getBody();	
+	(void)body;
+}
+
 int
 ExecuteRequest::getStatusCode(void) const
 {
@@ -129,5 +149,20 @@ ExecuteRequest::deleteMethod(std::string const& URI)
     }
     else
         _status_code = NOT_FOUND;
+    return buildBodyPath();
+}
+
+std::string
+ExecuteRequest::postMethod(std::string const& URI, Ticket const &ticket)
+{
+	std::cout << "POST METHOD" << std::endl;
+    std::string uri = "./" + URI;
+	//check multipart marks in headers
+	if (isMultipartProcessing(ticket))
+		processMultipart(ticket);
+	
+	//ticket.getRequest();
+	//if multipart :
+	//	process multipart
     return buildBodyPath();
 }

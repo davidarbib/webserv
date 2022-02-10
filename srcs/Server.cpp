@@ -172,9 +172,9 @@ Server::send()
 			size_t bufsize = BUFSIZE;
 			size_t write_size = std::min(bufsize,
 									connection_it->second->getOutBufferData().size());
-			std::cout << connection_it->second->getOutBufferData().data();
 			std::cout << std::endl;
-			std::cout << "write size" << write_size << std::endl;
+			std::cout << "write size : " << write_size << std::endl;
+			std::cout << connection_it->second->getOutBufferData().data();
 			write(fd, connection_it->second->getOutBufferData().data(), write_size); 
 			//TODO write wrapper
 			connection_it->second->eatOutBufferData(BUFSIZE);

@@ -3,6 +3,7 @@
 
 #include "Response.hpp"
 #include "Request.hpp"
+#include "Ticket.hpp"
 #include "ConfigServer.hpp"
 #include <fstream>
 #include <iostream>
@@ -19,6 +20,8 @@
 #define PAYLOAD_TO_LARGE 413
 #define VERSION_NOT_SUPPORTED 505
 
+#define MULTIPART "multipart/form-data; boundary="
+
 class ExecuteRequest
 {
 
@@ -34,6 +37,12 @@ class ExecuteRequest
 
 		bool
 		isValidMethod(std::string const &method) const;
+
+		bool
+		isMultipartProcessing(Ticket const &ticket) const;
+		
+		void
+		processMultipart(Ticket const &ticket);
 
     public:
         ExecuteRequest(void);
@@ -61,6 +70,9 @@ class ExecuteRequest
 
         std::string
         deleteMethod(std::string const& URI);
+
+        std::string
+        postMethod(std::string const& URI, Ticket const &ticket);
 };
 
 #endif
