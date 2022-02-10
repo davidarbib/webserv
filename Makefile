@@ -42,6 +42,7 @@ SRC = AHttpMessage.cpp \
 	  Server.cpp \
 	  request_parser.cpp \
 	  CgiHandler.cpp \
+	  safe_wrappers.cpp \
 	  Buffer.cpp \
 	  Connection.cpp \
 	  Ticket.cpp \

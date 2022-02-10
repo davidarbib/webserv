@@ -6,12 +6,12 @@ int main()
 {
 	Request request;
 
-	request.set_method_token("POST");
-	request.set_request_URI("www.example.com/test?querystring");
-	request.set_http_version("1.1");
-	request.set_body("Aloha");
-	request.set_header("Content-Length", "5");
-	request.set_header("Content-Type", "text/html");
+	request.setMethodToken("POST");
+	request.setRequestURI("www.example.com/test?querystring");
+	request.setHttpVersion("1.1");
+	request.setBody("Aloha");
+	request.setHeader("Content-Length", "5");
+	request.setHeader("Content-Type", "text/html");
 	CgiHandler handler(request, new std::string("/usr/bin/php-cgi"),
 						new std::string("/home/daav/webserv/UT/index.php"));
 
