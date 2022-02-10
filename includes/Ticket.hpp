@@ -18,8 +18,8 @@ class Ticket
 		Connection &
 		getConnection(void);
 		
-		Request const &
-		getRequest(void) const;
+		Request &
+		getRequest(void);
 		
 		Server const &
 		getServer(void) const;

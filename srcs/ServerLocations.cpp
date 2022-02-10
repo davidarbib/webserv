@@ -23,7 +23,7 @@ ServerLocations::setAll(std::string const &confFile)
 	if ((pos_start = confFile.find("methods_allowed")) != -1)
 		this->setMethods(parse(confFile, pos_start));
 	if ((pos_start = confFile.find("auto_index")) != -1)
-		this->setAuto_index(parse(confFile, pos_start));
+		this->setAutoIndex(parse(confFile, pos_start));
 	if ((pos_start = confFile.find("root")) != -1)
 		this->setRoot(parse(confFile, pos_start));
 	if ((pos_start = confFile.find("index")) != -1)
@@ -31,7 +31,7 @@ ServerLocations::setAll(std::string const &confFile)
 	if ((pos_start = confFile.find("redir")) != -1)
 		this->setRedir(parse(confFile, pos_start));
 	if ((pos_start = confFile.find("cgi_path")) != -1)
-		this->setCgi_path(parse(confFile, pos_start));
+		this->setCgiPath(parse(confFile, pos_start));
 }
 
 //SETTERS
@@ -73,7 +73,7 @@ ServerLocations::setMethods(std::string const &methods)
 }
 
 void
-ServerLocations::setAuto_index(std::string const &auto_index)
+ServerLocations::setAutoIndex(std::string const &auto_index)
 {
 	if (auto_index == "")
 		throw("Wrong auto_index rule format, missing auto index param.");
@@ -109,7 +109,7 @@ ServerLocations::setRoot(std::string const &root)
 }
 
 void
-ServerLocations::setCgi_path(std::string const &cgi_path)
+ServerLocations::setCgiPath(std::string const &cgi_path)
 {
 	if (cgi_path == "")
 		throw("Wrong cgi_path rule format, missing path.");
@@ -152,12 +152,12 @@ ServerLocations::getIndex() const {
 }
 
 std::string
-ServerLocations::getCgi_path() const {
+ServerLocations::getCgiPath() const {
 	return (this->_cgi_path);
 }
 
 int
-ServerLocations::getAuto_index() const {
+ServerLocations::getAutoIndex() const {
 	return (this->_auto_index);
 }
 

@@ -1,5 +1,6 @@
 #include "main.hpp"
 
+
 int 
 processArgs(int ac, char **av, ServersType &servers, Config &conf)
 {
@@ -107,6 +108,30 @@ getLocation(ConfigServer const& config, std::string const& uri)
 	return config.getLocations()[matched_index];
 }
 
+bool
+isCgiRequested(std::string const &uri, ServerLocations const &location)
+{
+	std::string php_extension = ".php";
+	size_t len_extension = php_extension.size();
+	
+	if (uri.compare(uri.size() - (len_extension + 1),  len_extension, php_extension) != 0)
+		return false;
+	if (access(location.getCgiPath().c_str(), X_OK) != 0)
+		return false;
+	return true;
+}
+
+# define QUERYCHAR '?'
+
+void
+cutQuery(Request &request, std::string &query)
+{
+	size_t query_pos = request.getStartLine().request_URI.find(QUERYCHAR);
+	
+	query = request.getStartLine().request_URI.substr(query_pos + 1);
+	request.setRequestURI(request.getStartLine().request_URI.substr(0, query_pos - 1));
+}
+
 Response
 processRequest(TicketsType &tickets)
 {
@@ -120,14 +145,18 @@ processRequest(TicketsType &tickets)
 		ServerLocations const& location = getLocation(config, current.getRequest().getStartLine().request_URI);
 		if (executor.isValidRequest(current.getRequest(), config, location) == true)
 		{
-			if (location.getRedir().from == current.getRequest().getStartLine().request_URI)
+			std::string query;
+			cutQuery(current.getRequest(), query);
+			if (isCgiRequested(current.getRequest().getStartLine().request_URI, location))
+				executor.execCgi(current.getRequest().getStartLine().request_URI, config, location);
+			else if (location.getRedir().from == current.getRequest().getStartLine().request_URI)
 				body_path = executor.getRedirected(location, response);
 			else if (current.getRequest().getStartLine().method_token == "DELETE")
 				body_path = executor.deleteMethod(current.getRequest().getStartLine().request_URI, config, location);
 			else if (current.getRequest().getStartLine().method_token == "GET")
 				body_path = executor.getMethod(current.getRequest().getStartLine().request_URI, config, location);
 			else if (current.getRequest().getStartLine().method_token == "POST")
-				body_path = executor.postMethod(current.getRequest().getStartLine().request_URI, current);
+				body_path = executor.postMethod(current.getRequest().getStartLine().request_URI, config, location);
 			else
 			{
 				executor.setStatusCode(405);

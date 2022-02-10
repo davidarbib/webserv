@@ -13,7 +13,7 @@ CgiHandler::CgiHandler(Request &request, std::string* pgm_path, std::string *scr
 	addCgiEnv("GATEWAY_INTERFACE", "CGI/1.1");
 	addCgiEnv("PATH_INFO", *_script_path);
 	addCgiEnv("PATH_TRANSLATED", *_script_path);
-	addCgiEnv("QUERY_STRING", extractQuery(startline.request_URI));
+	//addCgiEnv("QUERY_STRING", extractQuery(startline.request_URI)); //TODO uncomment
 	//addCgiEnv("REMOTE_ADDR", "");
 	//addCgiEnv("REMOTE_HOST", ""); 
 	//addCgiEnv("REMOTE_IDENT", "");
@@ -38,12 +38,6 @@ CgiHandler::CgiHandler(Request &request, std::string* pgm_path, std::string *scr
 
 CgiHandler::~CgiHandler(void)
 {
-}
-
-std::string
-CgiHandler::extractQuery(std::string requestURI)
-{
-	return requestURI.substr(requestURI.find(QUERYCHAR) + 1);
 }
 
 void

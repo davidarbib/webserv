@@ -14,7 +14,6 @@
 #include <sys/types.h>
 #include <sys/wait.h>
 
-# define QUERYCHAR '?'
 
 class CgiHandler
 {
@@ -30,9 +29,6 @@ class CgiHandler
 
 		void
 		buildCgi(void);
-
-		std::string
-		extractQuery(std::string); //TODO go private
 
 		char **
 		getCgiEnv(void); //TODO go private 

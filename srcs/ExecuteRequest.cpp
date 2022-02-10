@@ -31,7 +31,7 @@ ExecuteRequest::isAllowedMethod(std::string const &method, std::vector<std::stri
 }
 
 bool
-ExecuteRequest::isMultipartProcessing(Ticket const &ticket) const
+ExecuteRequest::isMultipartProcessing(Ticket &ticket) const
 {
 	std::string content_type = ticket.getRequest().get_header_value("Content-Type");
 		return true;
@@ -39,7 +39,7 @@ ExecuteRequest::isMultipartProcessing(Ticket const &ticket) const
 }
 
 void
-ExecuteRequest::processMultipart(Ticket const &ticket)
+ExecuteRequest::processMultipart(Ticket &ticket)
 {
 	std::string content_type = ticket.getRequest().get_header_value("Content-Type");
 	size_t xpos = content_type.find(MULTIPART);
@@ -168,7 +168,7 @@ ExecuteRequest::matchIndex(ServerLocations const &location, ConfigServer const &
 std::string
 ExecuteRequest::getMethod(std::string const& URI, ConfigServer const& config, ServerLocations const& location)
 {
-    if (URI[URI.size() - 1] == '/' && location.getAuto_index() == 1)
+    if (URI[URI.size() - 1] == '/' && location.getAutoIndex() == 1)
     {
         _status_code = OK;
         return autoindexPath();
@@ -220,21 +220,31 @@ ExecuteRequest::fillMethodNotImplemented(void)
     method_not_implemented[5] = "PATCH";
 }
 
-
 std::string
-ExecuteRequest::postMethod(std::string const& URI, Ticket const &ticket)
+ExecuteRequest::postMethod(std::string const &URI, ConfigServer const &config,
+					ServerLocations const& location)
 {
+	(void)config;
+	(void)location;
 	std::cout << "POST METHOD" << std::endl;
     std::string uri = "./" + URI;
 	//check multipart marks in headers
-	if (isMultipartProcessing(ticket))
-		processMultipart(ticket);
+	//if (isMultipartProcessing(ticket))
+	//	processMultipart(ticket);
 	
 	//ticket.getRequest();
 	//if multipart :
 	//	process multipart
     //return buildBodyPath(ticket.get, location.getRoot());
 	return "OK"; //TODO not OK
+}
+
+std::string
+ExecuteRequest::execCgi(std::string const &URI, ConfigServer const &config,
+					ServerLocations const& location)
+{
+	CgiHandler handler = CgiHandler();	
+	return "OK";
 }
 
 std::string ExecuteRequest::method_not_implemented[HTTP_METHOD_NOT_IMPLEMENTED_NB];

@@ -20,8 +20,8 @@ Ticket::getConnection(void)
 	return _connection;
 }
 
-Request const &
-Ticket::getRequest(void) const
+Request &
+Ticket::getRequest(void)
 {
 	return *_request;
 }

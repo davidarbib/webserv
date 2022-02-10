@@ -43,10 +43,10 @@ public:
 	setIndex(std::string const &index);
 
 	void
-	setAuto_index(std::string const &auto_index);
+	setAutoIndex(std::string const &auto_index);
 
 	void
-	setCgi_path(std::string const &cgi_path);
+	setCgiPath(std::string const &cgi_path);
 
 	void
 	setRedir(std::string const &redir);
@@ -66,10 +66,10 @@ public:
 	getIndex() const;
 	
 	std::string
-	getCgi_path() const;
+	getCgiPath() const;
 
 	int
-	getAuto_index() const;
+	getAutoIndex() const;
 
 	s_redir
 	getRedir() const;
