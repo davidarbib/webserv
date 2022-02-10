@@ -46,6 +46,12 @@ Buffer::getBuffer(void)
 	return this->_buffer;
 }
 
+char const *
+Buffer::getContent(void)
+{
+	return _buffer.data();
+}
+
 bool
 Buffer::isEndLine(std::string &line, int index)
 {
@@ -58,10 +64,20 @@ Buffer::isEndLine(std::string &line, int index)
 }
 
 void
-Buffer::clearBuffer(int index)
-{
-	for (int i = 0; i < index; i++)
-		this->_buffer[i] = 0;
+Buffer::clearBuffer()
+{				
+	size_t count;
+	size_t current_size = _buffer.size();
+	//std::cout << "idx : " << _idx << std::endl;
+	//std::cout << "size : " << _buffer.size() << std::endl;
+	if (_idx >= current_size)	
+		_buffer.clear();
+	else
+	{
+		count = current_size - _idx;
+		_buffer.assign(_buffer.substr(_idx, count)); 
+		_idx = 0;
+	}
 }
 
 void
@@ -70,16 +86,8 @@ Buffer::append(std::string const &message)
 	_buffer += message;
 }
 
-void
-Buffer::eatData(size_t size)
-{				
-	size_t count;
-	size_t current_size = _buffer.size();
-	if (size >= current_size)	
-		_buffer.clear();
-	else
-	{
-		count = current_size - size;
-		_buffer.assign(_buffer.substr(size, count)); 
-	}
+bool
+Buffer::isEmpty(void)
+{
+	return _buffer.empty();
 }

@@ -9,7 +9,7 @@ class Buffer
 {
 	private:
 
-		int						_idx;
+		size_t					_idx;
 		std::string				_buffer;
 
 		Buffer(Buffer const &src);
@@ -37,16 +37,22 @@ class Buffer
 		std::string &
 		getBuffer(void);
 
+		char const *
+		getContent(void);
+
 		static bool
 		isEndLine(std::string &line, int index);
 
 		void
-		clearBuffer(int);
+		clearBuffer(void);
 		
 		void
 		append(std::string const &message);
 
 		void
 		eatData(size_t size);
+
+		bool
+		isEmpty(void);
 };
 #endif

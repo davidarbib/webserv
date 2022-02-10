@@ -66,7 +66,7 @@ RequestHandler::isEndLine(std::string &line, int index)
 }
 
 void
-RequestHandler::clearBuffer(int index)
+RequestHandler::clearBuffer(void)
 {
-	_connection.getInBuffer().clearBuffer(index);
+	_connection.getInBuffer().clearBuffer();
 }

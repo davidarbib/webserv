@@ -126,11 +126,20 @@ processRequest(TicketsType &tickets)
 				body_path = executor.deleteMethod(current.getRequest().getStartLine().request_URI, config, location);
 			else if (current.getRequest().getStartLine().method_token == "GET")
 				body_path = executor.getMethod(current.getRequest().getStartLine().request_URI, config, location);
+			else if (current.getRequest().getStartLine().method_token == "POST")
+				body_path = executor.postMethod(current.getRequest().getStartLine().request_URI, current);
+			else
+			{
+				executor.setStatusCode(405);
+				body_path = executor.buildBodyPath(config, location.getRoot());
+			}
 		}
 		else
 			body_path = executor.buildBodyPath(config, location.getRoot());
 		response.buildPreResponse(executor.getStatusCode(), body_path);
 		// std::cout << response.serialize_response() << std::endl;
+		//response.setHeader("Content-Length", "0"); //TODO multipart tests
+		//std::cout << response.serialize_response() << std::endl;
 		tickets.front().getConnection() << response.serialize_response();
 		tickets.pop();
 	}
@@ -151,7 +160,6 @@ main(int ac, char **av)
 
 	Server::max_fd = 0;
 	Server::initFdset();
-
 	
 	processArgs(ac, av, servers, config);
 
@@ -160,8 +168,8 @@ main(int ac, char **av)
 	//(void)av;
 	//ConfigServer conf;
 	//conf.setName("127.0.0.1:8003");
-	//// conf.setHost("127.0.0.1:8003");
-	//// conf.setPort("8003");
+	//conf.setHost("127.0.0.1:8003");
+	//conf.setPort("8003");
 	//conf.setMaxBody("200");
 	//std::vector<ConfigServer> configs;
 	//configs.push_back(conf);

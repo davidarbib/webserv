@@ -3,6 +3,7 @@
 
 #include "Response.hpp"
 #include "Request.hpp"
+#include "Ticket.hpp"
 #include "ConfigServer.hpp"
 #include <fstream>
 #include <iostream>
@@ -10,6 +11,8 @@
 #include <cstdio>
 
 #define HTTP_METHOD_NOT_IMPLEMENTED_NB 6
+
+#define MULTIPART "multipart/form-data; boundary="
 
 class ExecuteRequest
 {
@@ -25,6 +28,12 @@ class ExecuteRequest
 
         std::string
         matchIndex(ServerLocations const &location, ConfigServer const &config, std::ifstream &ressource);
+
+		bool
+		isMultipartProcessing(Ticket const &ticket) const;
+		
+		void
+		processMultipart(Ticket const &ticket);
 
     public:
         static std::string method_not_implemented[HTTP_METHOD_NOT_IMPLEMENTED_NB];
@@ -62,6 +71,9 @@ class ExecuteRequest
 
         std::string
         deleteMethod(std::string const &URI, ConfigServer const &config, ServerLocations const& location);
+
+        std::string
+        postMethod(std::string const& URI, Ticket const &ticket);
 };
 
 #endif

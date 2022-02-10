@@ -30,6 +30,26 @@ ExecuteRequest::isAllowedMethod(std::string const &method, std::vector<std::stri
 	return false;
 }
 
+bool
+ExecuteRequest::isMultipartProcessing(Ticket const &ticket) const
+{
+	std::string content_type = ticket.getRequest().get_header_value("Content-Type");
+		return true;
+	return false;
+}
+
+void
+ExecuteRequest::processMultipart(Ticket const &ticket)
+{
+	std::string content_type = ticket.getRequest().get_header_value("Content-Type");
+	size_t xpos = content_type.find(MULTIPART);
+	if (xpos != 0)
+		throw std::exception();
+	std::string key = content_type.substr(std::string(MULTIPART).size());
+	std::string const &body = ticket.getRequest().getBody();	
+	(void)body;
+}
+
 int
 ExecuteRequest::getStatusCode(void) const
 {
@@ -198,6 +218,23 @@ ExecuteRequest::fillMethodNotImplemented(void)
     method_not_implemented[3] = "OPTIONS";
     method_not_implemented[4] = "TRACE";
     method_not_implemented[5] = "PATCH";
+}
+
+
+std::string
+ExecuteRequest::postMethod(std::string const& URI, Ticket const &ticket)
+{
+	std::cout << "POST METHOD" << std::endl;
+    std::string uri = "./" + URI;
+	//check multipart marks in headers
+	if (isMultipartProcessing(ticket))
+		processMultipart(ticket);
+	
+	//ticket.getRequest();
+	//if multipart :
+	//	process multipart
+    //return buildBodyPath(ticket.get, location.getRoot());
+	return "OK"; //TODO not OK
 }
 
 std::string ExecuteRequest::method_not_implemented[HTTP_METHOD_NOT_IMPLEMENTED_NB];

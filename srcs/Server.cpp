@@ -148,6 +148,8 @@ Server::watchInput(std::map<fd_t, RequestHandler> &request_handlers)
 		}
 		else
 		{
+			//std::cout << "buf content : " << std::endl << buf << std::endl;
+			//std::cout << "----------------------------------------" << std::endl;
 			transferToBuffer(connection_it->first, buf);
 			FD_CLR(connection_it->first, &Server::read_fds);
 			connection_it++;
@@ -167,7 +169,14 @@ Server::send()
 		fd_t fd = connection_it->second->getSocketFd();
 		if (isPossibleToWrite(fd))
 		{
-			write(fd, connection_it->second->getOutBufferData().c_str(), BUFSIZE); //TODO wrapper
+			size_t bufsize = BUFSIZE;
+			size_t write_size = std::min(bufsize,
+									connection_it->second->getOutBufferData().size());
+			std::cout << std::endl;
+			std::cout << "write size : " << write_size << std::endl;
+			std::cout << connection_it->second->getOutBufferData().data();
+			write(fd, connection_it->second->getOutBufferData().data(), write_size); 
+			//TODO write wrapper
 			connection_it->second->eatOutBufferData(BUFSIZE);
 		}
 	}

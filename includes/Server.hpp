@@ -13,6 +13,7 @@
 # include <unistd.h>
 # include <map>
 # include <sstream>
+# include <algorithm>
 # include "Connection.hpp"
 # include "Buffer.hpp"
 # include "RequestHandler.hpp"
