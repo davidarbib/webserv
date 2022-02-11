@@ -248,16 +248,18 @@ ExecuteRequest::execCgi(Request const &request,
 	(void)config;
 	std::string ressource = location.getRoot() + request.getStartLine().request_URI;
 	CgiHandler handler(request, location.getCgiPath(), ressource, query);
-    std::cout << "CA EXISTE REGARDE : " << location.getCgiPath() << std::endl;
 	handler.sendCgi();
 	handler.getCgiResponse();
 
 	/* ------------ TODO for debug ------------- */
-	char line[100];
-	while (fscanf(handler.getCgiResponse(), "%[^\n]", line) == 1)  
-		std::cout << line << std::endl;
+#define SIZE 100
+	char buf[SIZE];
+  
+	while (fgets(buf, SIZE - 1, handler.getCgiResponse()))
+		std::cout << buf << std::endl;
 	/* ----------------------------------------- */
 	
+	_status_code = OK;
 	return "OK";
 }
 

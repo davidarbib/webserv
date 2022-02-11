@@ -1,5 +1,6 @@
 #include "CgiHandler.hpp"
 
+#include <errno.h>
 CgiHandler::CgiHandler(Request const &request, std::string const &pgm_path,
 						std::string &script_path, std::string const &query)
 : _pgm_path(pgm_path), _script_path(script_path), _query(query)
