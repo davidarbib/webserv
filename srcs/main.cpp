@@ -113,7 +113,7 @@ isCgiRequested(std::string const &uri, ServerLocations const &location)
 	std::string php_extension = ".php";
 	size_t len_extension = php_extension.size();
 	
-	if (uri.compare(uri.size() - (len_extension + 1),  len_extension, php_extension) != 0)
+	if (uri.compare(uri.size() - (len_extension),  len_extension, php_extension) != 0)
 		return false;
 	if (access(location.getCgiPath().c_str(), X_OK) != 0)
 		return false;
@@ -128,7 +128,7 @@ cutQuery(Request &request, std::string &query)
 	size_t query_pos = request.getStartLine().request_URI.find(QUERYCHAR);
 	
 	query = request.getStartLine().request_URI.substr(query_pos + 1);
-	request.setRequestURI(request.getStartLine().request_URI.substr(0, query_pos - 1));
+	request.setRequestURI(request.getStartLine().request_URI.substr(0, query_pos));
 }
 
 Response
@@ -146,8 +146,10 @@ processRequest(TicketsType &tickets)
 		{
 			std::string query;
 			cutQuery(current.getRequest(), query);
+			std::cout << "query content : " << query << std::endl;
+			std::cout << "uri content : " << current.getRequest().getStartLine().request_URI << std::endl;
 			if (isCgiRequested(current.getRequest().getStartLine().request_URI, location))
-				executor.execCgi(current.getRequest().getStartLine().request_URI, config, location);
+				executor.execCgi(current.getRequest(), query, config, location);
 			else if (location.getRedir().from == current.getRequest().getStartLine().request_URI)
 				body_path = executor.getRedirected(location, response);
 			else if (current.getRequest().getStartLine().method_token == "DELETE")

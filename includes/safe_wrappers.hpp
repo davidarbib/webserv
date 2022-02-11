@@ -79,10 +79,10 @@ void
 __dup2__(int oldfd, int newfd);
 
 FILE *
-_tmpfile64_( void );
+_tmpfile_( void );
 
 FILE *
-__tmpfile64__( void );
+__tmpfile__( void );
 
 
 #endif

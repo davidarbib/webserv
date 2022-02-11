@@ -240,10 +240,23 @@ ExecuteRequest::postMethod(std::string const &URI, ConfigServer const &config,
 }
 
 std::string
-ExecuteRequest::execCgi(std::string const &URI, ConfigServer const &config,
-					ServerLocations const& location)
-{
-	CgiHandler handler = CgiHandler();	
+ExecuteRequest::execCgi(Request const &request,
+							std::string const &query,
+							ConfigServer const &config,
+							ServerLocations const& location)
+{	
+	(void)config;
+	std::string ressource = location.getRoot() + request.getStartLine().request_URI;
+	CgiHandler handler(request, location.getCgiPath(), ressource, query);
+	handler.sendCgi();
+	handler.getCgiResponse();
+
+	/* ------------ TODO for debug ------------- */
+	char line[100];
+	while (fscanf(handler.getCgiResponse(), "%[^\n]", line) == 1)  
+		std::cout << line << std::endl;
+	/* ----------------------------------------- */
+	
 	return "OK";
 }
 

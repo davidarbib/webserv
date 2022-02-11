@@ -19,9 +19,10 @@ class CgiHandler
 {
 	public:
 		CgiHandler(void);
+		CgiHandler(CgiHandler const &src);
 		//CgiHandler(Request &request);
 		//TODO remove second and third arg
-		CgiHandler(Request &request, std::string* pgm_path, std::string *script_path);
+		CgiHandler(Request const &, std::string const &, std::string &, std::string const &);
 		virtual	~CgiHandler(void);
 		
 		void
@@ -39,11 +40,12 @@ class CgiHandler
 		FILE *
 		getCgiRequest(void); //TODO delete 
 
-		std::string							*_pgm_path; //TODO go private
-		std::string							*_script_path; //TODO go private
 
 	private:
-		CgiHandler(CgiHandler const &src);
+		std::string	const					&_pgm_path; 
+		std::string							&_script_path;
+		std::string const 					&_query;
+
 		CgiHandler	&operator=(CgiHandler const &rhs);
 
 		void

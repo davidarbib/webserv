@@ -1,8 +1,10 @@
 #include "CgiHandler.hpp"
 
-CgiHandler::CgiHandler(Request &request, std::string* pgm_path, std::string *script_path)
-: _pgm_path(pgm_path), _script_path(script_path)
+CgiHandler::CgiHandler(Request const &request, std::string const &pgm_path,
+						std::string &script_path, std::string const &query)
+: _pgm_path(pgm_path), _script_path(script_path), _query(query)
 {
+	std::cout << "cgi in constructor" << pgm_path << std::endl;
 	//(void)request;
 	request_line startline = request.getStartLine();
 	(void)startline;
@@ -11,29 +13,30 @@ CgiHandler::CgiHandler(Request &request, std::string* pgm_path, std::string *scr
 	addCgiEnv("CONTENT_LENGTH", request.get_header_value("Content-Length"));
 	addCgiEnv("CONTENT_TYPE", request.get_header_value("Content-Type"));
 	addCgiEnv("GATEWAY_INTERFACE", "CGI/1.1");
-	addCgiEnv("PATH_INFO", *_script_path);
-	addCgiEnv("PATH_TRANSLATED", *_script_path);
-	//addCgiEnv("QUERY_STRING", extractQuery(startline.request_URI)); //TODO uncomment
+	addCgiEnv("PATH_INFO", _script_path);
+	addCgiEnv("PATH_TRANSLATED", _script_path);
+	addCgiEnv("QUERY_STRING", _query);
 	//addCgiEnv("REMOTE_ADDR", "");
 	//addCgiEnv("REMOTE_HOST", ""); 
 	//addCgiEnv("REMOTE_IDENT", "");
 	//addCgiEnv("REMOTE_USER", "");
 	addCgiEnv("REQUEST_METHOD", startline.method_token);
 	//addCgiEnv("REQUEST_METHOD", "POST");
-	addCgiEnv("SCRIPT_NAME", *_script_path);
+	addCgiEnv("SCRIPT_NAME", _script_path);
 	//addCgiEnv("SERVER_NAME", "");
 	//addCgiEnv("SERVER_PORT", "");
 	//addCgiEnv("SERVER_PROTOCOL", "");
 	//addCgiEnv("SERVER_SOFTWARE", "");
 	addCgiEnv("REDIRECT_STATUS", "200");
 
-	_sender = __tmpfile64__();
-	_receiver = __tmpfile64__();
+	_sender = __tmpfile__();
+	_receiver = __tmpfile__();
 	
 	std::string const &body = request.getBody();
 	int ret = write(fileno(_sender), body.c_str(), body.size()); //TODO Exception handlin
 	std::cout << "write ret : " << ret << std::endl;
 	rewind(_sender);
+	std::cout << "cgi initialized" << _pgm_path << std::endl;
 }
 
 CgiHandler::~CgiHandler(void)
@@ -124,17 +127,20 @@ CgiHandler::sendCgi(void)
 	char *argv[3];
 	char *const *env = getCgiEnv();	
 
-	argv[0] = const_cast<char*>(_pgm_path->c_str());
-	argv[1] = const_cast<char*>(_script_path->c_str());
+	argv[0] = const_cast<char*>(_pgm_path.c_str());
+	argv[1] = const_cast<char*>(_script_path.c_str());
 	argv[2] = NULL;
 
-	std::cout << argv[0] << std::endl;
+	std::cout << "cgi before env stacking" << const_cast<char*>(_pgm_path.c_str());
+	std::cout << std::endl;
+	std::cout << "cgi : " << argv[0] << std::endl;
+	std::cout << "script : " << argv[1] << std::endl;
 	pid_t pid = __fork__();	
 	if (pid == 0)
 	{
 		__dup2__(fileno(_sender), STDIN_FILENO);
 		__dup2__(fileno(_receiver), STDOUT_FILENO);
-		__execve__(_pgm_path->c_str(), argv, env);
+		__execve__(_pgm_path.c_str(), argv, env);
 	}
 	else
 	{

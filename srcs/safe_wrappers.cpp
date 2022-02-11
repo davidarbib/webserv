@@ -90,20 +90,20 @@ __dup2__(int oldfd, int newfd)
 }
 
 FILE *
-_tmpfile64_( void )
+_tmpfile_( void )
 {
-	FILE *file = tmpfile64();
+	FILE *file = tmpfile();
 	if (!file)
 		throw TmpFileException();
 	return file;
 }
 
 FILE *
-__tmpfile64__( void )
+__tmpfile__( void )
 {
 	try
 	{
-		return _tmpfile64_();
+		return _tmpfile_();
 	}
 	catch (TmpFileException &e)
 	{

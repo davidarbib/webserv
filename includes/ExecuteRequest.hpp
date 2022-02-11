@@ -5,6 +5,7 @@
 #include "Request.hpp"
 #include "Ticket.hpp"
 #include "ConfigServer.hpp"
+#include "CgiHandler.hpp"
 #include <fstream>
 #include <iostream>
 #include <ios>
@@ -77,9 +78,8 @@ class ExecuteRequest
 					ServerLocations const& location);
 
 		std::string
-		execCgi(std::string const &URI, ConfigServer const &config,
-					ServerLocations const& location);
-
+		execCgi(Request const &request, std::string const &query,
+				ConfigServer const &config, ServerLocations const& location);
 };
 
 #endif
