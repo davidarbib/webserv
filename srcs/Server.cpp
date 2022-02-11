@@ -142,8 +142,8 @@ Server::watchInput(std::map<fd_t, RequestHandler> &request_handlers)
 		{
 			delWatchedFd(connection_it->first);
 			close(connection_it->first);
-			_connections.erase(connection_it);
 			request_handlers.erase(connection_it->second->getSocketFd());
+			_connections.erase(connection_it);
 			connection_it = _connections.begin();
 		}
 		else

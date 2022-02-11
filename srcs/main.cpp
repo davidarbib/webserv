@@ -148,8 +148,10 @@ processRequest(TicketsType &tickets)
 			cutQuery(current.getRequest(), query);
 			std::cout << "query content : " << query << std::endl;
 			std::cout << "uri content : " << current.getRequest().getStartLine().request_URI << std::endl;
-			if (isCgiRequested(current.getRequest().getStartLine().request_URI, location))
+			if (isCgiRequested(current.getRequest().getStartLine().request_URI, location)) {
+				std::cout << "IN CGI BITCH" << std::endl;
 				executor.execCgi(current.getRequest(), query, config, location);
+			}
 			else if (location.getRedir().from == current.getRequest().getStartLine().request_URI)
 				body_path = executor.getRedirected(location, response);
 			else if (current.getRequest().getStartLine().method_token == "DELETE")
