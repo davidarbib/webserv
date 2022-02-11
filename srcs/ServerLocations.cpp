@@ -151,7 +151,7 @@ ServerLocations::getIndex() const {
 	return (this->_index);
 }
 
-std::string
+std::string const&
 ServerLocations::getCgiPath() const {
 	return (this->_cgi_path);
 }

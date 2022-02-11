@@ -4,10 +4,9 @@ CgiHandler::CgiHandler(Request const &request, std::string const &pgm_path,
 						std::string &script_path, std::string const &query)
 : _pgm_path(pgm_path), _script_path(script_path), _query(query)
 {
-	std::cout << "cgi in constructor" << pgm_path << std::endl;
+	std::cout << "cgi in constructor" << _pgm_path << std::endl;
 	//(void)request;
 	request_line startline = request.getStartLine();
-	(void)startline;
 	//cutting URI in start line for env
 	//addCgiEnv("AUTH_TYPE", "");
 	addCgiEnv("CONTENT_LENGTH", request.get_header_value("Content-Length"));
@@ -124,6 +123,7 @@ CgiHandler::sendCgi(void)
 void
 CgiHandler::sendCgi(void)
 {
+
 	char *argv[3];
 	char *const *env = getCgiEnv();	
 
@@ -190,3 +190,8 @@ CgiHandler::getCgiResponse(void)
  * "SERVER_SOFTWARE" = 
  * + for php cgi : "REDIRECT_STATUS" = 200
 */
+
+std::string const& CgiHandler::getPgm() const
+{
+	return _pgm_path;
+}

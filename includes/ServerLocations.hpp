@@ -65,7 +65,7 @@ public:
 	std::vector<std::string>
 	getIndex() const;
 	
-	std::string
+	std::string const&
 	getCgiPath() const;
 
 	int

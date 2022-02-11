@@ -248,6 +248,7 @@ ExecuteRequest::execCgi(Request const &request,
 	(void)config;
 	std::string ressource = location.getRoot() + request.getStartLine().request_URI;
 	CgiHandler handler(request, location.getCgiPath(), ressource, query);
+    std::cout << "CA EXISTE REGARDE : " << location.getCgiPath() << std::endl;
 	handler.sendCgi();
 	handler.getCgiResponse();
 

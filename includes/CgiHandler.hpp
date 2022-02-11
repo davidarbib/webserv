@@ -40,6 +40,8 @@ class CgiHandler
 		FILE *
 		getCgiRequest(void); //TODO delete 
 
+		std::string const& getPgm() const;
+
 
 	private:
 		std::string	const					&_pgm_path; 
