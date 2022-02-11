@@ -1,6 +1,5 @@
 #include "main.hpp"
 
-
 int 
 processArgs(int ac, char **av, ServersType &servers, Config &conf)
 {
@@ -159,7 +158,7 @@ processRequest(TicketsType &tickets)
 				body_path = executor.postMethod(current.getRequest().getStartLine().request_URI, config, location);
 			else
 			{
-				executor.setStatusCode(405);
+				executor.setStatusCode(NOT_ALLOWED);
 				body_path = executor.buildBodyPath(config, location.getRoot());
 			}
 		}
