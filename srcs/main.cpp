@@ -130,7 +130,7 @@ cutQuery(Request &request, std::string &query)
 	request.setRequestURI(request.getStartLine().request_URI.substr(0, query_pos));
 }
 
-void
+int
 parseCgiResponse(Response &response, std::string cgi_response)
 {
 	int index = 0;
@@ -138,8 +138,18 @@ parseCgiResponse(Response &response, std::string cgi_response)
 	{
 		index = getHeader(index, cgi_response, response);
 		if (isEndLine(cgi_response, index))
-			response.setBody(cgi_response.substr(index, cgi_response.size()));
+		{
+			std::string body(cgi_response.substr(index, cgi_response.size()));
+			std::stringstream ss;
+			ss << body.size();
+			response.setBody(body);
+			response.setHeader("Content-Length", ss.str());
+		}
 	}
+	std::string status_code = response.get_header_value("Status");
+	if (!status_code.empty())
+		return std::atoi(status_code.c_str());
+	return OK;
 }
 
 Response
@@ -158,7 +168,7 @@ processRequest(TicketsType &tickets)
 			std::string query;
 			cutQuery(current.getRequest(), query);
 			if (isCgiRequested(current.getRequest().getStartLine().request_URI, location)) {
-				parseCgiResponse(response, executor.execCgi(current.getRequest(), query, config, location));
+				executor.setStatusCode(parseCgiResponse(response, executor.execCgi(current.getRequest(), query, config, location)));
 			}
 			else if (location.getRedir().from == current.getRequest().getStartLine().request_URI)
 				body_path = executor.getRedirected(location, response);
@@ -177,7 +187,6 @@ processRequest(TicketsType &tickets)
 		else
 			body_path = executor.buildBodyPath(config, location.getRoot());
 		response.buildPreResponse(executor.getStatusCode(), body_path);
-		// std::cout << response.serialize_response() << std::endl;
 		//response.setHeader("Content-Length", "0"); //TODO multipart tests
 		//std::cout << response.serialize_response() << std::endl;
 		tickets.front().getConnection() << response.serialize_response();

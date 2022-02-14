@@ -48,6 +48,9 @@ class AHttpMessage
 		std::string const
 		getDate(void) const;
 
+		std::string
+		get_header_value(std::string const &header_name) const;
+
 };
 
 #endif

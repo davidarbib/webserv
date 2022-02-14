@@ -261,7 +261,7 @@ ExecuteRequest::execCgi(Request const &request,
     {
         cgi_response += std::string(line);
     }
-    // std::cout << "OUR CGI RESPONSE :" << cgi_response << std::endl;
+    std::cout << "OUR CGI RESPONSE :" << cgi_response << std::endl;
 	return cgi_response;
 }
 

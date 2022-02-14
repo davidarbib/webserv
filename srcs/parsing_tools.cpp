@@ -32,8 +32,8 @@ getHeader(int index, std::string &src, Response &response)
 	size_t crlf_pos = src.find(CRLF_str, index);
 
 	key = src.substr(index, sep_pos - index);
-	value = src.substr(sep_pos, crlf_pos - sep_pos);
-
+	value = src.substr(sep_pos + 1, crlf_pos - sep_pos);
+	value = value.substr(value.find_first_not_of(" "));
 	response.setHeader(key, value);
 	return crlf_pos + 2;
 }

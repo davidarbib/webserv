@@ -73,17 +73,6 @@ Request::has_body(void) const
 	return true;
 }
 
-std::string
-Request::get_header_value(std::string const &header_name) const
-{
-	hash_map::const_iterator it;
-
-	it = this->_headers.find(header_name);
-	if (it != this->_headers.end())
-		return it->second;
-	return std::string();
-}
-
 const request_line
 Request::getStartLine(void) const
 {	
