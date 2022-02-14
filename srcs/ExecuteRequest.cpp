@@ -1,4 +1,5 @@
 #include "ExecuteRequest.hpp"
+#include <cstring>
 
 ExecuteRequest::ExecuteRequest() : _status_code(0)
 {}
@@ -239,6 +240,8 @@ ExecuteRequest::postMethod(std::string const &URI, ConfigServer const &config,
 	return "OK"; //TODO not OK
 }
 
+#define FGET_SIZE 42
+
 std::string
 ExecuteRequest::execCgi(Request const &request,
 							std::string const &query,
@@ -248,14 +251,16 @@ ExecuteRequest::execCgi(Request const &request,
 	(void)config;
 	std::string ressource = location.getRoot() + request.getStartLine().request_URI;
 	CgiHandler handler(request, location.getCgiPath(), ressource, query);
-    std::cout << "CA EXISTE REGARDE : " << location.getCgiPath() << std::endl;
 	handler.sendCgi();
 	handler.getCgiResponse();
 
 	/* ------------ TODO for debug ------------- */
-	char line[100];
-	while (fscanf(handler.getCgiResponse(), "%[^\n]", line) == 1)  
-		std::cout << line << std::endl;
+	char line[FGET_SIZE + 1];
+    bzero(line, FGET_SIZE + 1);
+	while (fgets(line, FGET_SIZE, handler.getCgiResponse()))
+    {
+        std::cout << line << std::endl;
+    }
 	/* ----------------------------------------- */
 	
 	return "OK";

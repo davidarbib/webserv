@@ -5,7 +5,6 @@ processArgs(int ac, char **av, ServersType &servers, Config &conf)
 {
 	std::string config_path;
 
-	std::cout << "ac : " << ac << std::endl;
 	if (ac < 2)
 		config_path = "webserv.conf";
 	else

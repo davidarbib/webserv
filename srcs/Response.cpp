@@ -75,7 +75,8 @@ Response::buildPreResponse(int code, std::string const& body_path)
 	{
 		if (code == OK)
 		{
-			this->_start_line.reason_phrase = Response::errors_code.find(NO_CONTENT)->second;
+			this->_start_line.reason_phrase = 
+			Response::errors_code.find(NO_CONTENT)->second;
 			this->_start_line.status_code = NO_CONTENT;
 		}
 	}
