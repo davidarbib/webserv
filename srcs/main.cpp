@@ -167,17 +167,25 @@ processRequest(TicketsType &tickets)
 		{
 			std::string query;
 			cutQuery(current.getRequest(), query);
-			if (isCgiRequested(current.getRequest().getStartLine().request_URI, location)) {
+			if (isCgiRequested(current.getRequest().getStartLine().request_URI, location))
 				executor.setStatusCode(parseCgiResponse(response, executor.execCgi(current.getRequest(), query, config, location)));
-			}
 			else if (location.getRedir().from == current.getRequest().getStartLine().request_URI)
 				body_path = executor.getRedirected(location, response);
 			else if (current.getRequest().getStartLine().method_token == "DELETE")
+			{
 				body_path = executor.deleteMethod(current.getRequest().getStartLine().request_URI, config, location);
+				response.searchForBody(executor.getStatusCode(), body_path);
+			}
 			else if (current.getRequest().getStartLine().method_token == "GET")
+			{
 				body_path = executor.getMethod(current.getRequest().getStartLine().request_URI, config, location);
+				response.searchForBody(executor.getStatusCode(), body_path);
+			}
 			else if (current.getRequest().getStartLine().method_token == "POST")
+			{
 				body_path = executor.postMethod(current.getRequest().getStartLine().request_URI, config, location);
+				response.searchForBody(executor.getStatusCode(), body_path);
+			}
 			else
 			{
 				executor.setStatusCode(NOT_ALLOWED);
@@ -186,7 +194,7 @@ processRequest(TicketsType &tickets)
 		}
 		else
 			body_path = executor.buildBodyPath(config, location.getRoot());
-		response.buildPreResponse(executor.getStatusCode(), body_path);
+		response.buildPreResponse(executor.getStatusCode());
 		//response.setHeader("Content-Length", "0"); //TODO multipart tests
 		//std::cout << response.serialize_response() << std::endl;
 		tickets.front().getConnection() << response.serialize_response();
