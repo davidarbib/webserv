@@ -130,6 +130,16 @@ cutQuery(Request &request, std::string &query)
 	request.setRequestURI(request.getStartLine().request_URI.substr(0, query_pos));
 }
 
+void
+parseCgiResponse(Response &response, std::string &cgi_response)
+{
+	for (size_t i = 0; i < cgi_response.size(); i++)
+	{
+		
+	}
+	(void)response;
+}
+
 Response
 processRequest(TicketsType &tickets)
 {

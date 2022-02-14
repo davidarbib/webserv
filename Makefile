@@ -52,7 +52,8 @@ SRC = AHttpMessage.cpp \
 	  ConfigUtils.cpp \
 	  Config.cpp \
 	  ServerLocations.cpp \
-	  ExecuteRequest.cpp
+	  ExecuteRequest.cpp \
+	  parsing_tools.cpp
 
 ifeq ($(CGI_UT), 1)
 	SRC += main_cgi.cpp

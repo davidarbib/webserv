@@ -248,22 +248,21 @@ ExecuteRequest::execCgi(Request const &request,
 							ConfigServer const &config,
 							ServerLocations const& location)
 {	
-	(void)config;
+	(void)config; // TODO
 	std::string ressource = location.getRoot() + request.getStartLine().request_URI;
 	CgiHandler handler(request, location.getCgiPath(), ressource, query);
 	handler.sendCgi();
 	handler.getCgiResponse();
 
-	/* ------------ TODO for debug ------------- */
 	char line[FGET_SIZE + 1];
     bzero(line, FGET_SIZE + 1);
+    std::string cgi_response;
 	while (fgets(line, FGET_SIZE, handler.getCgiResponse()))
     {
-        std::cout << line << std::endl;
+        cgi_response += std::string(line);
     }
-	/* ----------------------------------------- */
-	
-	return "OK";
+    // std::cout << "OUR CGI RESPONSE :" << cgi_response << std::endl;
+	return cgi_response;
 }
 
 std::string ExecuteRequest::method_not_implemented[HTTP_METHOD_NOT_IMPLEMENTED_NB];

@@ -1,16 +1,5 @@
 #include "request_parser.hpp"
 
-bool
-isEndSection(std::string &line, int index)
-{
-	if (RequestHandler::isEndLine(line, index))
-	{
-		if (RequestHandler::isEndLine(line, index + 2))
-			return true;
-	}
-	return false;
-}
-
 int
 parseMethodToken(RequestHandler &rh)
 {
@@ -47,7 +36,7 @@ parseHttpVersion(RequestHandler &rh, int position)
 	int index = position;
 	std::string http_version;
 
-	while (rh.getBuffer()[index] && !RequestHandler::isEndLine(rh.getBuffer(), index))
+	while (rh.getBuffer()[index] && !isEndLine(rh.getBuffer(), index))
 	{
 		http_version += rh.getBuffer()[index];
 		index++;
@@ -81,7 +70,7 @@ getOneHeader(RequestHandler &rh, int position)
 		index++;
 	}
 	index += 2;
-	while (rh.getBuffer()[index] && !RequestHandler::isEndLine(rh.getBuffer(), index))
+	while (rh.getBuffer()[index] && !isEndLine(rh.getBuffer(), index))
 	{
 		//std::cout << "len : " << rh.getBuffer().size() << std::endl;
 		//std::cout << "index : " << index << std::endl;
@@ -128,7 +117,7 @@ is_complete_line(std::string &line, int idx)
 
 	while (i < line.length())
 	{
-		if (RequestHandler::isEndLine(line, i))
+		if (isEndLine(line, i))
 			return true;
 		i++;
 	}
