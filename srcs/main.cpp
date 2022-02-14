@@ -131,13 +131,15 @@ cutQuery(Request &request, std::string &query)
 }
 
 void
-parseCgiResponse(Response &response, std::string &cgi_response)
+parseCgiResponse(Response &response, std::string cgi_response)
 {
-	for (size_t i = 0; i < cgi_response.size(); i++)
+	int index = 0;
+	while (!isEndLine(cgi_response, index))
 	{
-		
+		index = getHeader(index, cgi_response, response);
+		if (isEndLine(cgi_response, index))
+			response.setBody(cgi_response.substr(index, cgi_response.size()));
 	}
-	(void)response;
 }
 
 Response
@@ -156,7 +158,7 @@ processRequest(TicketsType &tickets)
 			std::string query;
 			cutQuery(current.getRequest(), query);
 			if (isCgiRequested(current.getRequest().getStartLine().request_URI, location)) {
-				executor.execCgi(current.getRequest(), query, config, location);
+				parseCgiResponse(response, executor.execCgi(current.getRequest(), query, config, location));
 			}
 			else if (location.getRedir().from == current.getRequest().getStartLine().request_URI)
 				body_path = executor.getRedirected(location, response);

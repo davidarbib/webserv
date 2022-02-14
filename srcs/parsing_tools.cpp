@@ -21,3 +21,19 @@ isEndSection(std::string &line, int index)
 	}
 	return false;
 }
+
+int
+getHeader(int index, std::string &src, Response &response)
+{
+	std::string key;
+	std::string value;
+
+	size_t sep_pos = src.find(HEADER_SEP, index);
+	size_t crlf_pos = src.find(CRLF_str, index);
+
+	key = src.substr(index, sep_pos - index);
+	value = src.substr(sep_pos, crlf_pos - sep_pos);
+
+	response.setHeader(key, value);
+	return crlf_pos + 2;
+}
