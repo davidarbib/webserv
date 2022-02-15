@@ -31,12 +31,14 @@ CgiHandler::CgiHandler(Request const &request, std::string const &pgm_path,
 	_receiver = __tmpfile__();
 	
 	std::string const &body = request.getBody();
-	write(fileno(_sender), body.c_str(), body.size()); //TODO Exception handlin
+	write(fileno(_sender), body.c_str(), body.size()); //TODO Exception handling , and fd select checking
 	rewind(_sender);
 }
 
 CgiHandler::~CgiHandler(void)
 {
+	fclose(_sender);
+	fclose(_receiver);
 }
 
 void
