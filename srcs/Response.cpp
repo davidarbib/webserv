@@ -159,4 +159,20 @@ Response::fillResponseCodes(void)
 	return codes;
 }
 
+std::vector<std::string>
+Response::fillHandledExtensions(void)
+{
+	std::vector<std::string> extensions;
+
+	extensions.push_back("text/html");
+	extensions.push_back("audio/mp3");
+	extensions.push_back("video/mp4");
+	extensions.push_back("font/ttf");
+	extensions.push_back("image/png");
+	extensions.push_back("application/octet-stream");
+
+	return extensions;
+}
+
 std::map<int, std::string> Response::errors_code;
+std::vector<std::string> Response::handled_extensions;

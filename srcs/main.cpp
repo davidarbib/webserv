@@ -185,6 +185,7 @@ main(int ac, char **av)
 	Config						config;
 
 	Response::errors_code = Response::fillResponseCodes();
+	Response::handled_extensions = Response::fillHandledExtensions();
 	ExecuteRequest::fillMethodNotImplemented();
 
 	Server::max_fd = 0;
