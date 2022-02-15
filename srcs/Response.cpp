@@ -138,6 +138,12 @@ operator<<(std::ostream &flux, Response const &response)
 	return flux;
 }
 
+std::string
+Response::getFileExtension(std::string & uri) const
+{
+	return uri.substr(uri.find_last_of("."), uri.size());	
+}
+
 std::map<int, std::string>
 Response::fillResponseCodes(void)
 {
@@ -159,20 +165,19 @@ Response::fillResponseCodes(void)
 	return codes;
 }
 
-std::vector<std::string>
+std::map<std::string, std::string>
 Response::fillHandledExtensions(void)
 {
-	std::vector<std::string> extensions;
+	std::map<std::string, std::string> extensions;
 
-	extensions.push_back("text/html");
-	extensions.push_back("audio/mp3");
-	extensions.push_back("video/mp4");
-	extensions.push_back("font/ttf");
-	extensions.push_back("image/png");
-	extensions.push_back("application/octet-stream");
-
+	extensions.insert(std::make_pair(".html" ,"text/html"));
+	extensions.insert(std::make_pair(".mp3" ,"audio/mp3"));
+	extensions.insert(std::make_pair(".mp4" ,"video/mp4"));
+	extensions.insert(std::make_pair(".ttf" ,"font/ttf"));
+	extensions.insert(std::make_pair(".png" ,"image/png"));
+	extensions.insert(std::make_pair("" ,"application/octet-stream"));
 	return extensions;
 }
 
 std::map<int, std::string> Response::errors_code;
-std::vector<std::string> Response::handled_extensions;
+std::map<std::string, std::string> Response::handled_extensions;

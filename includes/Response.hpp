@@ -5,7 +5,6 @@
 #include "AHttpMessage.hpp"
 #include <sstream>
 #include <fstream>
-#include <vector>
 
 #define HTTP_VERSION "HTTP/1.1"
 #define SERVER_VERSION "webserv/1.0.0"
@@ -38,7 +37,7 @@ class Response : public AHttpMessage
 
 	public:
 		static std::map<int, std::string> errors_code;
-		static std::vector<std::string> handled_extensions;
+		static std::map<std::string, std::string> handled_extensions;
 		Response(void);
 		Response(Response &cpy);
 		Response &
@@ -48,7 +47,7 @@ class Response : public AHttpMessage
 		static std::map<int, std::string>
 		fillResponseCodes(void);
 
-		static std::vector<std::string>
+		static std::map<std::string, std::string>
 		fillHandledExtensions(void);
 
 		void
@@ -71,6 +70,9 @@ class Response : public AHttpMessage
 
 		void
 		buildPreResponse(int code, std::string const &body_path);
+
+		std::string
+		getFileExtension(std::string & uri) const;
 
 		std::string
 		serialize_response(void);
