@@ -3,6 +3,7 @@
 	
 # include "Server.hpp"
 # include "request_parser.hpp"
+# include "parsing_tools.hpp"
 # include "config_handler.hpp"
 # include "RequestHandler.hpp"
 # include "Ticket.hpp"

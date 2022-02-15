@@ -5,7 +5,6 @@ CgiHandler::CgiHandler(Request const &request, std::string const &pgm_path,
 						std::string &script_path, std::string const &query)
 : _pgm_path(pgm_path), _script_path(script_path), _query(query)
 {
-	std::cout << "cgi in constructor" << _pgm_path << std::endl;
 	//(void)request;
 	request_line startline = request.getStartLine();
 	//cutting URI in start line for env
@@ -33,10 +32,8 @@ CgiHandler::CgiHandler(Request const &request, std::string const &pgm_path,
 	_receiver = __tmpfile__();
 	
 	std::string const &body = request.getBody();
-	int ret = write(fileno(_sender), body.c_str(), body.size()); //TODO Exception handlin
-	std::cout << "write ret : " << ret << std::endl;
+	write(fileno(_sender), body.c_str(), body.size()); //TODO Exception handlin
 	rewind(_sender);
-	std::cout << "cgi initialized" << _pgm_path << std::endl;
 }
 
 CgiHandler::~CgiHandler(void)
@@ -132,10 +129,6 @@ CgiHandler::sendCgi(void)
 	argv[1] = const_cast<char*>(_script_path.c_str());
 	argv[2] = NULL;
 
-	std::cout << "cgi before env stacking" << const_cast<char*>(_pgm_path.c_str());
-	std::cout << std::endl;
-	std::cout << "cgi : " << argv[0] << std::endl;
-	std::cout << "script : " << argv[1] << std::endl;
 	pid_t pid = __fork__();	
 	if (pid == 0)
 	{

@@ -1,4 +1,5 @@
 #include "ExecuteRequest.hpp"
+#include <cstring>
 
 ExecuteRequest::ExecuteRequest() : _status_code(0)
 {}
@@ -239,28 +240,29 @@ ExecuteRequest::postMethod(std::string const &URI, ConfigServer const &config,
 	return "OK"; //TODO not OK
 }
 
+#define FGET_SIZE 42
+
 std::string
 ExecuteRequest::execCgi(Request const &request,
 							std::string const &query,
 							ConfigServer const &config,
 							ServerLocations const& location)
 {	
-	(void)config;
+	(void)config; // TODO
 	std::string ressource = location.getRoot() + request.getStartLine().request_URI;
 	CgiHandler handler(request, location.getCgiPath(), ressource, query);
 	handler.sendCgi();
 	handler.getCgiResponse();
 
-	/* ------------ TODO for debug ------------- */
-#define SIZE 100
-	char buf[SIZE];
-  
-	while (fgets(buf, SIZE - 1, handler.getCgiResponse()))
-		std::cout << buf << std::endl;
-	/* ----------------------------------------- */
-	
-	_status_code = OK;
-	return "OK";
+	char line[FGET_SIZE + 1];
+    bzero(line, FGET_SIZE + 1);
+    std::string cgi_response;
+	while (fgets(line, FGET_SIZE, handler.getCgiResponse()))
+    {
+        cgi_response += std::string(line);
+    }
+    std::cout << "OUR CGI RESPONSE :" << cgi_response << std::endl;
+	return cgi_response;
 }
 
 std::string ExecuteRequest::method_not_implemented[HTTP_METHOD_NOT_IMPLEMENTED_NB];

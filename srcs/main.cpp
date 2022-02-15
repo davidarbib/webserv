@@ -5,7 +5,6 @@ processArgs(int ac, char **av, ServersType &servers, Config &conf)
 {
 	std::string config_path;
 
-	std::cout << "ac : " << ac << std::endl;
 	if (ac < 2)
 		config_path = "webserv.conf";
 	else
@@ -131,6 +130,28 @@ cutQuery(Request &request, std::string &query)
 	request.setRequestURI(request.getStartLine().request_URI.substr(0, query_pos));
 }
 
+int
+parseCgiResponse(Response &response, std::string cgi_response)
+{
+	int index = 0;
+	while (!isEndLine(cgi_response, index))
+	{
+		index = getHeader(index, cgi_response, response);
+		if (isEndLine(cgi_response, index))
+		{
+			std::string body(cgi_response.substr(index, cgi_response.size()));
+			std::stringstream ss;
+			ss << body.size();
+			response.setBody(body);
+			response.setHeader("Content-Length", ss.str());
+		}
+	}
+	std::string status_code = response.get_header_value("Status");
+	if (!status_code.empty())
+		return std::atoi(status_code.c_str());
+	return OK;
+}
+
 Response
 processRequest(TicketsType &tickets)
 {
@@ -146,17 +167,25 @@ processRequest(TicketsType &tickets)
 		{
 			std::string query;
 			cutQuery(current.getRequest(), query);
-			if (isCgiRequested(current.getRequest().getStartLine().request_URI, location)) {
-				executor.execCgi(current.getRequest(), query, config, location);
-			}
+			if (isCgiRequested(current.getRequest().getStartLine().request_URI, location))
+				executor.setStatusCode(parseCgiResponse(response, executor.execCgi(current.getRequest(), query, config, location)));
 			else if (location.getRedir().from == current.getRequest().getStartLine().request_URI)
 				body_path = executor.getRedirected(location, response);
 			else if (current.getRequest().getStartLine().method_token == "DELETE")
+			{
 				body_path = executor.deleteMethod(current.getRequest().getStartLine().request_URI, config, location);
+				response.searchForBody(executor.getStatusCode(), body_path);
+			}
 			else if (current.getRequest().getStartLine().method_token == "GET")
+			{
 				body_path = executor.getMethod(current.getRequest().getStartLine().request_URI, config, location);
+				response.searchForBody(executor.getStatusCode(), body_path);
+			}
 			else if (current.getRequest().getStartLine().method_token == "POST")
+			{
 				body_path = executor.postMethod(current.getRequest().getStartLine().request_URI, config, location);
+				response.searchForBody(executor.getStatusCode(), body_path);
+			}
 			else
 			{
 				executor.setStatusCode(NOT_ALLOWED);
@@ -165,8 +194,7 @@ processRequest(TicketsType &tickets)
 		}
 		else
 			body_path = executor.buildBodyPath(config, location.getRoot());
-		response.buildPreResponse(executor.getStatusCode(), body_path);
-		// std::cout << response.serialize_response() << std::endl;
+		response.buildPreResponse(executor.getStatusCode());
 		//response.setHeader("Content-Length", "0"); //TODO multipart tests
 		//std::cout << response.serialize_response() << std::endl;
 		tickets.front().getConnection() << response.serialize_response();

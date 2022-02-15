@@ -61,7 +61,7 @@ Response::printMessage(std::ostream &flux) const
 }
 
 void
-Response::buildPreResponse(int code, std::string const& body_path)
+Response::buildPreResponse(int code)
 {
 	this->_start_line.status_code = code;
 	this->_start_line.reason_phrase = Response::errors_code.find(code)->second;
@@ -71,16 +71,6 @@ Response::buildPreResponse(int code, std::string const& body_path)
 		this->_headers["Connection"] = "keep-alive";
 	else
 		this->_headers["Connection"] = "close";
-	if (buildBody(body_path) == 0)
-	{
-		if (code == OK)
-		{
-			this->_start_line.reason_phrase = Response::errors_code.find(NO_CONTENT)->second;
-			this->_start_line.status_code = NO_CONTENT;
-		}
-	}
-	else
-		this->_headers["Content-Type"] = "text/html";
 }
 
 std::string
@@ -177,6 +167,21 @@ Response::fillHandledExtensions(void)
 	extensions.insert(std::make_pair(".png" ,"image/png"));
 	extensions.insert(std::make_pair("" ,"application/octet-stream"));
 	return extensions;
+}
+
+void
+Response::searchForBody(int code, std::string const &body_path)
+{
+	if (buildBody(body_path) == 0)
+	{
+		if (code == OK)
+		{
+			this->_start_line.reason_phrase = "No Content";
+			this->_start_line.status_code = NO_CONTENT;
+		}
+	}
+	else
+		this->_headers["Content-Type"] = "text/html";
 }
 
 std::map<int, std::string> Response::errors_code;

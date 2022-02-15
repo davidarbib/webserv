@@ -6,6 +6,7 @@
 #include "RequestHandler.hpp"
 #include <sstream>
 #include <string>
+#include "parsing_tools.hpp"
 //#include "main.hpp"
 #include "Ticket.hpp"
 # include <queue>
@@ -16,9 +17,6 @@ typedef std::map<fd_t, RequestHandler>			ReqHandlersType;
 #define NEXT_SPACE_TOKEN 1
 #define CRLF 2
 #define CRLFCRLF 4
-
-bool
-isEndSection(std::string &line, int index);
 
 int
 parseMethodToken(RequestHandler &rh);
