@@ -174,17 +174,17 @@ processRequest(TicketsType &tickets)
 			else if (current.getRequest().getStartLine().method_token == "DELETE")
 			{
 				body_path = executor.deleteMethod(current.getRequest().getStartLine().request_URI, config, location);
-				response.searchForBody(executor.getStatusCode(), body_path);
+				response.searchForBody(executor.getStatusCode(), body_path, response.getFileExtension(body_path));
 			}
 			else if (current.getRequest().getStartLine().method_token == "GET")
 			{
 				body_path = executor.getMethod(current.getRequest().getStartLine().request_URI, config, location);
-				response.searchForBody(executor.getStatusCode(), body_path);
+				response.searchForBody(executor.getStatusCode(), body_path, response.getFileExtension(body_path));
 			}
 			else if (current.getRequest().getStartLine().method_token == "POST")
 			{
 				body_path = executor.postMethod(current.getRequest().getStartLine().request_URI, config, location);
-				response.searchForBody(executor.getStatusCode(), body_path);
+				response.searchForBody(executor.getStatusCode(), body_path, response.getFileExtension(body_path));
 			}
 			else
 			{

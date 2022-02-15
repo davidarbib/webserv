@@ -72,13 +72,13 @@ class Response : public AHttpMessage
 		buildPreResponse(int code);
 
 		std::string
-		getFileExtension(std::string & uri) const;
+		getFileExtension(std::string const &uri) const;
 
 		std::string
 		serialize_response(void);
 
 		void
-		searchForBody(int code, std::string const &body_path);
+		searchForBody(int code, std::string const &body_path, std::string const &file_type);
 };
 
 std::ostream &

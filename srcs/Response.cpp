@@ -129,9 +129,11 @@ operator<<(std::ostream &flux, Response const &response)
 }
 
 std::string
-Response::getFileExtension(std::string & uri) const
+Response::getFileExtension(std::string const &uri) const
 {
-	return uri.substr(uri.find_last_of("."), uri.size());	
+	if (!uri.empty())
+		return uri.substr(uri.find_last_of("."), uri.size());
+	return std::string();
 }
 
 std::map<int, std::string>
@@ -170,7 +172,7 @@ Response::fillHandledExtensions(void)
 }
 
 void
-Response::searchForBody(int code, std::string const &body_path)
+Response::searchForBody(int code, std::string const &body_path, std::string const &file_type)
 {
 	if (buildBody(body_path) == 0)
 	{
@@ -181,7 +183,18 @@ Response::searchForBody(int code, std::string const &body_path)
 		}
 	}
 	else
-		this->_headers["Content-Type"] = "text/html";
+	{
+		if (file_type.empty())
+			setHeader("Content-Type", handled_extensions.find("")->second);
+		else
+		{
+			std::map<std::string, std::string>::iterator it = handled_extensions.find(file_type);
+			if (it == handled_extensions.end())
+				setHeader("Content-Type", handled_extensions.find("")->second);
+			else
+				setHeader("Content-Type", it->second);
+		}
+	}
 }
 
 std::map<int, std::string> Response::errors_code;
