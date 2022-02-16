@@ -112,7 +112,10 @@ isCgiRequested(std::string const &uri, ServerLocations const &location)
 	std::string php_extension = ".php";
 	size_t len_extension = php_extension.size();
 	
-	if (uri.compare(uri.size() - (len_extension),  len_extension, php_extension) != 0)
+	size_t extension_pos = uri.find(php_extension);
+	if (extension_pos == std::string::npos)
+		return false;
+	if (extension_pos != uri.size() - len_extension)
 		return false;
 	if (access(location.getCgiPath().c_str(), X_OK) != 0)
 		return false;
