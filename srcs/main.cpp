@@ -153,7 +153,7 @@ parseCgiResponse(Response &response, std::string cgi_response)
 }
 
 Response
-processRequest(TicketsType &tickets)
+processRequest(TicketsType &tickets, ReqHandlersType &request_handlers)
 {
 	ExecuteRequest executor;
 	Response response;
@@ -195,8 +195,10 @@ processRequest(TicketsType &tickets)
 		else
 			body_path = executor.buildBodyPath(config, location.getRoot());
 		response.buildPreResponse(executor.getStatusCode());
+		request_handlers.erase(tickets.front().getRhIt());
 		//response.setHeader("Content-Length", "0"); //TODO multipart tests
 		//std::cout << response.serialize_response() << std::endl;
+		
 		tickets.front().getConnection() << response.serialize_response();
 		tickets.pop();
 	}
@@ -247,7 +249,7 @@ main(int ac, char **av)
 		handleConnectionRequest(servers);
 		networkInputToBuffers(servers, request_handlers);
 		handleRequestBuffers(servers, tickets, request_handlers);
-		processRequest(tickets);
+		processRequest(tickets, request_handlers);
 		sendToNetwork(servers);
 	}
 	return 0;
