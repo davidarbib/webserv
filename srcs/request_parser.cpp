@@ -1,5 +1,19 @@
 #include "request_parser.hpp"
 
+void print_buffer(std::string str) // for debug purpose
+{
+	 std::cout << "BUFFER : " << std::endl;
+	 for(size_t i = 0; i < str.length(); i++)
+	 {
+	 	if (str[i] == '\r')
+	 		std::cout << "\\r";
+	 	else if (str[i] == '\n')
+	 		std::cout << "\\n";
+	 	else
+	 		std::cout << str[i];
+	 }
+}
+
 int
 parseMethodToken(RequestHandler &rh)
 {
@@ -72,8 +86,6 @@ getOneHeader(RequestHandler &rh, int position)
 	index += 2;
 	while (rh.getBuffer()[index] && !isEndLine(rh.getBuffer(), index))
 	{
-		//std::cout << "len : " << rh.getBuffer().size() << std::endl;
-		//std::cout << "index : " << index << std::endl;
 		value += rh.getBuffer()[index];
 		index++;
 	}
@@ -102,18 +114,20 @@ has_body(RequestHandler &rh)
 int
 parseHeaders(RequestHandler &rh)
 {
-	int index = rh.getIdx();
+	int index = 0;
 
 	index = getOneHeader(rh, index);
+	if (rh.getBuffer() == "\r\n")
+		rh.getRequest()->setHeaderInitialized(true);
 	if (rh.getRequest()->isHeadersInitialized() == true)
 		rh.getRequest()->setRequestFinalized(!has_body(rh));
 	return index;
 }
 
 bool
-is_complete_line(std::string &line, int idx)
+is_complete_line(std::string &line)
 {
-	size_t i = idx;
+	size_t i = 0;
 
 	while (i < line.length())
 	{
@@ -121,8 +135,6 @@ is_complete_line(std::string &line, int idx)
 			return true;
 		i++;
 	}
-//	if (i == line.length())
-//		return true;
 	return false;
 }
 
@@ -161,7 +173,7 @@ getChunkOfBody(RequestHandler &rh, int index)
 int
 parseBody(RequestHandler &rh)
 {
-	int index = rh.getIdx();
+	int index = 0;
 	
 	if (rh.getRequest()->get_header_value("Content-Length") != "0")
 		return getBodyWithContentLength(rh, index);
@@ -190,20 +202,6 @@ parseBody(RequestHandler &rh)
 	return index;
 }
 
-void print_buffer(std::string str) // for debug purpose
-{
-	 std::cout << "BUFFER : ";
-	 for(size_t i = 0; i < str.length(); i++)
-	 {
-	 	if (str[i] == '\r')
-	 		std::cout << "\\r";
-	 	else if (str[i] == '\n')
-	 		std::cout << "\\n";
-	 	else
-	 		std::cout << str[i];
-	 }
-}
-
 int
 parseRequest(Connection *raw_request, Server &server, TicketsType &tickets, ReqHandlersType &request_handlers)
 {
@@ -218,21 +216,20 @@ parseRequest(Connection *raw_request, Server &server, TicketsType &tickets, ReqH
 	RequestHandler &rh = it->second;
 	if (rh.getRequest()->isRequestFinalized() == true)
 		return 1;
-	if (is_complete_line(rh.getBuffer(), rh.getIdx()) && !rh.getBuffer().empty())
+	if (is_complete_line(rh.getBuffer()) && !rh.getBuffer().empty())
 	{
-		print_buffer(rh.getBuffer()); // for debug purpose
 		if (rh.getRequest()->iStartLineInitialized() == false)
 			rh.setIdx(parseStartLine(rh));
 		else if (rh.getRequest()->isHeadersInitialized() == false)
 		{
-			std::cout << "start line" << std::endl;
+			// std::cout << "start line" << std::endl;
 			//print_buffer(rh.getBuffer()); // for debug purpose
 			//std::cout << *rh.getRequest() << std::endl;
 			rh.setIdx(parseHeaders(rh));
 		}
 		else if (rh.getRequest()->isRequestFinalized() == false)
 		{
-			std::cout << "headers initialized" << std::endl;
+			// std::cout << "headers initialized" << std::endl;
 			//std::cout << "body parsing" << std::endl;
 			rh.setIdx(parseBody(rh));
 		}
@@ -240,7 +237,6 @@ parseRequest(Connection *raw_request, Server &server, TicketsType &tickets, ReqH
 		rh.clearBuffer();
 		if (rh.getRequest()->isRequestFinalized() == true)
 		{
-			std::cout << "request finalized" << std::endl;
 			//UNCOMENT TO SEE REQUEST INFOS
 			//std::cout << *rh.getRequest() << std::endl;
 			Ticket my_ticket(*raw_request, rh.getRequest(), server, it);
