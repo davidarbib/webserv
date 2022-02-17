@@ -108,7 +108,9 @@ has_body(RequestHandler &rh)
 	ss >> content_length;
 	if (content_length == 0 && rh.getRequest()->get_header_value("Transfer-Encoding") != "chunked")
 		return false;
-	return true;
+	else if (rh.getRequest()->isContentLengthCorrect())
+		return true;
+	return false;
 }
 
 int

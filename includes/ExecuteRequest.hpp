@@ -22,9 +22,6 @@ class ExecuteRequest
     private:
         int             _status_code;
 
-        bool
-        isContentLengthCorrect(std::string const &content_length);
-
 		bool
 		isAllowedMethod(std::string const &method, std::vector<std::string> method_allowed) const;
 
