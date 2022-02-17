@@ -2,7 +2,8 @@
 
 Request::Request(void) : _start_line_initialized(false),
 						 _headers_initialized(false),
-						 _request_finalized(false) 
+						 _request_finalized(false),
+						 _valid(true)
 {
 	this->setHeader("Content-Length", "0");
 	this->setHeader("Transfer-Encoding", std::string());
@@ -20,6 +21,7 @@ Request::operator=(Request const &src)
 	this->_start_line = src._start_line;
 	this->_headers = src._headers;
 	this->_body = src._body;
+	this->_valid = src._valid;
 	return *this;
 }
 
@@ -141,4 +143,17 @@ operator<<(std::ostream &flux, Request const &request)
 {
 	request.printMessage(flux);
 	return flux;
+}
+
+
+bool
+Request::getValid(void) const
+{
+	return _valid;
+}
+
+void
+Request::setValid(bool value)
+{
+	_valid = value;
 }
