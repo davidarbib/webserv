@@ -75,6 +75,19 @@ ExecuteRequest::isImplemented(std::string const& method) const
 }
 
 bool
+ExecuteRequest::isContentLengthCorrect(std::string const &content_length)
+{
+    if (content_length != "0" && std::atoi(content_length.c_str()) <= 0)
+        return false;
+    // for (size_t i = 0; i < content_length.size(); i++)
+    // {
+    //     if (isdigit(content_length[i]) == 0 || (i == 0 && content_length[i] != '-' && isdigit(content_length[i]) == 0))
+    //         return false;
+    // }
+    return true;
+}
+
+bool
 ExecuteRequest::isValidRequest(Request const& request, ConfigServer const& config, ServerLocations const& location)
 {
     bool valid = true;
