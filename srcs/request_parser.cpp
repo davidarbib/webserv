@@ -121,8 +121,8 @@ is_complete_line(std::string &line, int idx)
 			return true;
 		i++;
 	}
-	if (i == line.length())
-		return true;
+//	if (i == line.length())
+//		return true;
 	return false;
 }
 
@@ -220,16 +220,19 @@ parseRequest(Connection *raw_request, Server &server, TicketsType &tickets, ReqH
 		return 1;
 	if (is_complete_line(rh.getBuffer(), rh.getIdx()) && !rh.getBuffer().empty())
 	{
+		print_buffer(rh.getBuffer()); // for debug purpose
 		if (rh.getRequest()->iStartLineInitialized() == false)
 			rh.setIdx(parseStartLine(rh));
 		else if (rh.getRequest()->isHeadersInitialized() == false)
 		{
+			std::cout << "start line" << std::endl;
 			//print_buffer(rh.getBuffer()); // for debug purpose
 			//std::cout << *rh.getRequest() << std::endl;
 			rh.setIdx(parseHeaders(rh));
 		}
 		else if (rh.getRequest()->isRequestFinalized() == false)
 		{
+			std::cout << "headers initialized" << std::endl;
 			//std::cout << "body parsing" << std::endl;
 			rh.setIdx(parseBody(rh));
 		}
@@ -237,6 +240,7 @@ parseRequest(Connection *raw_request, Server &server, TicketsType &tickets, ReqH
 		rh.clearBuffer();
 		if (rh.getRequest()->isRequestFinalized() == true)
 		{
+			std::cout << "request finalized" << std::endl;
 			//UNCOMENT TO SEE REQUEST INFOS
 			//std::cout << *rh.getRequest() << std::endl;
 			Ticket my_ticket(*raw_request, rh.getRequest(), server, it);
