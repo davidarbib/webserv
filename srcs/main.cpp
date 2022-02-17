@@ -163,6 +163,7 @@ processRequest(TicketsType &tickets, ReqHandlersType &request_handlers)
 	std::string body_path;
 	while (!tickets.empty() && tickets.front().getRequest().isRequestFinalized() == true)
 	{
+		std::cout << "new ticket" << std::endl;
 		Ticket current(tickets.front());
 		ConfigServer const& config = getConfig(current);
 		ServerLocations const& location = getLocation(config, current.getRequest().getStartLine().request_URI);

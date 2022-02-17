@@ -248,11 +248,13 @@ ExecuteRequest::execCgi(Request const &request,
 							ConfigServer const &config,
 							ServerLocations const& location)
 {	
+	std::cout << "------------------New Cgi handling------------------" << std::endl;
 	(void)config; // TODO
 	std::string ressource = location.getRoot() + request.getStartLine().request_URI;
 	CgiHandler handler(request, location.getCgiPath(), ressource, query);
 	handler.sendCgi();
 	handler.getCgiResponse();
+	std::cout << "New Cgi response obtained" << std::endl;
 
 	char line[FGET_SIZE + 1];
     bzero(line, FGET_SIZE + 1);
