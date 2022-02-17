@@ -60,7 +60,7 @@ class Request : public AHttpMessage
 		isRequestFinalized(void) const;
 
 		bool
-        isContentLengthCorrect(void);
+        isContentLengthCorrect(void) const;
 
 		bool
 		has_body(void) const;

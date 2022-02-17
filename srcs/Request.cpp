@@ -26,16 +26,16 @@ Request::operator=(Request const &src)
 Request::~Request(void) {}
 
 bool
-Request::isContentLengthCorrect(void)
+Request::isContentLengthCorrect(void) const
 {
 	std::string content_length = get_header_value("Content-Length");
     if (content_length != "0" && std::atoi(content_length.c_str()) <= 0)
         return false;
-    // for (size_t i = 0; i < content_length.size(); i++)
-    // {
-    //     if (isdigit(content_length[i]) == 0 || (i == 0 && content_length[i] != '-' && isdigit(content_length[i]) == 0))
-    //         return false;
-    // }
+    for (size_t i = 0; i < content_length.size(); i++)
+    {
+        if (isdigit(content_length[i]) == 0)
+            return false;
+    }
     return true;
 }
 
