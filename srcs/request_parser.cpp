@@ -222,14 +222,14 @@ parseRequest(Connection *raw_request, Server &server, TicketsType &tickets, ReqH
 	{
 		if (rh.getRequest()->iStartLineInitialized() == false)
 			rh.setIdx(parseStartLine(rh));
-		else if (rh.getRequest()->isHeadersInitialized() == false)
+		else if (rh.getRequest()->isHeadersInitialized() == false && rh.getRequest()->getValid())
 		{
 			// std::cout << "start line" << std::endl;
 			//print_buffer(rh.getBuffer()); // for debug purpose
 			//std::cout << *rh.getRequest() << std::endl;
 			rh.setIdx(parseHeaders(rh));
 		}
-		else if (rh.getRequest()->isRequestFinalized() == false)
+		else if (rh.getRequest()->isRequestFinalized() == false && rh.getRequest()->getValid())
 		{
 			// std::cout << "headers initialized" << std::endl;
 			//std::cout << "body parsing" << std::endl;
@@ -237,7 +237,7 @@ parseRequest(Connection *raw_request, Server &server, TicketsType &tickets, ReqH
 		}
 		//print_buffer(rh.getBuffer()); // for debug purpose
 		rh.clearBuffer();
-		if (rh.getRequest()->isRequestFinalized() == true)
+		if (rh.getRequest()->isRequestFinalized() == true || !rh.getRequest()->getValid())
 		{
 			//UNCOMENT TO SEE REQUEST INFOS
 			//std::cout << *rh.getRequest() << std::endl;
