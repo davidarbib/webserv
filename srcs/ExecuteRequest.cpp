@@ -35,19 +35,19 @@ bool
 ExecuteRequest::isMultipartProcessing(Ticket &ticket) const
 {
 	std::string content_type = ticket.getRequest().get_header_value("Content-Type");
-		return true;
-	return false;
+	size_t xpos = content_type.find(MULTIPART);
+	if (xpos != 0)
+		return false;
+	return true;
 }
 
 void
 ExecuteRequest::processMultipart(Ticket &ticket)
 {
 	std::string content_type = ticket.getRequest().get_header_value("Content-Type");
-	size_t xpos = content_type.find(MULTIPART);
-	if (xpos != 0)
-		throw std::exception();
 	std::string key = content_type.substr(std::string(MULTIPART).size());
 	std::string const &body = ticket.getRequest().getBody();	
+
 	(void)body;
 }
 
