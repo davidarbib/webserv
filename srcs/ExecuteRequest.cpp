@@ -80,7 +80,7 @@ ExecuteRequest::isValidRequest(Request const& request, ConfigServer const& confi
     bool valid = true;
     if (request.getStartLine().method_token.empty() || request.getStartLine().request_URI.empty()
     || request.getStartLine().http_version.empty() || request.get_header_value("Host").empty()
-    || !request.isContentLengthCorrect())
+    || !request.isContentLengthCorrect() || !request.getValid())
     {
         _status_code = BAD_REQUEST;
         valid = false;

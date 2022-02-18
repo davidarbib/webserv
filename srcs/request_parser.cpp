@@ -74,21 +74,23 @@ parseStartLine(RequestHandler &rh)
 int
 getOneHeader(RequestHandler &rh, int position)
 {
-	int index = position;
+	size_t index = static_cast<size_t>(position);
 	std::string key;
 	std::string value;
 
-	while (rh.getBuffer()[index] && rh.getBuffer()[index] != ':')
+	while (index < rh.getBuffer().size() && rh.getBuffer()[index] != ':')
 	{
 		key += rh.getBuffer()[index];
 		index++;
 	}
 	index += 2;
-	while (rh.getBuffer()[index] && !isEndLine(rh.getBuffer(), index))
+	while (index < rh.getBuffer().size() && !isEndLine(rh.getBuffer(), index))
 	{
 		value += rh.getBuffer()[index];
 		index++;
 	}
+	if (key.empty() || value.empty())
+		rh.getRequest()->setValid(false);
 	rh.getRequest()->setHeader(key, value);
 	if (isEndSection(rh.getBuffer(), index))
 	{
@@ -118,9 +120,10 @@ parseHeaders(RequestHandler &rh)
 {
 	int index = 0;
 
-	index = getOneHeader(rh, index);
 	if (rh.getBuffer() == "\r\n")
 		rh.getRequest()->setHeaderInitialized(true);
+	else
+		index = getOneHeader(rh, index);
 	if (rh.getRequest()->isHeadersInitialized() == true)
 		rh.getRequest()->setRequestFinalized(!has_body(rh));
 	return index;
