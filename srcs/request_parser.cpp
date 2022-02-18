@@ -172,7 +172,10 @@ getChunkOfBody(RequestHandler &rh, int index)
 	ss << std::hex << chunk;
 	ss >> chunk_size;
 	index += CRLF;
-	return index;
+	i = 0;
+	chunk.clear();
+	chunk = rh.getBuffer().substr(index, chunk_size);
+	return index = chunk_size;
 }
 
 int
