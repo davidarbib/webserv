@@ -161,17 +161,17 @@ getBodyWithContentLength(RequestHandler &rh, int index)
 int
 getChunkOfBody(RequestHandler &rh, int index)
 {
-	std::string tmp(rh.getRequest()->getBody());
-	std::string body;
-	int sublen = 0;
-	while(rh.getBuffer()[index])
-	{
+	unsigned int i = index;
+	size_t chunk_size = 0;
+	std::string chunk;
+	
+	while (!isEndLine(rh.getBuffer(), index))
 		index++;
-		sublen++;
-	}
-	body.assign(rh.getBuffer(), rh.getIdx(), sublen);
-	tmp += body;
-	rh.getRequest()->setBody(tmp);
+	chunk = rh.getBuffer().substr(i, index - 1);
+	std::stringstream ss;
+	ss << std::hex << chunk;
+	ss >> chunk_size;
+	index += CRLF;
 	return index;
 }
 
