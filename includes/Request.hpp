@@ -3,6 +3,7 @@
 
 #include <iostream>
 #include <cctype>
+#include <cstdlib>
 #include "AHttpMessage.hpp"
 #include "Response.hpp"
 
