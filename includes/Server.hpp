@@ -20,11 +20,12 @@
 # include "typedefs.hpp"
 # include "ConfigServer.hpp"
 
-# define DELAY		1
-# define BUFSIZE	2000
-# define PORT		8003
-# define IP			"127.0.0.1"
-# define HOSTNAME	"w3bs0rv.com"
+# define DELAY			1
+# define BUFSIZE		2000
+# define PORT			8003
+# define QUEUE_LIMIT 	128
+# define IP				"127.0.0.1"
+# define HOSTNAME		"w3bs0rv.com"
 
 class Server
 {

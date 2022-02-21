@@ -63,7 +63,7 @@ Server::listenSocket()
 
 	if (bind(_listen_fd, reinterpret_cast<sockaddr*>(&sin), sizeof(sin)) == -1)
 		throw ListenException();
-	listen(_listen_fd, 1);
+	listen(_listen_fd, QUEUE_LIMIT);
 	addWatchedFd(_listen_fd);
 	return _listen_fd;
 }
@@ -186,16 +186,16 @@ bool
 Server::isThereSomethingToRead(fd_t fd)
 {
 	if (FD_ISSET(fd, &Server::read_fds))
-		return 1;
-	return 0;
+		return true;
+	return false;
 }
 
 bool
 Server::isPossibleToWrite(fd_t fd)
 {
 	if (FD_ISSET(fd, &Server::write_fds))
-		return 1;
-	return 0;
+		return true;
+	return false;
 }
 
 void
