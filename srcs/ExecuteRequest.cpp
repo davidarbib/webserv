@@ -146,51 +146,39 @@ ExecuteRequest::getRedirected(ServerLocations const& location, Response &respons
 }
 
 std::string
-ExecuteRequest::matchIndex(ServerLocations const &location, ConfigServer const &config, std::ifstream &ressource)
-{
-    std::string uri;    
-    for (size_t i = 0; i < location.getIndex().size(); i++)
-    {
-        uri = location.getRoot() + "/" + location.getIndex()[i];
-        ressource.open(uri.c_str(), std::ifstream::in);
-        if (ressource.is_open())
-        {
-            _status_code = OK;
-            ressource.close();
-            return uri;
-        }
-    }
-    if (ressource.is_open() == false)
-        _status_code = NOT_FOUND;
-    ressource.close();
-    return buildBodyPath(config, location.getRoot());
-}
-
-std::string
 ExecuteRequest::getMethod(std::string const& URI, ConfigServer const& config, ServerLocations const& location)
 {
-    if (URI[URI.size() - 1] == '/' && location.getAutoIndex() == 1)
-    {
-        _status_code = OK;
-        return autoindexPath();
-    }
-    std::ifstream ressource;
-    std::string uri = location.getRoot() + URI;
-    if (URI == location.getpath())
-        return matchIndex(location, config, ressource);
-    else
-        ressource.open(uri.c_str(), std::ifstream::in);
-    if (ressource.is_open() && uri[uri.size() - 1] != '/')
-    {
-        _status_code = OK;
-        ressource.close();
-        return uri;
-    }
-    else
-        _status_code = NOT_FOUND;
-    ressource.close();
-    return buildBodyPath(config, location.getRoot());
+	(void)URI;
+	(void)config;
+	(void)location;
+	return "";
 }
+
+//std::string
+//ExecuteRequest::getMethod(std::string const& URI, ConfigServer const& config, ServerLocations const& location)
+//{
+//    if (URI[URI.size() - 1] == '/' && location.getAutoIndex() == 1)
+//    {
+//        _status_code = OK;
+//        return autoindexPath();
+//    }
+//    std::ifstream ressource;
+//    std::string uri = location.getRoot() + URI;
+//    if (URI == location.getpath())
+//        return matchIndex(location, config, ressource);
+//    else
+//        ressource.open(uri.c_str(), std::ifstream::in);
+//    if (ressource.is_open() && uri[uri.size() - 1] != '/')
+//    {
+//        _status_code = OK;
+//        ressource.close();
+//        return uri;
+//    }
+//    else
+//        _status_code = NOT_FOUND;
+//    ressource.close();
+//    return buildBodyPath(config, location.getRoot());
+//}
 
 std::string
 ExecuteRequest::deleteMethod(std::string const& URI, ConfigServer const& config, ServerLocations const& location)
@@ -244,13 +232,23 @@ ExecuteRequest::postMethod(std::string const &URI, ConfigServer const &config,
 
 std::string
 ExecuteRequest::execCgi(Request const &request,
+							std::string const &original_uri,
+							std::string const &resolved_uri,
 							std::string const &query,
 							ConfigServer const &config,
-							ServerLocations const& location)
+							ServerLocations const& location,
+							int index_page_idx)
 {	
 	std::cout << "------------------New Cgi handling------------------" << std::endl;
 	(void)config; // TODO
-	std::string ressource = location.getRoot() + request.getStartLine().request_URI;
+	std::cout << "resolved_uri" << resolved_uri << std::endl;
+	std::cout << "index" << index_page_idx << std::endl;
+	std::string ressource;
+	if (index_page_idx == -1)
+		ressource = original_uri;
+	else
+		ressource = resolved_uri;
+	std::cout << "ressource : " << ressource << std::endl;
 	CgiHandler handler(request, location.getCgiPath(), ressource, query);
 	handler.sendCgi();
 	handler.getCgiResponse();

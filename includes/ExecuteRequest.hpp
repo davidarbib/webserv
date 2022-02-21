@@ -27,9 +27,6 @@ class ExecuteRequest
         std::string
         autoindexPath(void) const;
 
-        std::string
-        matchIndex(ServerLocations const &location, ConfigServer const &config, std::ifstream &ressource);
-
 		bool
 		isMultipartProcessing(Ticket &ticket) const;
 		
@@ -78,8 +75,10 @@ class ExecuteRequest
 					ServerLocations const& location);
 
 		std::string
-		execCgi(Request const &request, std::string const &query,
-				ConfigServer const &config, ServerLocations const& location);
+		execCgi(Request const &request, std::string const &original_uri,
+				std::string const &resolved_uri, std::string const &query,
+				ConfigServer const &config, ServerLocations const& location,
+				int index_page_idx);
 };
 
 #endif
