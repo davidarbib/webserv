@@ -3,6 +3,7 @@
 
 # include <string>
 # include <iostream>
+# include <cstdio>
 #include "Server.hpp"
 
 class SmartFile

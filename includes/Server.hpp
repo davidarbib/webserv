@@ -81,6 +81,15 @@ class Server
 		static void
 		initFdset(void);
 
+		static void
+		addWatchedFd(fd_t);
+
+		static bool
+		isThereSomethingToRead(fd_t);
+
+		static bool
+		isPossibleToWrite(fd_t);
+
 		std::vector<ConfigServer> const&
 		getCandidateConfs(void) const;
 
@@ -102,15 +111,6 @@ class Server
 
 		void
 		recvSend(void);
-
-		bool
-		isThereSomethingToRead(fd_t);
-
-		bool
-		isPossibleToWrite(fd_t);
-
-		void
-		addWatchedFd(fd_t);
 
 		void
 		delWatchedFd(fd_t);
