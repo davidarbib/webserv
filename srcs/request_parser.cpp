@@ -171,11 +171,31 @@ getChunkOfBody(RequestHandler &rh, int index)
 	std::stringstream ss;
 	ss << std::hex << chunk;
 	ss >> chunk_size;
+	if (chunk_size == 0)
+	{
+		return index;
+		rh.getRequest()->setRequestFinalized(true);
+	}
+	std::cout << "The size of this chunk is : " << chunk_size << std::endl;
 	index += CRLF;
 	i = 0;
 	chunk.clear();
 	chunk = rh.getBuffer().substr(index, chunk_size);
 	return index = chunk_size;
+}
+
+bool
+isCompleteChunk(RequestHandler &rh)
+{
+	int match_end_line = 0;
+	for (size_t index = 0; index < rh.getBuffer().size() && match_end_line < 2; index++)
+	{
+		if (isEndLine(rh.getBuffer(), index))
+			match_end_line++;
+	}
+	if (match_end_line >= 2)
+		return true;
+	return false;
 }
 
 int
@@ -187,12 +207,8 @@ parseBody(RequestHandler &rh)
 		return getBodyWithContentLength(rh, index);
 	else if (rh.getRequest()->get_header_value("Transfer-Encoding") == "chunked")
 	{
-		if (rh.getBuffer()[index] == 0)
-		{
-			rh.getRequest()->setRequestFinalized(true);
-			return index;
-		}
-		index = getChunkOfBody(rh, index);
+		if (isCompleteChunk(rh))
+			index = getChunkOfBody(rh, index);
 	}
 	else
 	{
@@ -241,7 +257,6 @@ parseRequest(Connection *raw_request, Server &server, TicketsType &tickets, ReqH
 			//std::cout << "body parsing" << std::endl;
 			rh.setIdx(parseBody(rh));
 		}
-		//print_buffer(rh.getBuffer()); // for debug purpose
 		rh.clearBuffer();
 		if (rh.getRequest()->isRequestFinalized() == true || !rh.getRequest()->getValid())
 		{
