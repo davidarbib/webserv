@@ -121,7 +121,10 @@ parseHeaders(RequestHandler &rh)
 	int index = 0;
 
 	if (rh.getBuffer() == "\r\n")
+	{
 		rh.getRequest()->setHeaderInitialized(true);
+		return index + CRLF;
+	}
 	else
 		index = getOneHeader(rh, index);
 	if (rh.getRequest()->isHeadersInitialized() == true)
@@ -162,26 +165,24 @@ int
 getChunkOfBody(RequestHandler &rh, int index)
 {
 	unsigned int i = index;
-	size_t chunk_size = 0;
+	size_t chunk_size = 1;
 	std::string chunk;
 	
 	while (!isEndLine(rh.getBuffer(), index))
 		index++;
-	chunk = rh.getBuffer().substr(i, index - 1);
+	chunk = rh.getBuffer().substr(i, index);
 	std::stringstream ss;
 	ss << std::hex << chunk;
 	ss >> chunk_size;
 	if (chunk_size == 0)
 	{
-		return index;
 		rh.getRequest()->setRequestFinalized(true);
+		return index;
 	}
-	std::cout << "The size of this chunk is : " << chunk_size << std::endl;
 	index += CRLF;
-	i = 0;
-	chunk.clear();
-	chunk = rh.getBuffer().substr(index, chunk_size);
-	return index = chunk_size;
+	rh.getRequest()->setBody(rh.getBuffer().substr(index, chunk_size));
+	index += CRLF;
+	return index += chunk_size;
 }
 
 bool
