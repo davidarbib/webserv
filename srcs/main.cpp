@@ -188,17 +188,13 @@ processRequest(TicketsType &tickets, ReqHandlersType &request_handlers)
 		std::string uri = current.getRequest().getStartLine().request_URI;
 		std::string resolved_uri;
 		ServerLocations const& location = getLocation(config, uri);
-		std::cout << "Path : " << location.getpath() << std::endl;
 		int index_page_idx = -1;
 		if (uri == location.getpath())
 			index_page_idx = matchIndex(location, resolved_uri);
 		if (executor.isValidRequest(current.getRequest(), config, location) == true)
 		{
-			std::cout << "index page = " << index_page_idx << std::endl;
 			if (isCgiRequested(uri, resolved_uri, location, index_page_idx))
 			{
-			std::cout << "resolved_uri : " << resolved_uri << std::endl;
-				std::cout << "CGI" << std::endl;
 				executor.setStatusCode(parseCgiResponse(response,
 														executor.execCgi(current.getRequest(), uri, resolved_uri,
 																			query, config, location, index_page_idx)));
@@ -212,7 +208,7 @@ processRequest(TicketsType &tickets, ReqHandlersType &request_handlers)
 			}
 			else if (current.getRequest().getStartLine().method_token == "GET")
 			{
-				body_path = executor.getMethod(current.getRequest().getStartLine().request_URI, config, location);
+				body_path = executor.getMethod(current.getRequest().getStartLine().request_URI, config, location, resolved_uri);
 				response.searchForBody(executor.getStatusCode(), body_path, response.getFileExtension(body_path));
 			}
 			else if (current.getRequest().getStartLine().method_token == "POST")

@@ -65,7 +65,7 @@ class ExecuteRequest
         // get / delete / post exec
 
         std::string
-        getMethod(std::string const &URI, ConfigServer const &config, ServerLocations const& location);
+        getMethod(std::string const &uri, ConfigServer const &config, ServerLocations const& location, std::string const &resolved_uri);
 
         std::string
         deleteMethod(std::string const &URI, ConfigServer const &config, ServerLocations const& location);

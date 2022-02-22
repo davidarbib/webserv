@@ -146,39 +146,30 @@ ExecuteRequest::getRedirected(ServerLocations const& location, Response &respons
 }
 
 std::string
-ExecuteRequest::getMethod(std::string const& URI, ConfigServer const& config, ServerLocations const& location)
+ExecuteRequest::getMethod(std::string const& uri, ConfigServer const& config, ServerLocations const& location, std::string const &resolved_uri)
 {
-	(void)URI;
-	(void)config;
-	(void)location;
-	return "";
+    if (uri[uri.size() - 1] == '/' && location.getAutoIndex() == 1)
+    {
+       _status_code = OK;
+       return autoindexPath();
+    }
+    std::ifstream ressource;
+    std::string complete_uri = location.getRoot() + uri;
+    if (uri == location.getpath())
+        complete_uri = resolved_uri;
+    else
+        ressource.open(uri, std::ifstream::in);
+    if (ressource.is_open() && uri[uri.size() - 1] != '/')
+    {
+        _status_code = OK;
+        ressource.close();
+        return uri;
+    }
+    else
+        _status_code = NOT_FOUND;
+    ressource.close();
+	return buildBodyPath(config, location.getRoot());
 }
-
-//std::string
-//ExecuteRequest::getMethod(std::string const& URI, ConfigServer const& config, ServerLocations const& location)
-//{
-//    if (URI[URI.size() - 1] == '/' && location.getAutoIndex() == 1)
-//    {
-//        _status_code = OK;
-//        return autoindexPath();
-//    }
-//    std::ifstream ressource;
-//    std::string uri = location.getRoot() + URI;
-//    if (URI == location.getpath())
-//        return matchIndex(location, config, ressource);
-//    else
-//        ressource.open(uri.c_str(), std::ifstream::in);
-//    if (ressource.is_open() && uri[uri.size() - 1] != '/')
-//    {
-//        _status_code = OK;
-//        ressource.close();
-//        return uri;
-//    }
-//    else
-//        _status_code = NOT_FOUND;
-//    ressource.close();
-//    return buildBodyPath(config, location.getRoot());
-//}
 
 std::string
 ExecuteRequest::deleteMethod(std::string const& URI, ConfigServer const& config, ServerLocations const& location)
