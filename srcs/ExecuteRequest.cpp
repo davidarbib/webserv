@@ -172,16 +172,23 @@ ExecuteRequest::getMethod(std::string const& uri, ConfigServer const& config, Se
 }
 
 std::string
-ExecuteRequest::deleteMethod(std::string const& URI, ConfigServer const& config, ServerLocations const& location)
+ExecuteRequest::deleteMethod(std::string const& uri, ConfigServer const& config, ServerLocations const& location, std::string const &resolved_uri)
 {
-    std::string uri = location.getRoot() + URI;
+    if (uri[uri.size() - 1] == '/' && location.getAutoIndex() == 1)
+    {
+       _status_code = NOT_ALLOWED;
+       return buildBodyPath(config, location.getRoot());
+    }
+    std::string complete_uri = location.getRoot() + uri;
+    if (uri == location.getpath())
+        complete_uri = resolved_uri;
     std::string deleted_path("./trash/");
-    std::ifstream in(uri.c_str(), std::ios::in | std::ios::binary);
+    std::ifstream in(complete_uri.c_str(), std::ios::in | std::ios::binary);
     if (in)
     {
-        std::ofstream out(deleted_path.append(uri).c_str(), std::ios::out | std::ios::binary);
+        std::ofstream out(deleted_path.append(complete_uri).c_str(), std::ios::out | std::ios::binary);
         out << in.rdbuf();
-        std::remove(uri.c_str());
+        std::remove(complete_uri.c_str());
         _status_code = OK;
     }
     else

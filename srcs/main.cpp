@@ -203,7 +203,7 @@ processRequest(TicketsType &tickets, ReqHandlersType &request_handlers)
 				body_path = executor.getRedirected(location, response);
 			else if (current.getRequest().getStartLine().method_token == "DELETE")
 			{
-				body_path = executor.deleteMethod(current.getRequest().getStartLine().request_URI, config, location);
+				body_path = executor.deleteMethod(current.getRequest().getStartLine().request_URI, config, location, resolved_uri);
 				response.searchForBody(executor.getStatusCode(), body_path, response.getFileExtension(body_path));
 			}
 			else if (current.getRequest().getStartLine().method_token == "GET")
