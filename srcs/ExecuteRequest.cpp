@@ -159,7 +159,7 @@ ExecuteRequest::getMethod(std::string const& uri, ConfigServer const& config, Se
     if (uri == location.getpath())
         complete_uri = resolved_uri;
     else
-        ressource.open(uri, std::ifstream::in);
+        ressource.open(uri.c_str(), std::ifstream::in);
     if (ressource.is_open() && uri[uri.size() - 1] != '/')
     {
         _status_code = OK;
