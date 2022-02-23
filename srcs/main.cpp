@@ -180,7 +180,6 @@ processRequest(TicketsType &tickets, ReqHandlersType &request_handlers)
 	std::string body_path;
 	while (!tickets.empty() && tickets.front().getRequest().isRequestFinalized() == true)
 	{
-		std::cout << "new ticket" << std::endl;
 		Ticket current(tickets.front());
 		ConfigServer const& config = getConfig(current);
 		std::string query;
@@ -188,6 +187,7 @@ processRequest(TicketsType &tickets, ReqHandlersType &request_handlers)
 		std::string uri = current.getRequest().getStartLine().request_URI;
 		std::string resolved_uri;
 		ServerLocations const& location = getLocation(config, uri);
+		std::cout << "location choosen : " << location.getpath() << std::endl;
 		int index_page_idx = -1;
 		if (uri == location.getpath())
 			index_page_idx = matchIndex(location, resolved_uri);
@@ -226,6 +226,7 @@ processRequest(TicketsType &tickets, ReqHandlersType &request_handlers)
 			body_path = executor.buildBodyPath(config, location.getRoot());
 		response.buildPreResponse(executor.getStatusCode());
 		request_handlers.erase(tickets.front().getRhIt());
+
 		//response.setHeader("Content-Length", "0"); //TODO multipart tests
 		//std::cout << response.serialize_response() << std::endl;
 		

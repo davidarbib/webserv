@@ -132,7 +132,12 @@ std::string
 Response::getFileExtension(std::string const &uri) const
 {
 	if (!uri.empty())
-		return uri.substr(uri.find_last_of("."), uri.size());
+	{
+		size_t  extension_begin = uri.find_last_of(".");
+		if (extension_begin == std::string::npos)
+			return std::string();
+		return uri.substr(extension_begin, uri.size());
+	}
 	return std::string();
 }
 

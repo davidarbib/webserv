@@ -158,18 +158,17 @@ ExecuteRequest::getMethod(std::string const& uri, ConfigServer const& config, Se
     std::string complete_uri = location.getRoot() + uri;
     if (uri == location.getpath())
         complete_uri = resolved_uri;
-    else
-        ressource.open(uri.c_str(), std::ifstream::in);
-    if (ressource.is_open() && uri[uri.size() - 1] != '/')
+    ressource.open(complete_uri.c_str(), std::ifstream::in);
+    if (ressource.is_open() && complete_uri[complete_uri.size() - 1] != '/')
     {
         _status_code = OK;
         ressource.close();
-        return uri;
+        return complete_uri;
     }
     else
         _status_code = NOT_FOUND;
     ressource.close();
-	return buildBodyPath(config, location.getRoot());
+    return buildBodyPath(config, location.getRoot());
 }
 
 std::string
@@ -238,20 +237,15 @@ ExecuteRequest::execCgi(Request const &request,
 							ServerLocations const& location,
 							int index_page_idx)
 {	
-	std::cout << "------------------New Cgi handling------------------" << std::endl;
 	(void)config; // TODO
-	std::cout << "resolved_uri" << resolved_uri << std::endl;
-	std::cout << "index" << index_page_idx << std::endl;
 	std::string ressource;
 	if (index_page_idx == -1)
 		ressource = original_uri;
 	else
 		ressource = resolved_uri;
-	std::cout << "ressource : " << ressource << std::endl;
 	CgiHandler handler(request, location.getCgiPath(), ressource, query);
 	handler.sendCgi();
 	handler.getCgiResponse();
-	std::cout << "New Cgi response obtained" << std::endl;
 
 	char line[FGET_SIZE + 1];
     bzero(line, FGET_SIZE + 1);
@@ -260,7 +254,6 @@ ExecuteRequest::execCgi(Request const &request,
     {
         cgi_response += std::string(line);
     }
-    std::cout << "OUR CGI RESPONSE :" << cgi_response << std::endl;
 	return cgi_response;
 }
 
