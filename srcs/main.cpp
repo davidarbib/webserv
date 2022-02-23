@@ -155,11 +155,12 @@ parseCgiResponse(Response &response, std::string cgi_response)
 	return OK;
 }
 
-#define "100CONTINUE"
+#define CONTINUE_VALUE "100-continue"
+
 bool
 is100Continue(Request const &request)
 {
-	if (request.get_header_value("Expect") == 100CONTINUE)
+	if (request.get_header_value("Expect") == CONTINUE_VALUE)
 		return true;
 	return false;
 }
@@ -181,8 +182,8 @@ processRequest(TicketsType &tickets, ReqHandlersType &request_handlers)
 			std::string query;
 			cutQuery(current.getRequest(), query);
 			if (is100Continue(current.getRequest()))
-				executor.continueGeneration(current, 
-			if (isCgiRequested(current.getRequest().getStartLine().request_URI, location))
+				body_path = executor.continueGeneration(current);
+			else if (isCgiRequested(current.getRequest().getStartLine().request_URI, location))
 				executor.setStatusCode(parseCgiResponse(response, executor.execCgi(current.getRequest(), query, config, location)));
 			else if (location.getRedir().from == current.getRequest().getStartLine().request_URI)
 				body_path = executor.getRedirected(location, response);

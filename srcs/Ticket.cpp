@@ -23,7 +23,7 @@ Ticket::getConnection(void) const
 }
 
 Request &
-Ticket::getRequest(void)
+Ticket::getRequest(void) const
 {
 	return *_request;
 }

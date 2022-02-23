@@ -23,7 +23,7 @@ class Ticket
 		getConnection(void) const;
 		
 		Request &
-		getRequest(void);
+		getRequest(void) const;
 		
 		Server const &
 		getServer(void) const;

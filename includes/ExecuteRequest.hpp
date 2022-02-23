@@ -19,7 +19,8 @@ class ExecuteRequest
 {
 
     private:
-        int             _status_code;
+        int						_status_code;
+		std::map<fd_t, Request> _continue_requests;
 
 		bool
 		isAllowedMethod(std::string const &method, std::vector<std::string> method_allowed) const;

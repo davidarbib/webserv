@@ -233,7 +233,6 @@ ExecuteRequest::postMethod(std::string const &URI, ConfigServer const &config,
 	//check expect 100-continue
 	//if (isMultipartProcessing(ticket))
 	//	processMultipart(ticket);
-	
 	//ticket.getRequest();
 	//if multipart :
 	//	process multipart
@@ -273,6 +272,8 @@ std::string
 ExecuteRequest::continueGeneration(Ticket const &ticket)
 {
 	ticket.getConnection().expectFullBodyNextRequest();
+	_continue_requests[ticket.getConnection().getSocketFd()]
+		= ticket.getRequest();
 	setStatusCode(CONTINUE);
 	return std::string(EMPTY_STR);
 }

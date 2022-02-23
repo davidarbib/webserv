@@ -18,7 +18,7 @@ class Request : public AHttpMessage
 	public:
 
 		Request(void);
-		Request(Request &cpy);
+		Request(Request const &cpy);
 		Request &
 		operator=(Request const &src);
 		virtual ~Request(void);

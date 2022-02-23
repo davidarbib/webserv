@@ -9,7 +9,7 @@ Request::Request(void) : _start_line_initialized(false),
 	this->_body = std::string();
 }
 
-Request::Request(Request & cpy)
+Request::Request(Request const & cpy)
 {
 	*this = cpy;
 }
