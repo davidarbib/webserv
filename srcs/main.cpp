@@ -155,6 +155,13 @@ parseCgiResponse(Response &response, std::string cgi_response)
 	return OK;
 }
 
+bool
+is100Continue(Request const &request)
+{
+	if (request.get_header_value("Expect")
+		
+}
+
 Response
 processRequest(TicketsType &tickets, ReqHandlersType &request_handlers)
 {
