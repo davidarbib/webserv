@@ -189,6 +189,7 @@ processRequest(TicketsType &tickets, ReqHandlersType &request_handlers)
 			{
 				body_path = executor.postMethod(current.getRequest().getStartLine().request_URI, config, location);
 				response.searchForBody(executor.getStatusCode(), body_path, response.getFileExtension(body_path));
+				std::cout << "probe" << std::endl;
 			}
 			else
 			{

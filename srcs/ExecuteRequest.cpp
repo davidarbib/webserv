@@ -46,9 +46,9 @@ ExecuteRequest::processMultipart(Ticket &ticket)
 {
 	std::string content_type = ticket.getRequest().get_header_value("Content-Type");
 	std::string key = content_type.substr(std::string(MULTIPART).size());
-	std::string const &body = ticket.getRequest().getBody();	
+	std::string const &body = ticket.getRequest().getBody();
 
-	(void)body;
+	std::cout << "BODY" << std::endl << body;
 }
 
 int
@@ -230,6 +230,7 @@ ExecuteRequest::postMethod(std::string const &URI, ConfigServer const &config,
 	std::cout << "POST METHOD" << std::endl;
     std::string uri = "./" + URI;
 	//check multipart marks in headers
+	//check expect 100-continue
 	//if (isMultipartProcessing(ticket))
 	//	processMultipart(ticket);
 	

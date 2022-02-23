@@ -14,13 +14,17 @@ class SmartFile
 		SmartFile(SmartFile const &src);
 		virtual	~SmartFile(void);
 		SmartFile	&operator=(SmartFile const &rhs);
+
+		char *
+		read(char*, int);
+
+		int
+		write(const char*);
+
 		
 	private:
-
 		FILE		*_file;
 		std::string _name;
 		std::string _mode;
-		
-		
 };
 #endif

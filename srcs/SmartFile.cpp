@@ -35,3 +35,20 @@ SmartFile &SmartFile::operator=(SmartFile const &rhs)
     return *this;
 }
 
+char *
+SmartFile::read(char *buf, int size)
+{
+	if (Server::isThereSomethingToRead(fileno(_file)))
+		return fgets(buf, size, _file);
+	else
+		return NULL;
+}
+
+int
+SmartFile::write(const char *buf)
+{
+	if (Server::isPossibleToWrite(fileno(_file)))
+		return fputs(buf, _file);
+	else
+		return 0;
+}
