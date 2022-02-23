@@ -1,5 +1,5 @@
 #ifndef EXECUTE_REQUEST_HPP
-#define EXECUTE_REQUEST_HPP
+# define EXECUTE_REQUEST_HPP
 
 #include "Response.hpp"
 #include "Request.hpp"
@@ -80,6 +80,9 @@ class ExecuteRequest
 		std::string
 		execCgi(Request const &request, std::string const &query,
 				ConfigServer const &config, ServerLocations const& location);
-};
 
+		std::string
+		continueGeneration(Ticket const &ticket);
+};
 #endif
+

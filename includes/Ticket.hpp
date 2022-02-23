@@ -20,7 +20,7 @@ class Ticket
 		Ticket(Ticket const &src);
 		
 		Connection &
-		getConnection(void);
+		getConnection(void) const;
 		
 		Request &
 		getRequest(void);

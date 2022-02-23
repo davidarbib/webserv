@@ -17,7 +17,7 @@ Ticket::~Ticket(void)
 }
 
 Connection &
-Ticket::getConnection(void)
+Ticket::getConnection(void) const
 {
 	return _connection;
 }

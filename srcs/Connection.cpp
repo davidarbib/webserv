@@ -5,6 +5,7 @@ Connection::Connection(fd_t fd, unsigned long client_ip, unsigned short client_p
 {
 	makeIpStr();
 	makePortStr();
+	_expect_body = false;
 }
 
 Connection::~Connection(void)
@@ -59,6 +60,18 @@ Connection::eatOutBufferData(int size)
 {
 	_out_buffer.setIdx(size);
 	_out_buffer.clearBuffer();
+}
+
+bool
+Connection::isFullBodyExpected(void)
+{
+	return _expect_body;
+}
+
+void
+Connection::expectFullBodyNextRequest(void)
+{
+	_expect_body = true;
 }
 
 void

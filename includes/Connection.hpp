@@ -44,10 +44,16 @@ class Connection
 		getOutBufferData(void);
 		
 		void
+		expectFullBodyNextRequest(void);
+		
+		void
 		fillBuffer(char *buf);
 
 		void
 		eatOutBufferData(int);
+
+		bool
+		isFullBodyExpected(void);
 
 	private:
 		Connection(Connection const &src);
@@ -64,6 +70,7 @@ class Connection
 		std::string		_client_port_str;
 		Buffer			_in_buffer;
 		Buffer			_out_buffer;
+		bool			_expect_body;
 
 		Connection(void);
 

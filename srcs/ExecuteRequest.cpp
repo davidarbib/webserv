@@ -242,6 +242,7 @@ ExecuteRequest::postMethod(std::string const &URI, ConfigServer const &config,
 }
 
 #define FGET_SIZE 42
+#define EMPTY_STR ""
 
 std::string
 ExecuteRequest::execCgi(Request const &request,
@@ -266,6 +267,14 @@ ExecuteRequest::execCgi(Request const &request,
     }
     std::cout << "OUR CGI RESPONSE :" << cgi_response << std::endl;
 	return cgi_response;
+}
+
+std::string
+ExecuteRequest::continueGeneration(Ticket const &ticket)
+{
+	ticket.getConnection().expectFullBodyNextRequest();
+	setStatusCode(CONTINUE);
+	return std::string(EMPTY_STR);
 }
 
 std::string ExecuteRequest::method_not_implemented[HTTP_METHOD_NOT_IMPLEMENTED_NB];

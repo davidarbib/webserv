@@ -12,6 +12,7 @@
 #define CRLFCRLF_str "\r\n\r\n"
 #define MAX_URI_SIZE 32000
 #define MAX_HEADER_SIZE 32000
+#define CONTINUE 100
 #define OK 200
 #define ACCEPTED 202
 #define NO_CONTENT 204
