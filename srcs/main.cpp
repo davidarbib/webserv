@@ -219,16 +219,14 @@ processRequest(TicketsType &tickets, ReqHandlersType &request_handlers)
 			else
 			{
 				executor.setStatusCode(NOT_ALLOWED);
-				body_path = executor.buildBodyPath(config, location.getRoot());
+				body_path = executor.buildBodyPath(config);
 			}
 		}
 		else
-			body_path = executor.buildBodyPath(config, location.getRoot());
+			body_path = executor.buildBodyPath(config);
 		response.buildPreResponse(executor.getStatusCode());
 		request_handlers.erase(tickets.front().getRhIt());
-
-		//response.setHeader("Content-Length", "0"); //TODO multipart tests
-		//std::cout << response.serialize_response() << std::endl;
+		//response.setHeader("Content-Length", "0"); //TODO multipart test
 		
 		tickets.front().getConnection() << response.serialize_response();
 		tickets.pop();

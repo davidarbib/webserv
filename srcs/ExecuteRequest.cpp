@@ -114,7 +114,7 @@ ExecuteRequest::isValidRequest(Request const& request, ConfigServer const& confi
 }
 
 std::string
-ExecuteRequest::buildBodyPath(ConfigServer const &config, std::string const& root)
+ExecuteRequest::buildBodyPath(ConfigServer const &config)
 {
     int error_code = 0;
     std::stringstream ss;
@@ -124,9 +124,11 @@ ExecuteRequest::buildBodyPath(ConfigServer const &config, std::string const& roo
         ss >> error_code;
         ss.clear();
         if (error_code == _status_code){
+		
             std::stringstream code_string;
             code_string << _status_code;
-            return root + config.getErrorPages().path + code_string.str() + ".html";
+	    std::cout << config.getErrorPages().path + code_string.str() + ".html" << std::endl;
+            return config.getErrorPages().path + code_string.str() + ".html";
         }
     }
     return std::string();
@@ -168,7 +170,7 @@ ExecuteRequest::getMethod(std::string const& uri, ConfigServer const& config, Se
     else
         _status_code = NOT_FOUND;
     ressource.close();
-    return buildBodyPath(config, location.getRoot());
+    return buildBodyPath(config);
 }
 
 std::string
@@ -177,7 +179,7 @@ ExecuteRequest::deleteMethod(std::string const& uri, ConfigServer const& config,
     if (uri[uri.size() - 1] == '/' && location.getAutoIndex() == 1)
     {
        _status_code = NOT_ALLOWED;
-       return buildBodyPath(config, location.getRoot());
+       return buildBodyPath(config);
     }
     std::string complete_uri = location.getRoot() + uri;
     if (uri == location.getpath())
@@ -193,7 +195,7 @@ ExecuteRequest::deleteMethod(std::string const& uri, ConfigServer const& config,
     }
     else
         _status_code = NOT_FOUND;
-    return buildBodyPath(config, location.getRoot());
+    return buildBodyPath(config);
 }
 
 void

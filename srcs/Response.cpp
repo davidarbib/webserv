@@ -181,11 +181,13 @@ Response::searchForBody(int code, std::string const &body_path, std::string cons
 {
 	if (buildBody(body_path) == 0)
 	{
+		std::cout << "we found nothing in term of error pages ..." << std::endl;
 		if (code == OK)
 		{
 			this->_start_line.reason_phrase = "No Content";
 			this->_start_line.status_code = NO_CONTENT;
 		}
+		setHeader("Content-Length", "0");
 	}
 	else
 	{

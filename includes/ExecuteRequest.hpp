@@ -58,7 +58,7 @@ class ExecuteRequest
         isImplemented(std::string const &method) const;
 
         std::string
-        buildBodyPath(ConfigServer const &config, std::string const& root);
+        buildBodyPath(ConfigServer const &config);
 
         std::string
         getRedirected(ServerLocations const& location, Response &response);
