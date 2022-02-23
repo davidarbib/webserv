@@ -127,7 +127,6 @@ ExecuteRequest::buildBodyPath(ConfigServer const &config)
 		
             std::stringstream code_string;
             code_string << _status_code;
-	    std::cout << config.getErrorPages().path + code_string.str() + ".html" << std::endl;
             return config.getErrorPages().path + code_string.str() + ".html";
         }
     }
@@ -143,8 +142,10 @@ ExecuteRequest::autoindexPath(void) const
 std::string
 ExecuteRequest::getRedirected(ServerLocations const& location, Response &response)
 {
+    std::cout << "GOGOGO POWER RANGERS" << std::endl;
     _status_code = MOVED_PERMANTLY;
     response.setHeader("Location", location.getRedir().to);
+    std::cout << "REDIRECT TO: " << location.getRedir().to << std::endl;
     return std::string();
 }
 

@@ -65,6 +65,8 @@ Response::buildPreResponse(int code)
 {
 	this->_start_line.status_code = code;
 	this->_start_line.reason_phrase = Response::errors_code.find(code)->second;
+	if (code == 301)
+		return;
 	this->_headers["Server"] = SERVER_VERSION;
 	this->_headers["Date"] = getDate();
 	if (code != BAD_REQUEST)
@@ -181,7 +183,6 @@ Response::searchForBody(int code, std::string const &body_path, std::string cons
 {
 	if (buildBody(body_path) == 0)
 	{
-		std::cout << "we found nothing in term of error pages ..." << std::endl;
 		if (code == OK)
 		{
 			this->_start_line.reason_phrase = "No Content";
