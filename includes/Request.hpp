@@ -3,6 +3,7 @@
 
 #include <iostream>
 #include <cctype>
+#include <cstdlib>
 #include "AHttpMessage.hpp"
 #include "Response.hpp"
 
@@ -14,6 +15,7 @@ class Request : public AHttpMessage
 		bool			_start_line_initialized;
 		bool			_headers_initialized;
 		bool			_request_finalized;
+		bool			_valid;
 
 	public:
 
@@ -22,6 +24,12 @@ class Request : public AHttpMessage
 		Request &
 		operator=(Request const &src);
 		virtual ~Request(void);
+
+		bool
+		getValid(void) const;
+
+		void
+		setValid(bool value);
 
 		void
 		setMethodToken(std::string const &method_token);
@@ -58,6 +66,9 @@ class Request : public AHttpMessage
 
 		bool
 		isRequestFinalized(void) const;
+
+		bool
+        isContentLengthCorrect(void) const;
 
 		bool
 		has_body(void) const;

@@ -74,21 +74,23 @@ parseStartLine(RequestHandler &rh)
 int
 getOneHeader(RequestHandler &rh, int position)
 {
-	int index = position;
+	size_t index = static_cast<size_t>(position);
 	std::string key;
 	std::string value;
 
-	while (rh.getBuffer()[index] && rh.getBuffer()[index] != ':')
+	while (index < rh.getBuffer().size() && rh.getBuffer()[index] != ':')
 	{
 		key += rh.getBuffer()[index];
 		index++;
 	}
 	index += 2;
-	while (rh.getBuffer()[index] && !isEndLine(rh.getBuffer(), index))
+	while (index < rh.getBuffer().size() && !isEndLine(rh.getBuffer(), index))
 	{
 		value += rh.getBuffer()[index];
 		index++;
 	}
+	if (key.empty() || value.empty())
+		rh.getRequest()->setValid(false);
 	rh.getRequest()->setHeader(key, value);
 	if (isEndSection(rh.getBuffer(), index))
 	{
@@ -108,7 +110,9 @@ has_body(RequestHandler &rh)
 	ss >> content_length;
 	if (content_length == 0 && rh.getRequest()->get_header_value("Transfer-Encoding") != "chunked")
 		return false;
-	return true;
+	else if (rh.getRequest()->isContentLengthCorrect())
+		return true;
+	return false;
 }
 
 int
@@ -116,9 +120,13 @@ parseHeaders(RequestHandler &rh)
 {
 	int index = 0;
 
-	index = getOneHeader(rh, index);
 	if (rh.getBuffer() == "\r\n")
+	{
 		rh.getRequest()->setHeaderInitialized(true);
+		return index + CRLF;
+	}
+	else
+		index = getOneHeader(rh, index);
 	if (rh.getRequest()->isHeadersInitialized() == true)
 		rh.getRequest()->setRequestFinalized(!has_body(rh));
 	return index;
@@ -156,18 +164,39 @@ getBodyWithContentLength(RequestHandler &rh, int index)
 int
 getChunkOfBody(RequestHandler &rh, int index)
 {
-	std::string tmp(rh.getRequest()->getBody());
-	std::string body;
-	int sublen = 0;
-	while(rh.getBuffer()[index])
-	{
+	unsigned int i = index;
+	size_t chunk_size = 1;
+	std::string chunk;
+	
+	while (!isEndLine(rh.getBuffer(), index))
 		index++;
-		sublen++;
+	chunk = rh.getBuffer().substr(i, index);
+	std::stringstream ss;
+	ss << std::hex << chunk;
+	ss >> chunk_size;
+	if (chunk_size == 0)
+	{
+		rh.getRequest()->setRequestFinalized(true);
+		return index;
 	}
-	body.assign(rh.getBuffer(), rh.getIdx(), sublen);
-	tmp += body;
-	rh.getRequest()->setBody(tmp);
-	return index;
+	index += CRLF;
+	rh.getRequest()->setBody(rh.getBuffer().substr(index, chunk_size));
+	index += CRLF;
+	return index += chunk_size;
+}
+
+bool
+isCompleteChunk(RequestHandler &rh)
+{
+	int match_end_line = 0;
+	for (size_t index = 0; index < rh.getBuffer().size() && match_end_line < 2; index++)
+	{
+		if (isEndLine(rh.getBuffer(), index))
+			match_end_line++;
+	}
+	if (match_end_line >= 2)
+		return true;
+	return false;
 }
 
 int
@@ -179,12 +208,8 @@ parseBody(RequestHandler &rh)
 		return getBodyWithContentLength(rh, index);
 	else if (rh.getRequest()->get_header_value("Transfer-Encoding") == "chunked")
 	{
-		if (rh.getBuffer()[index] == 0)
-		{
-			rh.getRequest()->setRequestFinalized(true);
-			return index;
-		}
-		index = getChunkOfBody(rh, index);
+		if (isCompleteChunk(rh))
+			index = getChunkOfBody(rh, index);
 	}
 	else
 	{
@@ -220,22 +245,21 @@ parseRequest(Connection *raw_request, Server &server, TicketsType &tickets, ReqH
 	{
 		if (rh.getRequest()->iStartLineInitialized() == false)
 			rh.setIdx(parseStartLine(rh));
-		else if (rh.getRequest()->isHeadersInitialized() == false)
+		else if (rh.getRequest()->isHeadersInitialized() == false && rh.getRequest()->getValid())
 		{
 			// std::cout << "start line" << std::endl;
 			//print_buffer(rh.getBuffer()); // for debug purpose
 			//std::cout << *rh.getRequest() << std::endl;
 			rh.setIdx(parseHeaders(rh));
 		}
-		else if (rh.getRequest()->isRequestFinalized() == false)
+		else if (rh.getRequest()->isRequestFinalized() == false && rh.getRequest()->getValid())
 		{
 			// std::cout << "headers initialized" << std::endl;
 			//std::cout << "body parsing" << std::endl;
 			rh.setIdx(parseBody(rh));
 		}
-		//print_buffer(rh.getBuffer()); // for debug purpose
 		rh.clearBuffer();
-		if (rh.getRequest()->isRequestFinalized() == true)
+		if (rh.getRequest()->isRequestFinalized() == true || !rh.getRequest()->getValid())
 		{
 			//UNCOMENT TO SEE REQUEST INFOS
 			//std::cout << *rh.getRequest() << std::endl;

@@ -10,6 +10,7 @@
 #include <iostream>
 #include <ios>
 #include <cstdio>
+#include <cctype>
 
 #define HTTP_METHOD_NOT_IMPLEMENTED_NB 6
 
