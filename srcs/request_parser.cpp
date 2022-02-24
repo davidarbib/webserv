@@ -262,7 +262,7 @@ parseRequest(Connection *raw_request, Server &server, TicketsType &tickets, ReqH
 		if (rh.getRequest()->isRequestFinalized() == true || !rh.getRequest()->getValid())
 		{
 			//UNCOMENT TO SEE REQUEST INFOS
-			//std::cout << *rh.getRequest() << std::endl;
+			std::cout << *rh.getRequest() << std::endl;
 			Ticket my_ticket(*raw_request, rh.getRequest(), server, it);
 			tickets.push(my_ticket);
 		}

@@ -43,7 +43,7 @@ Response::setReasonPhrase(std::string const &reason_phrase)
 void
 Response::setBody(std::string const& body)
 {
-	this->_body = body;
+	this->_body.insert(_body.end(), body.begin(), body.end());
 }
 
 void
@@ -97,7 +97,8 @@ Response::serialize_response(void)
 		it++;
 	}
 	serialized += CRLF_str;
-	serialized += _body;
+	for (size_t i = 0; i < _body.size(); i++)
+		serialized += _body[i];
 	return serialized;
 }
 
@@ -110,8 +111,8 @@ Response::buildBody(std::string const& path)
 	{
 		std::string line;
 		while (getline(web_page, line))
-			_body += line;
-		size = _body.length();
+			_body.insert(_body.end(), line.begin(), line.end());
+		size = _body.size();
 		std::stringstream s;
 		s << size;
 		if (size > 0)

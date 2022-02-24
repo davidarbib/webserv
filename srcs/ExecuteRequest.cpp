@@ -47,8 +47,8 @@ ExecuteRequest::processMultipart(Ticket &ticket)
 	if (xpos != 0)
 		throw std::exception();
 	std::string key = content_type.substr(std::string(MULTIPART).size());
-	std::string const &body = ticket.getRequest().getBody();	
-	(void)body;
+	//std::string const &body = ticket.getRequest().getBody();	
+	//(void)body;
 }
 
 int

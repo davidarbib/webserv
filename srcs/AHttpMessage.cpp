@@ -12,12 +12,12 @@ AHttpMessage::printMessage(std::ostream &flux) const
 	flux << "---------------------" << "Body :" << "---------------------" << std::endl;
 	if (!this->_body.empty())
 	{
-		for (int i = 0; this->_body[i]; i++)
+		for (size_t i = 0; i < this->_body.size(); i++)
 			flux << this->_body[i];
 	}
 }
 
-std::string const&
+AHttpMessage::body_type const&
 AHttpMessage::getBody(void) const
 {
 	return this->_body;

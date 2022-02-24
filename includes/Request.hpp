@@ -73,9 +73,6 @@ class Request : public AHttpMessage
 		bool
 		has_body(void) const;
 
-		bool
-		hadOctetInBody(char c);
-
 		const request_line
 		getStartLine(void) const;
 };

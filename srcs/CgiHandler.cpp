@@ -31,7 +31,8 @@ CgiHandler::CgiHandler(Request const &request, std::string const &pgm_path,
 	_sender = __tmpfile__();
 	_receiver = __tmpfile__();
 	
-	std::string const &body = request.getBody();
+	std::string body;
+	body.assign(request.getBody().begin(), request.getBody().end());
 	write(fileno(_sender), body.c_str(), body.size()); //TODO Exception handling , and fd select checking
 	rewind(_sender);
 }
