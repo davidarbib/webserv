@@ -226,7 +226,6 @@ processRequest(TicketsType &tickets, ReqHandlersType &request_handlers)
 		response.buildPreResponse(executor.getStatusCode());
 		request_handlers.erase(tickets.front().getRhIt());
 		//response.setHeader("Content-Length", "0"); //TODO multipart test
-		
 		tickets.front().getConnection() << response.serialize_response();
 		tickets.pop();
 	}
@@ -250,21 +249,6 @@ main(int ac, char **av)
 	Server::initFdset();
 	
 	processArgs(ac, av, servers, config);
-
-	/* ------------ TODO for tests without configuration file ----------------*/
-	//(void)ac;
-	//(void)av;
-	//ConfigServer conf;
-	//conf.setName("127.0.0.1:8003");
-	//conf.setHost("127.0.0.1:8003");
-	//conf.setPort("8003");
-	//conf.setMaxBody("200");
-	//std::vector<ConfigServer> configs;
-	//configs.push_back(conf);
-	//servers.push_back(Server("127.0.0.1", "8003", configs));
-
-	/* -----------------------------------------------------------------------*/
-	
 	listenNetwork(servers);
 
 	tv.tv_sec = DELAY;

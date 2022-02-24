@@ -68,8 +68,6 @@ Buffer::clearBuffer()
 {				
 	size_t count;
 	size_t current_size = _buffer.size();
-	//std::cout << "idx : " << _idx << std::endl;
-	//std::cout << "size : " << _buffer.size() << std::endl;
 	if (_idx >= current_size)	
 		_buffer.clear();
 	else
