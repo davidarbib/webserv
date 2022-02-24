@@ -113,14 +113,15 @@ isCgiRequested(std::string const &original_uri, std::string const &resolved_uri,
 	size_t len_extension = php_extension.size();
 	std::string tested_uri;
 
-	if (index != -1)
+	if (index == -1)
 		tested_uri = original_uri;
 	else
 		tested_uri = resolved_uri;
-	size_t extension_pos = resolved_uri.find(php_extension);
+	std::cout << "uri : " << tested_uri << std::endl;
+	size_t extension_pos = tested_uri.find(php_extension);
 	if (extension_pos == std::string::npos)
 		return false;
-	if (extension_pos != resolved_uri.size() - len_extension)
+	if (extension_pos != tested_uri.size() - len_extension)
 		return false;
 	if (access(location.getCgiPath().c_str(), X_OK) != 0)
 		return false;
@@ -208,6 +209,8 @@ processRequest(TicketsType &tickets, ReqHandlersType &request_handlers)
 				body_path = executor.continueGeneration(current);
 			else if (isCgiRequested(uri, resolved_uri, location, index_page_idx))
 			{
+				std::cout << "CGI" << std::endl;
+				std::cout << "index index : " << index_page_idx;
 				executor.setStatusCode(parseCgiResponse(response,
 														executor.execCgi(current.getRequest(), uri, resolved_uri,
 																			query, config, location, index_page_idx)));
@@ -243,7 +246,6 @@ processRequest(TicketsType &tickets, ReqHandlersType &request_handlers)
 		response.buildPreResponse(executor.getStatusCode());
 		request_handlers.erase(tickets.front().getRhIt());
 		//response.setHeader("Content-Length", "0"); //TODO multipart test
-		
 		tickets.front().getConnection() << response.serialize_response();
 		tickets.pop();
 	}
