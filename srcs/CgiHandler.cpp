@@ -9,8 +9,8 @@ CgiHandler::CgiHandler(Request const &request, std::string const &pgm_path,
 	request_line startline = request.getStartLine();
 	//cutting URI in start line for env
 	//addCgiEnv("AUTH_TYPE", "");
-	addCgiEnv("CONTENT_LENGTH", request.get_header_value("Content-Length"));
-	addCgiEnv("CONTENT_TYPE", request.get_header_value("Content-Type"));
+	addCgiEnv("CONTENT_LENGTH", request.getHeaderValue("Content-Length"));
+	addCgiEnv("CONTENT_TYPE", request.getHeaderValue("Content-Type"));
 	addCgiEnv("GATEWAY_INTERFACE", "CGI/1.1");
 	addCgiEnv("PATH_INFO", _script_path);
 	addCgiEnv("PATH_TRANSLATED", _script_path);

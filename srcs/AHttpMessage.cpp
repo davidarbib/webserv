@@ -39,7 +39,7 @@ AHttpMessage::getDate(void) const
 }
 
 std::string
-AHttpMessage::get_header_value(std::string const &header_name) const
+AHttpMessage::getHeaderValue(std::string const &header_name) const
 {
 	hash_map::const_iterator it;
 

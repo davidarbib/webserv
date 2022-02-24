@@ -50,7 +50,7 @@ class AHttpMessage
 		getDate(void) const;
 
 		std::string
-		get_header_value(std::string const &header_name) const;
+		getHeaderValue(std::string const &header_name) const;
 
 };
 

@@ -72,7 +72,7 @@ getConfig(Ticket current)
 {
 	for (size_t i = 0; i < current.getServer().getCandidateConfs().size(); i++)
 	{
-		if (current.getServer().getCandidateConfs()[i].getName() == current.getRequest().get_header_value("Host"))
+		if (current.getServer().getCandidateConfs()[i].getName() == current.getRequest().getHeaderValue("Host"))
 			return current.getServer().getCandidateConfs()[i];
 	}
 	return current.getServer().getCandidateConfs()[0];
@@ -166,7 +166,7 @@ parseCgiResponse(Response &response, std::string cgi_response)
 			response.setHeader("Content-Length", ss.str());
 		}
 	}
-	std::string status_code = response.get_header_value("Status");
+	std::string status_code = response.getHeaderValue("Status");
 	if (!status_code.empty())
 		return std::atoi(status_code.c_str());
 	return OK;

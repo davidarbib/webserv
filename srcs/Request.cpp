@@ -30,7 +30,7 @@ Request::~Request(void) {}
 bool
 Request::isContentLengthCorrect(void) const
 {
-	std::string content_length = get_header_value("Content-Length");
+	std::string content_length = getHeaderValue("Content-Length");
     if (content_length != "0" && std::atoi(content_length.c_str()) <= 0)
         return false;
     for (size_t i = 0; i < content_length.size(); i++)
