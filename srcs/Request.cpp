@@ -61,12 +61,6 @@ Request::setHttpVersion(std::string const &http_version)
 }
 
 void
-Request::setBody(std::string const& body)
-{
-	_body.insert(_body.end(), body.begin(), body.end());
-}
-
-void
 Request::setHeader(std::string const &key, std::string const &value)
 {
 	this->_headers[key] = value;

@@ -41,12 +41,6 @@ Response::setReasonPhrase(std::string const &reason_phrase)
 }
 
 void
-Response::setBody(std::string const& body)
-{
-	this->_body.insert(_body.end(), body.begin(), body.end());
-}
-
-void
 Response::setHeader(std::string const &key, std::string const &value)
 {
 	this->_headers[key] = value;
@@ -65,8 +59,6 @@ Response::buildPreResponse(int code)
 {
 	this->_start_line.status_code = code;
 	this->_start_line.reason_phrase = Response::errors_code.find(code)->second;
-	if (code == 301)
-		return;
 	this->_headers["Server"] = SERVER_VERSION;
 	this->_headers["Date"] = getDate();
 	if (code != BAD_REQUEST)
@@ -137,7 +129,7 @@ Response::getFileExtension(std::string const &uri) const
 	if (!uri.empty())
 	{
 		size_t  extension_begin = uri.find_last_of(".");
-		if (extension_begin == std::string::npos)
+		if (extension_begin == std::string::npos) 
 			return std::string();
 		return uri.substr(extension_begin, uri.size());
 	}
@@ -171,6 +163,7 @@ Response::fillHandledExtensions(void)
 	std::map<std::string, std::string> extensions;
 
 	extensions.insert(std::make_pair(".html" ,"text/html"));
+	extensions.insert(std::make_pair(".php" ,"text/html"));
 	extensions.insert(std::make_pair(".mp3" ,"audio/mp3"));
 	extensions.insert(std::make_pair(".mp4" ,"video/mp4"));
 	extensions.insert(std::make_pair(".ttf" ,"font/ttf"));

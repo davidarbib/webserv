@@ -48,3 +48,9 @@ AHttpMessage::get_header_value(std::string const &header_name) const
 		return it->second;
 	return std::string();
 }
+
+void
+AHttpMessage::setBody(std::string const& body)
+{
+	this->_body.insert(_body.end(), body.begin(), body.end());
+}

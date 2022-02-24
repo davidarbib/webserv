@@ -34,8 +34,8 @@ class AHttpMessage
 		body_type		_body;
 
 	public :
-		virtual void
-		setBody(std::string const& body) = 0;
+		void
+		setBody(std::string const& body);
 
 		virtual void
 		setHeader(std::string const &key, std::string const &value) = 0;
