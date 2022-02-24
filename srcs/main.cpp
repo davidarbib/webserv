@@ -187,13 +187,11 @@ processRequest(TicketsType &tickets, ReqHandlersType &request_handlers)
 		std::string uri = current.getRequest().getStartLine().request_URI;
 		std::string resolved_uri;
 		ServerLocations const& location = getLocation(config, uri);
-		std::cout << "location choosen : " << location.getpath() << std::endl;
 		int index_page_idx = -1;
 		if (uri == location.getpath())
 			index_page_idx = matchIndex(location, resolved_uri);
 		if (executor.isValidRequest(current.getRequest(), config, location) == true)
 		{
-			std::cout << "redir is : " << location.getRedir().from << " | URI is : " << current.getRequest().getStartLine().request_URI << std::endl;
 			if (isCgiRequested(uri, resolved_uri, location, index_page_idx))
 			{
 				executor.setStatusCode(parseCgiResponse(response,
@@ -201,7 +199,9 @@ processRequest(TicketsType &tickets, ReqHandlersType &request_handlers)
 																			query, config, location, index_page_idx)));
 			}
 			else if (location.getRedir().from == current.getRequest().getStartLine().request_URI)
+			{
 				body_path = executor.getRedirected(location, response);
+			}
 			else if (current.getRequest().getStartLine().method_token == "DELETE")
 			{
 				body_path = executor.deleteMethod(current.getRequest().getStartLine().request_URI, config, location, resolved_uri);
@@ -209,7 +209,6 @@ processRequest(TicketsType &tickets, ReqHandlersType &request_handlers)
 			}
 			else if (current.getRequest().getStartLine().method_token == "GET")
 			{
-				std::cout << "ENTER IN GET" << std::endl;
 				body_path = executor.getMethod(current.getRequest().getStartLine().request_URI, config, location, resolved_uri);
 				response.searchForBody(executor.getStatusCode(), body_path, response.getFileExtension(body_path));
 			}

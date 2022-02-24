@@ -142,11 +142,12 @@ ExecuteRequest::autoindexPath(void) const
 std::string
 ExecuteRequest::getRedirected(ServerLocations const& location, Response &response)
 {
-    std::cout << "GOGOGO POWER RANGERS" << std::endl;
     _status_code = MOVED_PERMANTLY;
-    response.setHeader("Location", location.getRedir().to);
-    std::cout << "REDIRECT TO: " << location.getRedir().to << std::endl;
-    return std::string();
+    std::string redir = location.getRedir().to;
+    std::cout << "REDIR TO : " << redir << std::endl;
+    response.setHeader("Location", redir);
+    response.setHeader("Content-Length", "0");
+    return redir;
 }
 
 std::string

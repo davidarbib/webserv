@@ -65,8 +65,6 @@ Response::buildPreResponse(int code)
 {
 	this->_start_line.status_code = code;
 	this->_start_line.reason_phrase = Response::errors_code.find(code)->second;
-	if (code == 301)
-		return;
 	this->_headers["Server"] = SERVER_VERSION;
 	this->_headers["Date"] = getDate();
 	if (code != BAD_REQUEST)
