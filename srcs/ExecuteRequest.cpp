@@ -32,7 +32,7 @@ ExecuteRequest::isAllowedMethod(std::string const &method, std::vector<std::stri
 }
 
 bool
-ExecuteRequest::isMultipartProcessing(Ticket &ticket) const
+ExecuteRequest::isMultipartProcessing(Ticket const &ticket) const
 {
 	std::string content_type = ticket.getRequest().get_header_value("Content-Type");
 	size_t xpos = content_type.find(MULTIPART);
@@ -42,7 +42,7 @@ ExecuteRequest::isMultipartProcessing(Ticket &ticket) const
 }
 
 void
-ExecuteRequest::processMultipart(Ticket &ticket)
+ExecuteRequest::processMultipart(Ticket const &ticket)
 {
 	std::string content_type = ticket.getRequest().get_header_value("Content-Type");
 	std::string key = content_type.substr(std::string(MULTIPART).size());
@@ -223,7 +223,7 @@ ExecuteRequest::fillMethodNotImplemented(void)
 
 std::string
 ExecuteRequest::postMethod(std::string const &URI, ConfigServer const &config,
-					ServerLocations const& location)
+					ServerLocations const& location, Ticket const& ticket)
 {
 	(void)config;
 	(void)location;
@@ -231,8 +231,8 @@ ExecuteRequest::postMethod(std::string const &URI, ConfigServer const &config,
     std::string uri = "./" + URI;
 	//check multipart marks in headers
 	//check expect 100-continue
-	//if (isMultipartProcessing(ticket))
-	//	processMultipart(ticket);
+	if (isMultipartProcessing(ticket))
+		processMultipart(ticket);
 	//ticket.getRequest();
 	//if multipart :
 	//	process multipart

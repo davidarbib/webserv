@@ -199,7 +199,7 @@ processRequest(TicketsType &tickets, ReqHandlersType &request_handlers)
 			}
 			else if (current.getRequest().getStartLine().method_token == "POST")
 			{
-				body_path = executor.postMethod(current.getRequest().getStartLine().request_URI, config, location);
+				body_path = executor.postMethod(current.getRequest().getStartLine().request_URI, config, location, current);
 				response.searchForBody(executor.getStatusCode(), body_path, response.getFileExtension(body_path));
 				std::cout << "probe" << std::endl;
 			}

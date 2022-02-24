@@ -32,10 +32,10 @@ class ExecuteRequest
         matchIndex(ServerLocations const &location, ConfigServer const &config, std::ifstream &ressource);
 
 		bool
-		isMultipartProcessing(Ticket &ticket) const;
+		isMultipartProcessing(Ticket const &ticket) const;
 		
 		void
-		processMultipart(Ticket &ticket);
+		processMultipart(Ticket const &ticket);
 
     public:
         static std::string method_not_implemented[HTTP_METHOD_NOT_IMPLEMENTED_NB];
@@ -76,7 +76,7 @@ class ExecuteRequest
 
         std::string
         postMethod(std::string const &URI, ConfigServer const &config,
-					ServerLocations const& location);
+					ServerLocations const& location, Ticket const& ticket);
 
 		std::string
 		execCgi(Request const &request, std::string const &query,
@@ -85,5 +85,5 @@ class ExecuteRequest
 		std::string
 		continueGeneration(Ticket const &ticket);
 };
-#endif
 
+#endif

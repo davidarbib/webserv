@@ -65,12 +65,15 @@ Response::buildPreResponse(int code)
 {
 	this->_start_line.status_code = code;
 	this->_start_line.reason_phrase = Response::errors_code.find(code)->second;
-	this->_headers["Server"] = SERVER_VERSION;
-	this->_headers["Date"] = getDate();
-	if (code != BAD_REQUEST)
-		this->_headers["Connection"] = "keep-alive";
-	else
-		this->_headers["Connection"] = "close";
+	if (code != CONTINUE)
+	{
+		this->_headers["Server"] = SERVER_VERSION;
+		this->_headers["Date"] = getDate();
+		if (code != BAD_REQUEST)
+			this->_headers["Connection"] = "keep-alive";
+		else
+			this->_headers["Connection"] = "close";
+	}
 }
 
 std::string
