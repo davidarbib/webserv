@@ -107,19 +107,36 @@ getLocation(ConfigServer const& config, std::string const& uri)
 }
 
 bool
-isCgiRequested(std::string const &uri, ServerLocations const &location)
+isCgiRequested(std::string const &original_uri, std::string const &resolved_uri, ServerLocations const &location, int index)
 {
 	std::string php_extension = ".php";
 	size_t len_extension = php_extension.size();
-	
-	size_t extension_pos = uri.find(php_extension);
+	std::string tested_uri;
+
+	if (index != -1)
+		tested_uri = original_uri;
+	else
+		tested_uri = resolved_uri;
+	size_t extension_pos = resolved_uri.find(php_extension);
 	if (extension_pos == std::string::npos)
 		return false;
-	if (extension_pos != uri.size() - len_extension)
+	if (extension_pos != resolved_uri.size() - len_extension)
 		return false;
 	if (access(location.getCgiPath().c_str(), X_OK) != 0)
 		return false;
 	return true;
+}
+
+int
+matchIndex(ServerLocations const &location, std::string &resolved_uri)
+{
+    for (size_t i = 0; i < location.getIndex().size(); i++)
+    {
+        resolved_uri = location.getRoot() + "/" + location.getIndex()[i];
+		if (access(resolved_uri.c_str(), F_OK) == 0)
+			return static_cast<int>(i);
+	}
+	return -1;
 }
 
 # define QUERYCHAR '?'
@@ -173,28 +190,40 @@ processRequest(TicketsType &tickets, ReqHandlersType &request_handlers)
 	std::string body_path;
 	while (!tickets.empty() && tickets.front().getRequest().isRequestFinalized() == true)
 	{
-		std::cout << "new ticket" << std::endl;
 		Ticket current(tickets.front());
 		ConfigServer const& config = getConfig(current);
-		ServerLocations const& location = getLocation(config, current.getRequest().getStartLine().request_URI);
+		std::string query;
+		cutQuery(current.getRequest(), query);
+		std::string uri = current.getRequest().getStartLine().request_URI;
+		std::string resolved_uri;
+		ServerLocations const& location = getLocation(config, uri);
+		int index_page_idx = -1;
+		if (uri == location.getpath())
+			index_page_idx = matchIndex(location, resolved_uri);
 		if (executor.isValidRequest(current.getRequest(), config, location) == true)
 		{
 			std::string query;
 			cutQuery(current.getRequest(), query);
 			if (is100Continue(current.getRequest()))
 				body_path = executor.continueGeneration(current);
-			else if (isCgiRequested(current.getRequest().getStartLine().request_URI, location))
-				executor.setStatusCode(parseCgiResponse(response, executor.execCgi(current.getRequest(), query, config, location)));
+			else if (isCgiRequested(uri, resolved_uri, location, index_page_idx))
+			{
+				executor.setStatusCode(parseCgiResponse(response,
+														executor.execCgi(current.getRequest(), uri, resolved_uri,
+																			query, config, location, index_page_idx)));
+			}
 			else if (location.getRedir().from == current.getRequest().getStartLine().request_URI)
+			{
 				body_path = executor.getRedirected(location, response);
+			}
 			else if (current.getRequest().getStartLine().method_token == "DELETE")
 			{
-				body_path = executor.deleteMethod(current.getRequest().getStartLine().request_URI, config, location);
+				body_path = executor.deleteMethod(current.getRequest().getStartLine().request_URI, config, location, resolved_uri);
 				response.searchForBody(executor.getStatusCode(), body_path, response.getFileExtension(body_path));
 			}
 			else if (current.getRequest().getStartLine().method_token == "GET")
 			{
-				body_path = executor.getMethod(current.getRequest().getStartLine().request_URI, config, location);
+				body_path = executor.getMethod(current.getRequest().getStartLine().request_URI, config, location, resolved_uri);
 				response.searchForBody(executor.getStatusCode(), body_path, response.getFileExtension(body_path));
 			}
 			else if (current.getRequest().getStartLine().method_token == "POST")
@@ -206,15 +235,14 @@ processRequest(TicketsType &tickets, ReqHandlersType &request_handlers)
 			else
 			{
 				executor.setStatusCode(NOT_ALLOWED);
-				body_path = executor.buildBodyPath(config, location.getRoot());
+				body_path = executor.buildBodyPath(config);
 			}
 		}
 		else
-			body_path = executor.buildBodyPath(config, location.getRoot());
+			body_path = executor.buildBodyPath(config);
 		response.buildPreResponse(executor.getStatusCode());
 		request_handlers.erase(tickets.front().getRhIt());
-		//response.setHeader("Content-Length", "0"); //TODO multipart tests
-		//std::cout << response.serialize_response() << std::endl;
+		//response.setHeader("Content-Length", "0"); //TODO multipart test
 		
 		tickets.front().getConnection() << response.serialize_response();
 		tickets.pop();

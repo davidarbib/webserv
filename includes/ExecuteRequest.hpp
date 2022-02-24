@@ -10,6 +10,7 @@
 #include <iostream>
 #include <ios>
 #include <cstdio>
+#include <cctype>
 
 #define HTTP_METHOD_NOT_IMPLEMENTED_NB 6
 
@@ -27,9 +28,6 @@ class ExecuteRequest
 
         std::string
         autoindexPath(void) const;
-
-        std::string
-        matchIndex(ServerLocations const &location, ConfigServer const &config, std::ifstream &ressource);
 
 		bool
 		isMultipartProcessing(Ticket const &ticket) const;
@@ -61,7 +59,7 @@ class ExecuteRequest
         isImplemented(std::string const &method) const;
 
         std::string
-        buildBodyPath(ConfigServer const &config, std::string const& root);
+        buildBodyPath(ConfigServer const &config);
 
         std::string
         getRedirected(ServerLocations const& location, Response &response);
@@ -69,18 +67,20 @@ class ExecuteRequest
         // get / delete / post exec
 
         std::string
-        getMethod(std::string const &URI, ConfigServer const &config, ServerLocations const& location);
+        getMethod(std::string const &uri, ConfigServer const &config, ServerLocations const& location, std::string const &resolved_uri);
 
         std::string
-        deleteMethod(std::string const &URI, ConfigServer const &config, ServerLocations const& location);
+        deleteMethod(std::string const &uri, ConfigServer const &config, ServerLocations const& location, std::string const &resolved_uri);
 
         std::string
         postMethod(std::string const &URI, ConfigServer const &config,
 					ServerLocations const& location, Ticket const& ticket);
 
 		std::string
-		execCgi(Request const &request, std::string const &query,
-				ConfigServer const &config, ServerLocations const& location);
+		execCgi(Request const &request, std::string const &original_uri,
+				std::string const &resolved_uri, std::string const &query,
+				ConfigServer const &config, ServerLocations const& location,
+				int index_page_idx);
 
 		std::string
 		continueGeneration(Ticket const &ticket);
