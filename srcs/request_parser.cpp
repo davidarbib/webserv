@@ -213,14 +213,14 @@ parseBody(RequestHandler &rh)
 	}
 	else
 	{
-		std::string body;
+		AHttpMessage::body_type body;
 		int sublen = 0;
 		while (rh.getBuffer()[index] && !isEndSection(rh.getBuffer(), index))
 		{
 			index++;
 			sublen++;
 		}
-		body.assign(rh.getBuffer(), rh.getIdx(), sublen);
+		body.insert(body.begin(),  rh.getBuffer().begin() + rh.getIdx(), rh.getBuffer().begin() + sublen);
 		rh.getRequest()->setBody(body);
 		rh.getRequest()->setRequestFinalized(true);
 	}
