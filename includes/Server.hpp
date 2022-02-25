@@ -97,7 +97,7 @@ class Server
 		std::map<fd_t, Connection*>		_connections;
 
 		void
-		transferToBuffer(fd_t connection_fd, char *buf);
+		transferToBuffer(fd_t connection_fd, char *buf, int size);
 
 		void
 		recvSend(void);
