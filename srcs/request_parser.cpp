@@ -120,7 +120,7 @@ parseHeaders(RequestHandler &rh)
 {
 	int index = 0;
 
-	if (rh.getBuffer() == "\r\n")
+	if (rh.getBuffer().size() == 2 && rh.getBuffer()[0] == '\r' && rh.getBuffer()[1] == '\n')
 	{
 		rh.getRequest()->setHeaderInitialized(true);
 		return index + CRLF;
@@ -133,11 +133,11 @@ parseHeaders(RequestHandler &rh)
 }
 
 bool
-is_complete_line(std::string &line)
+isCompleteLine(AHttpMessage::body_type &line)
 {
 	size_t i = 0;
 
-	while (i < line.length())
+	while (i < line.size())
 	{
 		if (isEndLine(line, i))
 			return true;
@@ -241,7 +241,7 @@ parseRequest(Connection *raw_request, Server &server, TicketsType &tickets, ReqH
 	RequestHandler &rh = it->second;
 	if (rh.getRequest()->isRequestFinalized() == true)
 		return 1;
-	if (is_complete_line(rh.getBuffer()) && !rh.getBuffer().empty())
+	if (isCompleteLine(rh.getBuffer()) && !rh.getBuffer().empty())
 	{
 		if (rh.getRequest()->iStartLineInitialized() == false)
 			rh.setIdx(parseStartLine(rh));
