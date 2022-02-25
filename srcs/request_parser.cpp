@@ -150,12 +150,12 @@ int
 getBodyWithContentLength(RequestHandler &rh, int index)
 {
 	std::stringstream ss;
-	std::string body;
+	AHttpMessage::body_type body;
 	int content_length;
 
 	ss << rh.getRequest()->getHeaderValue("Content-Length");
 	ss >> content_length;
-	body.assign(rh.getBuffer(), index, content_length);
+	body.insert(body.end(), rh.getBuffer().begin() + index, rh.getBuffer().begin() + content_length);
 	rh.getRequest()->setBody(body);
 	rh.getRequest()->setRequestFinalized(true);
 	return index + content_length;
