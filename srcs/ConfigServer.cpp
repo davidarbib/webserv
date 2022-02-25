@@ -99,7 +99,6 @@ ConfigServer::setErrorPages(std::string const &error_pages)
 		this->_error_pages.path = str;
 	else
 		throw("Wrong error_pages block format, missing path.");
-	printf("%s\n", this->_error_pages.path.c_str());
 }
 
 void
