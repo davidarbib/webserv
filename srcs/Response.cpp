@@ -41,12 +41,6 @@ Response::setReasonPhrase(std::string const &reason_phrase)
 }
 
 void
-Response::setBody(std::string const& body)
-{
-	this->_body = body;
-}
-
-void
 Response::setHeader(std::string const &key, std::string const &value)
 {
 	this->_headers[key] = value;
@@ -98,7 +92,8 @@ Response::serialize_response(void)
 		it++;
 	}
 	serialized += CRLF_str;
-	serialized += _body;
+	for (size_t i = 0; i < _body.size(); i++)
+		serialized += _body[i];
 	return serialized;
 }
 
@@ -111,8 +106,8 @@ Response::buildBody(std::string const& path)
 	{
 		std::string line;
 		while (getline(web_page, line))
-			_body += line;
-		size = _body.length();
+			_body.insert(_body.end(), line.begin(), line.end());
+		size = _body.size();
 		std::stringstream s;
 		s << size;
 		if (size > 0)
@@ -137,7 +132,7 @@ Response::getFileExtension(std::string const &uri) const
 	if (!uri.empty())
 	{
 		size_t  extension_begin = uri.find_last_of(".");
-		if (extension_begin == std::string::npos)
+		if (extension_begin == std::string::npos) 
 			return std::string();
 		return uri.substr(extension_begin, uri.size());
 	}
@@ -172,6 +167,7 @@ Response::fillHandledExtensions(void)
 	std::map<std::string, std::string> extensions;
 
 	extensions.insert(std::make_pair(".html" ,"text/html"));
+	extensions.insert(std::make_pair(".php" ,"text/html"));
 	extensions.insert(std::make_pair(".mp3" ,"audio/mp3"));
 	extensions.insert(std::make_pair(".mp4" ,"video/mp4"));
 	extensions.insert(std::make_pair(".ttf" ,"font/ttf"));

@@ -34,7 +34,7 @@ ExecuteRequest::isAllowedMethod(std::string const &method, std::vector<std::stri
 bool
 ExecuteRequest::isMultipartProcessing(Ticket const &ticket) const
 {
-	std::string content_type = ticket.getRequest().get_header_value("Content-Type");
+	std::string content_type = ticket.getRequest().getHeaderValue("Content-Type");
 	size_t xpos = content_type.find(MULTIPART);
 	if (xpos != 0)
 		return false;
@@ -44,13 +44,13 @@ ExecuteRequest::isMultipartProcessing(Ticket const &ticket) const
 void
 ExecuteRequest::processMultipart(Ticket const &ticket)
 {
-	std::string content_type = ticket.getRequest().get_header_value("Content-Type");
+	std::string content_type = ticket.getRequest().getHeaderValue("Content-Type");
+	size_t xpos = content_type.find(MULTIPART);
+	if (xpos != 0)
+		throw std::exception();
 	std::string key = content_type.substr(std::string(MULTIPART).size());
-	std::string const &body = ticket.getRequest().getBody();
-	
-	
-
-	std::cout << "BODY" << std::endl << body;
+	//std::string const &body = ticket.getRequest().getBody();	
+	//(void)body;
 }
 
 int
@@ -81,7 +81,7 @@ ExecuteRequest::isValidRequest(Request const& request, ConfigServer const& confi
 {
     bool valid = true;
     if (request.getStartLine().method_token.empty() || request.getStartLine().request_URI.empty()
-    || request.getStartLine().http_version.empty() || request.get_header_value("Host").empty()
+    || request.getStartLine().http_version.empty() || request.getHeaderValue("Host").empty()
     || !request.isContentLengthCorrect() || !request.getValid())
     {
         _status_code = BAD_REQUEST;

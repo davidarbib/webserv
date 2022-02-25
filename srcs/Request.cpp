@@ -7,7 +7,7 @@ Request::Request(void) : _start_line_initialized(false),
 {
 	this->setHeader("Content-Length", "0");
 	this->setHeader("Transfer-Encoding", std::string());
-	this->_body = std::string();
+	this->_body = AHttpMessage::body_type(); 
 }
 
 Request::Request(Request const & cpy)
@@ -30,7 +30,7 @@ Request::~Request(void) {}
 bool
 Request::isContentLengthCorrect(void) const
 {
-	std::string content_length = get_header_value("Content-Length");
+	std::string content_length = getHeaderValue("Content-Length");
     if (content_length != "0" && std::atoi(content_length.c_str()) <= 0)
         return false;
     for (size_t i = 0; i < content_length.size(); i++)
@@ -58,12 +58,6 @@ Request::setHttpVersion(std::string const &http_version)
 {
 	this->_start_line.http_version = http_version;
 	this->_start_line_initialized = true;
-}
-
-void
-Request::setBody(std::string const& body)
-{
-	this->_body = body;
 }
 
 void
@@ -129,13 +123,6 @@ bool
 Request::isRequestFinalized(void) const
 {
 	return this->_request_finalized;
-}
-
-bool
-Request::hadOctetInBody(char c)
-{
-	this->_body += c;
-	return true;
 }
 
 std::ostream&

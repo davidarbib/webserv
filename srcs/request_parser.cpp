@@ -106,9 +106,9 @@ has_body(RequestHandler &rh)
 	std::stringstream ss;
 	int content_length;
 
-	ss << rh.getRequest()->get_header_value("Content-Length");
+	ss << rh.getRequest()->getHeaderValue("Content-Length");
 	ss >> content_length;
-	if (content_length == 0 && rh.getRequest()->get_header_value("Transfer-Encoding") != "chunked")
+	if (content_length == 0 && rh.getRequest()->getHeaderValue("Transfer-Encoding") != "chunked")
 		return false;
 	else if (rh.getRequest()->isContentLengthCorrect())
 		return true;
@@ -153,7 +153,7 @@ getBodyWithContentLength(RequestHandler &rh, int index)
 	std::string body;
 	int content_length;
 
-	ss << rh.getRequest()->get_header_value("Content-Length");
+	ss << rh.getRequest()->getHeaderValue("Content-Length");
 	ss >> content_length;
 	body.assign(rh.getBuffer(), index, content_length);
 	rh.getRequest()->setBody(body);
@@ -204,9 +204,9 @@ parseBody(RequestHandler &rh)
 {
 	int index = 0;
 	
-	if (rh.getRequest()->get_header_value("Content-Length") != "0")
+	if (rh.getRequest()->getHeaderValue("Content-Length") != "0")
 		return getBodyWithContentLength(rh, index);
-	else if (rh.getRequest()->get_header_value("Transfer-Encoding") == "chunked")
+	else if (rh.getRequest()->getHeaderValue("Transfer-Encoding") == "chunked")
 	{
 		if (isCompleteChunk(rh))
 			index = getChunkOfBody(rh, index);
