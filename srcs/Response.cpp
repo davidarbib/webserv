@@ -156,6 +156,7 @@ Response::fillResponseCodes(void)
 	codes.insert(std::make_pair(NOT_ALLOWED, "Not Allowed"));
 	codes.insert(std::make_pair(PAYLOAD_TO_LARGE, "Payload To Large"));
 	codes.insert(std::make_pair(URI_TO_LONG, "Uri To Long"));
+	codes.insert(std::make_pair(INTERNAL_SERVER_ERROR, "Internal Server Error"));
 	codes.insert(std::make_pair(NOT_IMPLEMENTED, "Not Implemented"));
 	codes.insert(std::make_pair(VERSION_NOT_SUPPORTED, "Version Not Supported"));
 
@@ -201,6 +202,16 @@ Response::searchForBody(int code, std::string const &body_path, std::string cons
 				setHeader("Content-Type", it->second);
 		}
 	}
+}
+
+void
+Response::serverErrorResponse(void)
+{
+	this->_start_line.reason_phrase = "Internal Server Error";
+	this->_start_line.status_code = INTERNAL_SERVER_ERROR;
+	this->_headers["Server"] = SERVER_VERSION;
+	this->_headers["Date"] = getDate();
+	this->_headers["Connection"] = "close";
 }
 
 std::map<int, std::string> Response::errors_code;

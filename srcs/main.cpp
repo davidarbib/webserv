@@ -194,9 +194,24 @@ processRequest(TicketsType &tickets, ReqHandlersType &request_handlers)
 		{
 			if (isCgiRequested(uri, resolved_uri, location, index_page_idx))
 			{
-				executor.setStatusCode(parseCgiResponse(response,
+				std::cout << "COUCOU LES COPAINS" << std::endl;
+				try
+				{
+					executor.setStatusCode(parseCgiResponse(response,
 														executor.execCgi(current.getRequest(), uri, resolved_uri,
-																			query, config, location, index_page_idx)));
+																		query, config, location, index_page_idx)));
+				}
+				catch(ExecveException &e)
+				{
+					while(!tickets.empty())
+					{
+						response.serverErrorResponse();
+						body_path = executor.buildBodyPath(config);
+						tickets.front().getConnection() << response.serialize_response();
+						tickets.pop();
+					}
+					std::cout << "EXECVE A CRASH" << std::endl;
+				}
 			}
 			else if (location.getRedir().from == current.getRequest().getStartLine().request_URI)
 			{
@@ -209,7 +224,6 @@ processRequest(TicketsType &tickets, ReqHandlersType &request_handlers)
 			}
 			else if (current.getRequest().getStartLine().method_token == "GET")
 			{
-				body_path = executor.getMethod(current.getRequest().getStartLine().request_URI, config, location, resolved_uri);
 				response.searchForBody(executor.getStatusCode(), body_path, response.getFileExtension(body_path));
 			}
 			else if (current.getRequest().getStartLine().method_token == "POST")
