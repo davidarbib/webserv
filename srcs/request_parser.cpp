@@ -165,14 +165,15 @@ int
 getChunkOfBody(RequestHandler &rh, int index)
 {
 	unsigned int i = index;
+	std::string tmp;
 	size_t chunk_size = 1;
-	std::string chunk;
+	AHttpMessage::body_type chunk;
 	
 	while (!isEndLine(rh.getBuffer(), index))
 		index++;
-	chunk = rh.getBuffer().substr(i, index);
+	chunk.insert(chunk.end(), rh.getBuffer().begin() + i, rh.getBuffer().begin() + index);
 	std::stringstream ss;
-	ss << std::hex << chunk;
+	ss << std::hex << tmp;
 	ss >> chunk_size;
 	if (chunk_size == 0)
 	{
@@ -180,7 +181,9 @@ getChunkOfBody(RequestHandler &rh, int index)
 		return index;
 	}
 	index += CRLF;
-	rh.getRequest()->setBody(rh.getBuffer().substr(index, chunk_size));
+	chunk.clear();
+	chunk.insert(chunk.end(), rh.getBuffer().begin() + index, rh.getBuffer().begin() + chunk_size);
+	rh.getRequest()->setBody(chunk);
 	index += CRLF;
 	return index += chunk_size;
 }
