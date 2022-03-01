@@ -6,6 +6,7 @@
 #include "Ticket.hpp"
 #include "ConfigServer.hpp"
 #include "CgiHandler.hpp"
+#include "parsing_tools.hpp"
 #include <fstream>
 #include <iostream>
 #include <ios>

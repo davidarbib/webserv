@@ -41,14 +41,79 @@ ExecuteRequest::isMultipartProcessing(Ticket const &ticket) const
 	return true;
 }
 
+typedef std::vector<char> body_type;
+
+typedef struct s_headers
+{
+	std::string content_type;
+	std::string filename;
+	std::string charset;
+} 				t_headers;
+
+#define CRLFCRLF_S "\r\n\r\n"
+#define CRLF_S "\r\n"
+
 void
-ExecuteRequest::processMultipart(Ticket const &ticket)
+ExecuteRequest::processMultipartHeaders(std::string headers_part, t_headers *headers)
+{
+	std::map<std::string, std::string> mp_headers;
+
+	size_t i = 0;
+	while (i < headers_part.size())
+	{
+		size_t colon_pos = headers_part.find(":");
+		size_t endline_pos = headers_part.find(CRLF_S);
+		
+		mp_headers[headers_part.substr(0, colon_pos)] =
+			headers_part.substr(colon_pos + 1,  endline_pos - (colon_pos + 1));
+		
+		i = endline_pos + 2;
+	}
+
+	std::string fname_mark("filename=");
+	std::string content_disposition = mp_headers["Content-Disposition"];
+	size_t fpos = content_disposition.find(fname_mark);
+	size_t quote_pos = fpos + fname_mark.size();
+	std::string fname = content_disposition.substr(quote_pos + 1, content_disposition.size() - (quote_pos + 1));
+	fname.assign(fname.substr(0, fname.find("\"")));
+	headers->filename = fname;
+	headers->content_type = mp_headers["Content-type"]; 
+	headers->charset = mp_headers["charset"]; 
+}
+
+void
+processMultipart(Ticket const &ticket)
 {
 	std::string content_type = ticket.getRequest().getHeaderValue("Content-Type");
 	size_t xpos = content_type.find(MULTIPART);
 	if (xpos != 0)
 		throw std::exception();
+
 	std::string key = content_type.substr(std::string(MULTIPART).size());
+	std::string last_boundary = key + '-' + '-';
+	std::string end_section(CRLFCRLF_S);
+
+	body_type::iterator body_cursor = ticket.getRequest().getBody().begin();
+	body_type::iterator body_end = ticket.getRequest().getBody().end();
+	body_type::iterator multipart_end =
+		search(body_cursor, body_end, last_boundary.begin(), last_boundary.end());
+	body_type::iterator it = search(body_cursor, body_end, key.begin(), key.end());
+	while (it != multipart_end)
+	{
+		it += key.size();		
+		if (isItEndLine(it))
+		
+
+
+		it = search(body_cursor, body_end, key.begin(), key.end());
+	}
+	//search key
+	//detect end line or end section
+	//if end line
+	//	parse headers
+	//if end section
+	//  store body on disk
+	//
 	//std::string const &body = ticket.getRequest().getBody();	
 	//(void)body;
 }
@@ -219,16 +284,14 @@ ExecuteRequest::postMethod(std::string const &URI, ConfigServer const &config,
 {
 	(void)config;
 	(void)location;
+	(void)ticket;
 	std::cout << "POST METHOD" << std::endl;
-    std::string uri = "./" + URI;
+	std::string uri = "./" + URI;
 	//check multipart marks in headers
-	//check expect 100-continue
-	if (isMultipartProcessing(ticket))
-		processMultipart(ticket);
-	//ticket.getRequest();
-	//if multipart :
-	//	process multipart
-    //return buildBodyPath(ticket.get, location.getRoot());
+	//if (isMultipartProcessing(ticket))
+	//      processMultipart(ticket);
+	//
+	//return buildBodyPath(ticket.get, location.getRoot());
 	return "OK"; //TODO not OK
 }
 
