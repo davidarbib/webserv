@@ -42,16 +42,16 @@ Connection::getOutBuffer(void)
 	return _out_buffer;
 }
 
-std::string &
-Connection::getOutBufferData(void)
+void
+Connection::dumpOutBufferData(char *dump, int size)
 {
-	return _out_buffer.getBuffer();
+	_out_buffer.dumpData(dump, size);
 }
 
 void
-Connection::fillBuffer(char *buf)
+Connection::fillBuffer(char *buf, int size)
 {
-	_in_buffer.fillBuffer(buf);	
+	_in_buffer.fillBuffer(buf, size);	
 }
 
 void
@@ -79,6 +79,13 @@ Connection::makePortStr(void)
 
 Connection &
 operator<<(Connection &connection, std::string const & message)
+{
+	connection._out_buffer.append(message);
+	return connection;
+}
+
+Connection &
+operator<<(Connection &connection, std::vector<char> const & message)
 {
 	connection._out_buffer.append(message);
 	return connection;

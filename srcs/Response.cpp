@@ -41,12 +41,6 @@ Response::setReasonPhrase(std::string const &reason_phrase)
 }
 
 void
-Response::setBody(std::string const& body)
-{
-	this->_body = body;
-}
-
-void
 Response::setHeader(std::string const &key, std::string const &value)
 {
 	this->_headers[key] = value;
@@ -73,7 +67,7 @@ Response::buildPreResponse(int code)
 		this->_headers["Connection"] = "close";
 }
 
-std::string
+AHttpMessage::body_type
 Response::serialize_response(void)
 {
 	std::stringstream status_line;
@@ -83,38 +77,56 @@ Response::serialize_response(void)
 	status_line << _start_line.status_code;
 	status_line << " ";
 	status_line << _start_line.reason_phrase.append(CRLF_str);
-	std::string serialized(status_line.str());
+	AHttpMessage::body_type serialized;
+	serialized.reserve(status_line.str().size());
+	std::string tmp(status_line.str());
+	serialized.insert(serialized.end(), tmp.begin(), tmp.end());
 
 	hash_map::iterator it = _headers.begin();
 	while (it != _headers.end())
 	{
-		serialized += it->first;
-		serialized += ": ";
-		serialized += it->second;
-		serialized += CRLF_str;
+		serialized.insert(serialized.end(), it->first.begin(), it->first.end());
+		serialized.push_back(':');
+		serialized.push_back(' ');
+		serialized.insert(serialized.end(), it->second.begin(), it->second.end());
+		serialized.push_back('\r');
+		serialized.push_back('\n');
 		it++;
 	}
-	serialized += CRLF_str;
-	serialized += _body;
+	serialized.push_back('\r');
+	serialized.push_back('\n');
+	for (size_t i = 0; i < _body.size(); i++)
+		serialized.push_back(_body[i]);
 	return serialized;
 }
 
 int
 Response::buildBody(std::string const& path)
 {
-	std::ifstream web_page(path.c_str());
+	int fd = 0;
+	fd = open(path.c_str(), O_RDONLY);
 	int size = 0;
-	if (path.size() > 0 && web_page)
+	if (path.size() > 0 && fd > 0)
 	{
-		std::string line;
-		while (getline(web_page, line))
-			_body += line;
-		size = _body.length();
+		char line[BUFFER_SIZE];
+		bzero(line, BUFFER_SIZE);
+		_body.reserve(BUFFER_SIZE);
+		int ret = 0;
+		int sum = 0;
+		while ((ret =read(fd, line, BUFFER_SIZE)) > 0)
+		{
+			sum += ret;
+			for (int i = 0; i < BUFFER_SIZE; i++)
+        			_body.push_back(line[i]);
+			bzero(line, BUFFER_SIZE);
+		}
+		size = _body.size();
 		std::stringstream s;
-		s << size;
+		//s << size;
+		s << sum;
 		if (size > 0)
 			this->_headers["Content-Length"] =  s.str();
-		web_page.close();
+		close(fd);
 		return size;
 	}
 	else
@@ -134,7 +146,7 @@ Response::getFileExtension(std::string const &uri) const
 	if (!uri.empty())
 	{
 		size_t  extension_begin = uri.find_last_of(".");
-		if (extension_begin == std::string::npos)
+		if (extension_begin == std::string::npos) 
 			return std::string();
 		return uri.substr(extension_begin, uri.size());
 	}
@@ -169,6 +181,7 @@ Response::fillHandledExtensions(void)
 	std::map<std::string, std::string> extensions;
 
 	extensions.insert(std::make_pair(".html" ,"text/html"));
+	extensions.insert(std::make_pair(".php" ,"text/html"));
 	extensions.insert(std::make_pair(".mp3" ,"audio/mp3"));
 	extensions.insert(std::make_pair(".mp4" ,"video/mp4"));
 	extensions.insert(std::make_pair(".ttf" ,"font/ttf"));

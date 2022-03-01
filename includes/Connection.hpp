@@ -40,11 +40,11 @@ class Connection
 		Buffer &
 		getOutBuffer(void);
 
-		std::string &
-		getOutBufferData(void);
+		void
+		dumpOutBufferData(char *dump, int size);
 		
 		void
-		fillBuffer(char *buf);
+		fillBuffer(char *buf, int size);
 
 		void
 		eatOutBufferData(int);
@@ -75,6 +75,10 @@ class Connection
 
 		friend Connection &
 		operator<<(Connection &connection, std::string const & message);
+
+		friend Connection &
+		operator<<(Connection &connection,
+				std::vector<char> const & message);
 
 		friend bool
 		operator<(Connection const &lhs, Connection const &rhs)

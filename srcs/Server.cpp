@@ -117,9 +117,9 @@ Server::createConnection(void)
 }
 
 void
-Server::transferToBuffer(fd_t connection_fd, char *buf)
+Server::transferToBuffer(fd_t connection_fd, char *buf, int size)
 {
-	_connections[connection_fd]->fillBuffer(buf);
+	_connections[connection_fd]->fillBuffer(buf, size);
 }
 
 void
@@ -150,7 +150,7 @@ Server::watchInput(std::map<fd_t, RequestHandler> &request_handlers)
 		{
 			//std::cout << "buf content : " << std::endl << buf << std::endl;
 			//std::cout << "----------------------------------------" << std::endl;
-			transferToBuffer(connection_it->first, buf);
+			transferToBuffer(connection_it->first, buf, recvret);
 			FD_CLR(connection_it->first, &Server::read_fds);
 			connection_it++;
 		}
@@ -164,18 +164,20 @@ Server::send()
 	connection_it = _connections.begin();
 	for (; connection_it != _connections.end(); connection_it++)
 	{
-		if (connection_it->second->getOutBufferData().size() == 0)
+		if (connection_it->second->getOutBuffer().size() == 0)
 			continue;
 		fd_t fd = connection_it->second->getSocketFd();
 		if (isPossibleToWrite(fd))
 		{
+			char buf[BUFSIZE];
+			bzero(buf, BUFSIZE);
 			size_t bufsize = BUFSIZE;
-			size_t write_size = std::min(bufsize,
-									connection_it->second->getOutBufferData().size());
-			std::cout << connection_it->second->getOutBufferData().data();
-			write(fd, connection_it->second->getOutBufferData().data(), write_size); 
+			size_t write_size = std::min(bufsize - 1,
+									connection_it->second->getOutBuffer().size());
+			connection_it->second->dumpOutBufferData(buf, write_size);
+			write(fd, buf, write_size); 
 			//TODO write wrapper
-			connection_it->second->eatOutBufferData(BUFSIZE);
+			connection_it->second->eatOutBufferData(write_size);
 		}
 	}
 }

@@ -12,12 +12,12 @@ AHttpMessage::printMessage(std::ostream &flux) const
 	flux << "---------------------" << "Body :" << "---------------------" << std::endl;
 	if (!this->_body.empty())
 	{
-		for (int i = 0; this->_body[i]; i++)
+		for (size_t i = 0; i < this->_body.size(); i++)
 			flux << this->_body[i];
 	}
 }
 
-std::string const&
+AHttpMessage::body_type const&
 AHttpMessage::getBody(void) const
 {
 	return this->_body;
@@ -39,7 +39,7 @@ AHttpMessage::getDate(void) const
 }
 
 std::string
-AHttpMessage::get_header_value(std::string const &header_name) const
+AHttpMessage::getHeaderValue(std::string const &header_name) const
 {
 	hash_map::const_iterator it;
 
@@ -47,4 +47,10 @@ AHttpMessage::get_header_value(std::string const &header_name) const
 	if (it != this->_headers.end())
 		return it->second;
 	return std::string();
+}
+
+void
+AHttpMessage::setBody(AHttpMessage::body_type const& body)
+{
+	this->_body.insert(_body.end(), body.begin(), body.end());
 }

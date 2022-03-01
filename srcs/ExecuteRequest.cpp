@@ -34,7 +34,7 @@ ExecuteRequest::isAllowedMethod(std::string const &method, std::vector<std::stri
 bool
 ExecuteRequest::isMultipartProcessing(Ticket &ticket) const
 {
-	std::string content_type = ticket.getRequest().get_header_value("Content-Type");
+	std::string content_type = ticket.getRequest().getHeaderValue("Content-Type");
 		return true;
 	return false;
 }
@@ -42,13 +42,13 @@ ExecuteRequest::isMultipartProcessing(Ticket &ticket) const
 void
 ExecuteRequest::processMultipart(Ticket &ticket)
 {
-	std::string content_type = ticket.getRequest().get_header_value("Content-Type");
+	std::string content_type = ticket.getRequest().getHeaderValue("Content-Type");
 	size_t xpos = content_type.find(MULTIPART);
 	if (xpos != 0)
 		throw std::exception();
 	std::string key = content_type.substr(std::string(MULTIPART).size());
-	std::string const &body = ticket.getRequest().getBody();	
-	(void)body;
+	//std::string const &body = ticket.getRequest().getBody();	
+	//(void)body;
 }
 
 int
@@ -79,7 +79,7 @@ ExecuteRequest::isValidRequest(Request const& request, ConfigServer const& confi
 {
     bool valid = true;
     if (request.getStartLine().method_token.empty() || request.getStartLine().request_URI.empty()
-    || request.getStartLine().http_version.empty() || request.get_header_value("Host").empty()
+    || request.getStartLine().http_version.empty() || request.getHeaderValue("Host").empty()
     || !request.isContentLengthCorrect() || !request.getValid())
     {
         _status_code = BAD_REQUEST;
@@ -143,11 +143,16 @@ std::string
 ExecuteRequest::getRedirected(ServerLocations const& location, Response &response)
 {
     _status_code = MOVED_PERMANTLY;
+<<<<<<< HEAD
     std::string redir = location.getRedir().to;
     std::cout << "REDIR TO : " << redir << std::endl;
     response.setHeader("Location", redir);
     response.setHeader("Content-Length", "0");
     return redir;
+=======
+    response.setHeader("Location", location.getRedir().to);
+    return std::string();
+>>>>>>> refacto_buffer
 }
 
 std::string
@@ -232,7 +237,7 @@ ExecuteRequest::postMethod(std::string const &URI, ConfigServer const &config,
 
 #define FGET_SIZE 42
 
-std::string
+AHttpMessage::body_type
 ExecuteRequest::execCgi(Request const &request,
 							std::string const &original_uri,
 							std::string const &resolved_uri,
@@ -253,10 +258,11 @@ ExecuteRequest::execCgi(Request const &request,
 
 	char line[FGET_SIZE + 1];
     bzero(line, FGET_SIZE + 1);
-    std::string cgi_response;
+    AHttpMessage::body_type cgi_response;
 	while (fgets(line, FGET_SIZE, handler.getCgiResponse()))
     {
-        cgi_response += std::string(line);
+	for (int i = 0; line[i] && i < FGET_SIZE; i++)
+        	cgi_response.push_back(line[i]);
     }
 	return cgi_response;
 }

@@ -106,9 +106,9 @@ has_body(RequestHandler &rh)
 	std::stringstream ss;
 	int content_length;
 
-	ss << rh.getRequest()->get_header_value("Content-Length");
+	ss << rh.getRequest()->getHeaderValue("Content-Length");
 	ss >> content_length;
-	if (content_length == 0 && rh.getRequest()->get_header_value("Transfer-Encoding") != "chunked")
+	if (content_length == 0 && rh.getRequest()->getHeaderValue("Transfer-Encoding") != "chunked")
 		return false;
 	else if (rh.getRequest()->isContentLengthCorrect())
 		return true;
@@ -120,7 +120,7 @@ parseHeaders(RequestHandler &rh)
 {
 	int index = 0;
 
-	if (rh.getBuffer() == "\r\n")
+	if (rh.getBuffer().size() == 2 && rh.getBuffer()[0] == '\r' && rh.getBuffer()[1] == '\n')
 	{
 		rh.getRequest()->setHeaderInitialized(true);
 		return index + CRLF;
@@ -133,11 +133,11 @@ parseHeaders(RequestHandler &rh)
 }
 
 bool
-is_complete_line(std::string &line)
+isCompleteLine(AHttpMessage::body_type &line)
 {
 	size_t i = 0;
 
-	while (i < line.length())
+	while (i < line.size())
 	{
 		if (isEndLine(line, i))
 			return true;
@@ -150,12 +150,12 @@ int
 getBodyWithContentLength(RequestHandler &rh, int index)
 {
 	std::stringstream ss;
-	std::string body;
+	AHttpMessage::body_type body;
 	int content_length;
 
-	ss << rh.getRequest()->get_header_value("Content-Length");
+	ss << rh.getRequest()->getHeaderValue("Content-Length");
 	ss >> content_length;
-	body.assign(rh.getBuffer(), index, content_length);
+	body.insert(body.end(), rh.getBuffer().begin() + index, rh.getBuffer().begin() + content_length);
 	rh.getRequest()->setBody(body);
 	rh.getRequest()->setRequestFinalized(true);
 	return index + content_length;
@@ -165,14 +165,15 @@ int
 getChunkOfBody(RequestHandler &rh, int index)
 {
 	unsigned int i = index;
+	std::string tmp;
 	size_t chunk_size = 1;
-	std::string chunk;
+	AHttpMessage::body_type chunk;
 	
 	while (!isEndLine(rh.getBuffer(), index))
 		index++;
-	chunk = rh.getBuffer().substr(i, index);
+	chunk.insert(chunk.end(), rh.getBuffer().begin() + i, rh.getBuffer().begin() + index);
 	std::stringstream ss;
-	ss << std::hex << chunk;
+	ss << std::hex << tmp;
 	ss >> chunk_size;
 	if (chunk_size == 0)
 	{
@@ -180,7 +181,9 @@ getChunkOfBody(RequestHandler &rh, int index)
 		return index;
 	}
 	index += CRLF;
-	rh.getRequest()->setBody(rh.getBuffer().substr(index, chunk_size));
+	chunk.clear();
+	chunk.insert(chunk.end(), rh.getBuffer().begin() + index, rh.getBuffer().begin() + chunk_size);
+	rh.getRequest()->setBody(chunk);
 	index += CRLF;
 	return index += chunk_size;
 }
@@ -204,23 +207,23 @@ parseBody(RequestHandler &rh)
 {
 	int index = 0;
 	
-	if (rh.getRequest()->get_header_value("Content-Length") != "0")
+	if (rh.getRequest()->getHeaderValue("Content-Length") != "0")
 		return getBodyWithContentLength(rh, index);
-	else if (rh.getRequest()->get_header_value("Transfer-Encoding") == "chunked")
+	else if (rh.getRequest()->getHeaderValue("Transfer-Encoding") == "chunked")
 	{
 		if (isCompleteChunk(rh))
 			index = getChunkOfBody(rh, index);
 	}
 	else
 	{
-		std::string body;
+		AHttpMessage::body_type body;
 		int sublen = 0;
 		while (rh.getBuffer()[index] && !isEndSection(rh.getBuffer(), index))
 		{
 			index++;
 			sublen++;
 		}
-		body.assign(rh.getBuffer(), rh.getIdx(), sublen);
+		body.insert(body.begin(),  rh.getBuffer().begin() + rh.getIdx(), rh.getBuffer().begin() + sublen);
 		rh.getRequest()->setBody(body);
 		rh.getRequest()->setRequestFinalized(true);
 	}
@@ -241,7 +244,7 @@ parseRequest(Connection *raw_request, Server &server, TicketsType &tickets, ReqH
 	RequestHandler &rh = it->second;
 	if (rh.getRequest()->isRequestFinalized() == true)
 		return 1;
-	if (is_complete_line(rh.getBuffer()) && !rh.getBuffer().empty())
+	if (isCompleteLine(rh.getBuffer()) && !rh.getBuffer().empty())
 	{
 		if (rh.getRequest()->iStartLineInitialized() == false)
 			rh.setIdx(parseStartLine(rh));

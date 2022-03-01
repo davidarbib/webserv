@@ -37,9 +37,9 @@ class RequestHandler
 		getIdx(void) const;
 
 		void
-		fillBuffer(char *raw_buffer);
+		fillBuffer(char *raw_buffer, int size);
 
-		std::string &
+		std::vector<char> &
 		getBuffer(void);
 
 		Request *

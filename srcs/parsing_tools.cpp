@@ -1,7 +1,7 @@
 #include "parsing_tools.hpp"
 
 bool
-isEndLine(std::string &line, int index)
+isEndLine(AHttpMessage::body_type &line, int index)
 {
 	if (line[index] == '\r')
 	{
@@ -12,7 +12,7 @@ isEndLine(std::string &line, int index)
 }
 
 bool
-isEndSection(std::string &line, int index)
+isEndSection(AHttpMessage::body_type &line, int index)
 {
 	if (isEndLine(line, index))
 	{

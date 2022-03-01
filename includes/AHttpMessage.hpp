@@ -4,6 +4,7 @@
 #include <iostream>
 #include <string>
 #include <map>
+#include <vector>
 #include <ctime>
 
 #define DATE_BUFFER 80
@@ -24,22 +25,22 @@ struct status_line
 
 class AHttpMessage
 {
-	protected:
-
+	public:
+		typedef std::vector<char> body_type;
 		typedef std::map<std::string, std::string> hash_map;
-
+	
+	protected:
 		hash_map 		_headers;
-		std::string		_body;
+		body_type		_body;
 
 	public :
-
-		virtual void
-		setBody(std::string const& body) = 0;
+		void
+		setBody(AHttpMessage::body_type const& body);
 
 		virtual void
 		setHeader(std::string const &key, std::string const &value) = 0;
 
-		std::string const&
+		body_type const&
 		getBody(void) const;
 
 		void
@@ -49,7 +50,7 @@ class AHttpMessage
 		getDate(void) const;
 
 		std::string
-		get_header_value(std::string const &header_name) const;
+		getHeaderValue(std::string const &header_name) const;
 
 };
 
