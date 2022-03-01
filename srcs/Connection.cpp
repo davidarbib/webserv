@@ -83,3 +83,10 @@ operator<<(Connection &connection, std::string const & message)
 	connection._out_buffer.append(message);
 	return connection;
 }
+
+Connection &
+operator<<(Connection &connection, std::vector<char> const & message)
+{
+	connection._out_buffer.append(message);
+	return connection;
+}

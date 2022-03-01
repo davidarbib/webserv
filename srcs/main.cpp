@@ -230,8 +230,13 @@ processRequest(TicketsType &tickets, ReqHandlersType &request_handlers)
 		response.buildPreResponse(executor.getStatusCode());
 		request_handlers.erase(tickets.front().getRhIt());
 		//response.setHeader("Content-Length", "0"); //TODO multipart test
-		
+		std::cout << "Body size after exec : " << response.getBody().size() << std::endl;	
 		tickets.front().getConnection() << response.serialize_response();
+		#define D_SIZE 45000
+		char debug[D_SIZE];
+		bzero(debug, D_SIZE);
+		tickets.front().getConnection().dumpOutBufferData(debug, D_SIZE);
+		write(1, debug, D_SIZE);
 		tickets.pop();
 	}
 	return response;

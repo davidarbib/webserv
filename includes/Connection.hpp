@@ -76,6 +76,10 @@ class Connection
 		friend Connection &
 		operator<<(Connection &connection, std::string const & message);
 
+		friend Connection &
+		operator<<(Connection &connection,
+				std::vector<char> const & message);
+
 		friend bool
 		operator<(Connection const &lhs, Connection const &rhs)
 		{ return lhs._socket_fd < rhs._socket_fd; }

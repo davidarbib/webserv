@@ -5,7 +5,10 @@
 #include "AHttpMessage.hpp"
 #include <sstream>
 #include <fstream>
+#include <unistd.h>
+#include <fcntl.h>
 
+#define BUFFER_SIZE 1024
 #define HTTP_VERSION "HTTP/1.1"
 #define SERVER_VERSION "webserv/1.0.0"
 #define CRLF_str "\r\n"
@@ -71,7 +74,7 @@ class Response : public AHttpMessage
 		std::string
 		getFileExtension(std::string const &uri) const;
 
-		std::string
+		AHttpMessage::body_type
 		serialize_response(void);
 
 		void
