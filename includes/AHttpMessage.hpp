@@ -26,7 +26,7 @@ struct status_line
 class AHttpMessage
 {
 	public:
-		typedef std::vector<unsigned char> body_type;
+		typedef std::vector<char> body_type;
 		typedef std::map<std::string, std::string> hash_map;
 	
 	protected:
@@ -35,7 +35,7 @@ class AHttpMessage
 
 	public :
 		void
-		setBody(std::string const& body);
+		setBody(AHttpMessage::body_type const& body);
 
 		virtual void
 		setHeader(std::string const &key, std::string const &value) = 0;

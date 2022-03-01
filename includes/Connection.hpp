@@ -40,14 +40,14 @@ class Connection
 		Buffer &
 		getOutBuffer(void);
 
-		std::string &
-		getOutBufferData(void);
+		void
+		dumpOutBufferData(char *dump, int size);
 		
 		void
 		expectFullBodyNextRequest(void);
 		
 		void
-		fillBuffer(char *buf);
+		fillBuffer(char *buf, int size);
 
 		void
 		eatOutBufferData(int);

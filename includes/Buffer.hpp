@@ -4,13 +4,14 @@
 # include "typedefs.hpp"
 # include <string>
 # include <iostream>
+# include <vector>
 
 class Buffer
 {
 	private:
 
-		size_t					_idx;
-		std::string				_buffer;
+		size_t				_idx;
+		std::vector<char>	_buffer;
 
 		Buffer(Buffer const &src);
 		Buffer &
@@ -32,9 +33,12 @@ class Buffer
 		getIdx(void) const;
 
 		void
-		fillBuffer(char *raw_buffer);
+		fillBuffer(char *raw_buffer, int size);
 
-		std::string &
+		void
+		dumpData(char *dump, int size);
+
+		std::vector<char> &
 		getBuffer(void);
 
 		char const *
@@ -54,5 +58,8 @@ class Buffer
 
 		bool
 		isEmpty(void);
+
+		size_t
+		size(void);
 };
 #endif

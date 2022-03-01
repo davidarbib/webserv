@@ -1,8 +1,7 @@
 #include "Buffer.hpp"
 
 Buffer::Buffer():
-	_idx(0),
-	_buffer("")
+	_idx(0)
 {
 }
 
@@ -17,9 +16,12 @@ Buffer::~Buffer(void)
 }
 
 void
-Buffer::fillBuffer(char *raw_buffer)
+Buffer::fillBuffer(char *raw_buffer, int size)
 {
-	this->_buffer += const_cast<char*>(raw_buffer);
+	size_t len = _buffer.size();
+	_buffer.resize(len + size);
+	for (int i = 0; i < size; i++)
+		_buffer[len + i] = raw_buffer[i];
 }
 
 void
@@ -40,16 +42,10 @@ Buffer::getIdx(void) const
 	return this->_idx;
 }
 
-std::string &
+std::vector<char> &
 Buffer::getBuffer(void)
 {
-	return this->_buffer;
-}
-
-char const *
-Buffer::getContent(void)
-{
-	return _buffer.data();
+	return _buffer;
 }
 
 bool
@@ -66,16 +62,12 @@ Buffer::isEndLine(std::string &line, int index)
 void
 Buffer::clearBuffer()
 {				
-	size_t count;
 	size_t current_size = _buffer.size();
-	//std::cout << "idx : " << _idx << std::endl;
-	//std::cout << "size : " << _buffer.size() << std::endl;
 	if (_idx >= current_size)	
 		_buffer.clear();
 	else
 	{
-		count = current_size - _idx;
-		_buffer.assign(_buffer.substr(_idx, count)); 
+		_buffer.assign(_buffer.begin() + _idx, _buffer.end());
 		_idx = 0;
 	}
 }
@@ -83,11 +75,24 @@ Buffer::clearBuffer()
 void
 Buffer::append(std::string const &message)
 {
-	_buffer += message;
+	_buffer.insert(_buffer.end(), message.begin(), message.end());
 }
 
 bool
 Buffer::isEmpty(void)
 {
 	return _buffer.empty();
+}
+
+void
+Buffer::dumpData(char *dump, int size)
+{
+	for (int i = 0; i < size; i++)
+		dump[i] = _buffer[i];
+}
+
+size_t
+Buffer::size(void)
+{
+	return _buffer.size();
 }

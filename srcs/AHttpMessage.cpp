@@ -50,7 +50,7 @@ AHttpMessage::getHeaderValue(std::string const &header_name) const
 }
 
 void
-AHttpMessage::setBody(std::string const& body)
+AHttpMessage::setBody(AHttpMessage::body_type const& body)
 {
 	this->_body.insert(_body.end(), body.begin(), body.end());
 }
