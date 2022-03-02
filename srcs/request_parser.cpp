@@ -156,20 +156,15 @@ getBodyWithContentLength(RequestHandler &rh, int index)
 	ss << rh.getRequest()->getHeaderValue("Content-Length");
 	ss >> content_length;
 	body.reserve(content_length);
-	size_t count = 0;
-	for (AHttpMessage::body_type::iterator it = rh.getBuffer().begin();
-			it != rh.getBuffer().end(); it++)
+	for (AHttpMessage::body_type::iterator it = rh.getBuffer().begin(); it != rh.getBuffer().end(); it++)
 	{
 		body.push_back(*it);
-		count++;
+		index++;
 	}
-	std::cout << "content-length : " << content_length << std::endl;
-	std::cout << "body size: " << rh.getRequest()->getBody().size() << std::endl;
-	//body.insert(body.end(), rh.getBuffer().begin() + index, rh.getBuffer().end());
 	rh.getRequest()->setBody(body);
-	if (body.size() == content_length)
+	if (rh.getRequest()->getBody().size() == content_length)
 		rh.getRequest()->setRequestFinalized(true);
-	return index + count;
+	return index;
 }
 
 int
@@ -241,7 +236,6 @@ parseBody(RequestHandler &rh)
 	return index;
 }
 
-#define MULTIPART "multipart/form-data; boundary="
 int
 parseRequest(Connection *raw_request, Server &server, TicketsType &tickets, ReqHandlersType &request_handlers)
 {
@@ -256,11 +250,7 @@ parseRequest(Connection *raw_request, Server &server, TicketsType &tickets, ReqH
 	RequestHandler &rh = it->second;
 	if (rh.getRequest()->isRequestFinalized() == true)
 		return 1;
-	//std::cout << "buffer size : " << rh.getBuffer().size() << std::endl;
-	std::string content_type = rh.getRequest()->getHeaderValue("Content-type");
-	std::cout << content_type << std::endl;
-	if ((isCompleteLine(rh.getBuffer()) && !rh.getBuffer().empty())
-		|| (rh.getRequest()->isHeadersInitialized() == true && content_type.find(MULTIPART) != std::string::npos))
+	if (isCompleteLine(rh.getBuffer()) || rh.getRequest()->isHeadersInitialized() == true)
 	{
 		if (rh.getRequest()->iStartLineInitialized() == false)
 			rh.setIdx(parseStartLine(rh));
