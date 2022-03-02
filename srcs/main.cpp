@@ -152,15 +152,19 @@ cutQuery(Request &request, std::string &query)
 }
 
 int
-parseCgiResponse(Response &response, std::string cgi_response)
+parseCgiResponse(Response &response, AHttpMessage::body_type cgi_response)
 {
 	int index = 0;
 	while (!isEndLine(cgi_response, index))
 	{
-		index = getHeader(index, cgi_response, response);
+		std::string tmp;
+		tmp.reserve(cgi_response.size());
+		tmp.assign(cgi_response.begin(), cgi_response.end());
+		index = getHeader(index, tmp, response);
 		if (isEndLine(cgi_response, index))
 		{
-			std::string body(cgi_response.substr(index, cgi_response.size()));
+			AHttpMessage::body_type body;
+			body.insert(body.begin(), cgi_response.begin() + index, cgi_response.end());
 			std::stringstream ss;
 			ss << body.size();
 			response.setBody(body);
@@ -246,7 +250,13 @@ processRequest(TicketsType &tickets, ReqHandlersType &request_handlers)
 		response.buildPreResponse(executor.getStatusCode());
 		request_handlers.erase(tickets.front().getRhIt());
 		//response.setHeader("Content-Length", "0"); //TODO multipart test
+		std::cout << "Body size after exec : " << response.getBody().size() << std::endl;	
 		tickets.front().getConnection() << response.serialize_response();
+		//#define D_SIZE 45000
+		//char debug[D_SIZE];
+		//bzero(debug, D_SIZE);
+		//tickets.front().getConnection().dumpOutBufferData(debug, D_SIZE);
+		//write(1, debug, D_SIZE);
 		tickets.pop();
 	}
 	return response;

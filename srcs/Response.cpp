@@ -70,7 +70,7 @@ Response::buildPreResponse(int code)
 	}
 }
 
-std::string
+AHttpMessage::body_type
 Response::serialize_response(void)
 {
 	std::stringstream status_line;
@@ -80,39 +80,56 @@ Response::serialize_response(void)
 	status_line << _start_line.status_code;
 	status_line << " ";
 	status_line << _start_line.reason_phrase.append(CRLF_str);
-	std::string serialized(status_line.str());
+	AHttpMessage::body_type serialized;
+	serialized.reserve(status_line.str().size());
+	std::string tmp(status_line.str());
+	serialized.insert(serialized.end(), tmp.begin(), tmp.end());
 
 	hash_map::iterator it = _headers.begin();
 	while (it != _headers.end())
 	{
-		serialized += it->first;
-		serialized += ": ";
-		serialized += it->second;
-		serialized += CRLF_str;
+		serialized.insert(serialized.end(), it->first.begin(), it->first.end());
+		serialized.push_back(':');
+		serialized.push_back(' ');
+		serialized.insert(serialized.end(), it->second.begin(), it->second.end());
+		serialized.push_back('\r');
+		serialized.push_back('\n');
 		it++;
 	}
-	serialized += CRLF_str;
+	serialized.push_back('\r');
+	serialized.push_back('\n');
 	for (size_t i = 0; i < _body.size(); i++)
-		serialized += _body[i];
+		serialized.push_back(_body[i]);
 	return serialized;
 }
 
 int
 Response::buildBody(std::string const& path)
 {
-	std::ifstream web_page(path.c_str());
+	int fd = 0;
+	fd = open(path.c_str(), O_RDONLY);
 	int size = 0;
-	if (path.size() > 0 && web_page)
+	if (path.size() > 0 && fd > 0)
 	{
-		std::string line;
-		while (getline(web_page, line))
-			_body.insert(_body.end(), line.begin(), line.end());
+		char line[BUFFER_SIZE];
+		bzero(line, BUFFER_SIZE);
+		_body.reserve(BUFFER_SIZE);
+		int ret = 0;
+		int sum = 0;
+		while ((ret =read(fd, line, BUFFER_SIZE)) > 0)
+		{
+			sum += ret;
+			for (int i = 0; i < BUFFER_SIZE; i++)
+        			_body.push_back(line[i]);
+			bzero(line, BUFFER_SIZE);
+		}
 		size = _body.size();
 		std::stringstream s;
-		s << size;
+		//s << size;
+		s << sum;
 		if (size > 0)
 			this->_headers["Content-Length"] =  s.str();
-		web_page.close();
+		close(fd);
 		return size;
 	}
 	else

@@ -199,11 +199,8 @@ std::string
 ExecuteRequest::getRedirected(ServerLocations const& location, Response &response)
 {
     _status_code = MOVED_PERMANTLY;
-    std::string redir = location.getRedir().to;
-    std::cout << "REDIR TO : " << redir << std::endl;
-    response.setHeader("Location", redir);
-    response.setHeader("Content-Length", "0");
-    return redir;
+    response.setHeader("Location", location.getRedir().to);
+    return std::string();
 }
 
 std::string
@@ -287,7 +284,7 @@ ExecuteRequest::postMethod(std::string const &URI, ConfigServer const &config,
 #define FGET_SIZE 42
 #define EMPTY_STR ""
 
-std::string
+AHttpMessage::body_type
 ExecuteRequest::execCgi(Request const &request,
 							std::string const &original_uri,
 							std::string const &resolved_uri,
@@ -308,10 +305,11 @@ ExecuteRequest::execCgi(Request const &request,
 
 	char line[FGET_SIZE + 1];
     bzero(line, FGET_SIZE + 1);
-    std::string cgi_response;
+    AHttpMessage::body_type cgi_response;
 	while (fgets(line, FGET_SIZE, handler.getCgiResponse()))
     {
-        cgi_response += std::string(line);
+	for (int i = 0; line[i] && i < FGET_SIZE; i++)
+        	cgi_response.push_back(line[i]);
     }
 	return cgi_response;
 }

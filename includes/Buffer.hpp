@@ -54,6 +54,9 @@ class Buffer
 		append(std::string const &message);
 
 		void
+		append(std::vector<char> const &message);
+
+		void
 		eatData(size_t size);
 
 		bool

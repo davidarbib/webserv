@@ -90,7 +90,7 @@ class ExecuteRequest
         postMethod(std::string const &URI, ConfigServer const &config,
 					ServerLocations const& location, Ticket const& ticket);
 
-		std::string
+	        AHttpMessage::body_type	
 		execCgi(Request const &request, std::string const &original_uri,
 				std::string const &resolved_uri, std::string const &query,
 				ConfigServer const &config, ServerLocations const& location,

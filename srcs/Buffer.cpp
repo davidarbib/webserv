@@ -78,6 +78,12 @@ Buffer::append(std::string const &message)
 	_buffer.insert(_buffer.end(), message.begin(), message.end());
 }
 
+void
+Buffer::append(std::vector<char> const &message)
+{
+	_buffer.insert(_buffer.end(), message.begin(), message.end());
+}
+
 bool
 Buffer::isEmpty(void)
 {
