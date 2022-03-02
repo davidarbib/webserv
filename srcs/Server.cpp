@@ -97,14 +97,7 @@ Server::createConnection(void)
 	fd_t			new_sock_fd;
 	socklen_t sinsize = sizeof(new_sin);
 
-//	std::cout << "connection" << std::endl;
 	new_sock_fd = accept(_listen_fd, reinterpret_cast<sockaddr*>(&new_sin), &sinsize);
-//	std::cout << "client port : " << (int)ntohs(new_sin.sin_port) << std::endl;
-//	std::cout << "client IP : " << inet_ntoa(new_sin.sin_addr) << std::endl;
-//	std::cout << "client IP : " << ((unsigned char *)&new_sin.sin_addr)[0] << ".";
-//	std::cout << (int)((unsigned char *)&new_sin.sin_addr)[1] << ".";
-//	std::cout << (int)((unsigned char *)&new_sin.sin_addr)[2] << ".";
-//	std::cout << (int)((unsigned char *)&new_sin.sin_addr)[3] << std::endl;
 	if (new_sock_fd < 0)
 		throw ConnectionException();
 	if (fcntl(new_sock_fd, F_SETFL, O_NONBLOCK) < 0)
@@ -148,8 +141,6 @@ Server::watchInput(std::map<fd_t, RequestHandler> &request_handlers)
 		}
 		else
 		{
-			//std::cout << "buf content : " << std::endl << buf << std::endl;
-			//std::cout << "----------------------------------------" << std::endl;
 			transferToBuffer(connection_it->first, buf, recvret);
 			FD_CLR(connection_it->first, &Server::read_fds);
 			connection_it++;

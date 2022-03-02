@@ -66,15 +66,6 @@ processConfigFile(ServersType &servers, std::string &config_path, Config &conf)
 	}
 	//TODO config file error handling
 	classConfigs(conf, hostport_configs, hostports);
-	/* --------TODO debug -------- */
-	//HostPort debug_hostport = HostPort("127.0.0.1", "8003");
-	//hostports.push_back(debug_hostport);
-	//std::cout << hostports.size() << std::endl;
-	//std::cout << hostports.begin()->getIp() << std::endl;
-	//std::cout << hostports.begin()->getPort() << std::endl;
-	//std::cout << (hostports.begin() + 1)->getIp() << std::endl;
-	//std::cout << (hostports.begin() + 1)->getPort() << std::endl;
-	/* --------------------------- */
 	std::vector<HostPort>::iterator hp_end_it;
 	std::vector<HostPort>	unique_hostports(hostports.size());
 	hp_end_it = std::unique_copy(hostports.begin(), hostports.end(),
