@@ -143,10 +143,8 @@ std::string
 ExecuteRequest::getRedirected(ServerLocations const& location, Response &response)
 {
     _status_code = MOVED_PERMANTLY;
-    std::string redir = location.getRedir().to;
-    response.setHeader("Location", redir);
-    response.setHeader("Content-Length", "0");
-    return redir;
+    response.setHeader("Location", location.getRedir().to);
+    return std::string();
 }
 
 std::string
