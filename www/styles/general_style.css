@@ -1,0 +1,25 @@
+@font-face {
+    font-family: "BoldFont";
+    src: url("./fonts/theboldfont.ttf");
+}
+
+body
+{
+    background-color: rgb(144,230,229);
+    text-align: center;
+    padding-top: 10%;
+}
+
+h1
+{
+    font-weight: bold;
+    font-size: 5rem;
+    color: rgb(78, 185, 185);
+    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+}
+
+p
+{
+    font-size: 1.3rem;
+    color: rgb(17,17,17);
+}
