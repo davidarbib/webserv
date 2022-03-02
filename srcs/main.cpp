@@ -197,14 +197,11 @@ processRequest(TicketsType &tickets, ReqHandlersType &request_handlers)
 			index_page_idx = matchIndex(location, resolved_uri);
 		if (executor.isValidRequest(current.getRequest(), config, location) == true)
 		{
-			if (!isCgiRequested(uri, resolved_uri, location, index_page_idx))
+			if (isCgiRequested(uri, resolved_uri, location, index_page_idx))
 			{
 				try
 				{
-					/* code */
-				executor.setStatusCode(parseCgiResponse(response,
-														executor.execCgi(current.getRequest(), uri, resolved_uri,
-																			query, config, location, index_page_idx)));
+					executor.setStatusCode(parseCgiResponse(response, executor.execCgi(current.getRequest(), uri, resolved_uri, query, config, location, index_page_idx)));
 				}
 				catch(const std::exception& e)
 				{
@@ -239,6 +236,7 @@ processRequest(TicketsType &tickets, ReqHandlersType &request_handlers)
 		else
 			body_path = executor.buildBodyPath(config);
 		response.buildPreResponse(executor.getStatusCode());
+		std::cout << body_path << std::endl;
 		request_handlers.erase(tickets.front().getRhIt());
 		tickets.front().getConnection() << response.serialize_response();
 		char debug[D_SIZE];
@@ -267,21 +265,6 @@ main(int ac, char **av)
 	Server::initFdset();
 	
 	processArgs(ac, av, servers, config);
-
-	/* ------------ TODO for tests without configuration file ----------------*/
-	//(void)ac;
-	//(void)av;
-	//ConfigServer conf;
-	//conf.setName("127.0.0.1:8003");
-	//conf.setHost("127.0.0.1:8003");
-	//conf.setPort("8003");
-	//conf.setMaxBody("200");
-	//std::vector<ConfigServer> configs;
-	//configs.push_back(conf);
-	//servers.push_back(Server("127.0.0.1", "8003", configs));
-
-	/* -----------------------------------------------------------------------*/
-	
 	listenNetwork(servers);
 
 	tv.tv_sec = DELAY;

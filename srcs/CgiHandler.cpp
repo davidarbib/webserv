@@ -135,10 +135,9 @@ CgiHandler::sendCgi(void)
 	pid_t pid = __fork__();	
 	if (pid == 0)
 	{
-		__dup2__(fileno(_sender), STDIN_FILENO);
-		__dup2__(fileno(_receiver), STDOUT_FILENO);
-		_execve_("uhfdyghjbjhsdgbfhgdnbvhasjgdbcasyhjdgbuashjbdahsjdgbahgjdbcsdhjfgbcdiyufjhnbsedjhb", argv, env);
-		// _execve_(_pgm_path.c_str(), argv, env);
+		_dup2_(fileno(_sender), STDIN_FILENO);
+		_dup2_(fileno(_receiver), STDOUT_FILENO);
+		_execve_(_pgm_path.c_str(), argv, env);
 	}
 	else
 	{
