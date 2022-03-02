@@ -192,7 +192,7 @@ processRequest(TicketsType &tickets, ReqHandlersType &request_handlers)
 			index_page_idx = matchIndex(location, resolved_uri);
 		if (executor.isValidRequest(current.getRequest(), config, location) == true)
 		{
-			if (isCgiRequested(uri, resolved_uri, location, index_page_idx))
+			if (!isCgiRequested(uri, resolved_uri, location, index_page_idx))
 			{
 				executor.setStatusCode(parseCgiResponse(response,
 														executor.execCgi(current.getRequest(), uri, resolved_uri,
