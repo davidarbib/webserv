@@ -5,6 +5,7 @@
 #include "AHttpMessage.hpp"
 #include <sstream>
 #include <fstream>
+#include <cstring>
 #include <unistd.h>
 #include <cstring>
 #include <fcntl.h>
@@ -28,6 +29,7 @@
 #define NOT_ALLOWED 405
 #define PAYLOAD_TO_LARGE 413
 #define URI_TO_LONG 414
+#define INTERNAL_SERVER_ERROR 500
 #define NOT_IMPLEMENTED 501
 #define VERSION_NOT_SUPPORTED 505
 

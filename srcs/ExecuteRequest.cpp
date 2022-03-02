@@ -2,7 +2,8 @@
 #include <cstring>
 
 ExecuteRequest::ExecuteRequest() : _status_code(0)
-{}
+{
+}
 
 ExecuteRequest::ExecuteRequest(ExecuteRequest &cpy)
 {

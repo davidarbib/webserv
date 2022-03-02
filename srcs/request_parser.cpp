@@ -1,16 +1,16 @@
 #include "request_parser.hpp"
 
-void print_buffer(std::string str) // for debug purpose
+void print_buffer(AHttpMessage::body_type buffer) // for debug purpose
 {
 	 std::cout << "BUFFER : " << std::endl;
-	 for(size_t i = 0; i < str.length(); i++)
+	 for(size_t i = 0; i < buffer.size(); i++)
 	 {
-	 	if (str[i] == '\r')
+	 	if (buffer[i] == '\r')
 	 		std::cout << "\\r";
-	 	else if (str[i] == '\n')
+	 	else if (buffer[i] == '\n')
 	 		std::cout << "\\n";
 	 	else
-	 		std::cout << str[i];
+	 		std::cout << buffer[i];
 	 }
 }
 
@@ -155,12 +155,21 @@ getBodyWithContentLength(RequestHandler &rh, int index)
 
 	ss << rh.getRequest()->getHeaderValue("Content-Length");
 	ss >> content_length;
+	body.reserve(content_length);
+	size_t count = 0;
+	for (AHttpMessage::body_type::iterator it = rh.getBuffer().begin();
+			it != rh.getBuffer().end(); it++)
+	{
+		body.push_back(*it);
+		count++;
+	}
 	std::cout << "content-length : " << content_length << std::endl;
-	body.insert(body.end(), rh.getBuffer().begin() + index, rh.getBuffer().end());
+	std::cout << "body size: " << rh.getRequest()->getBody().size() << std::endl;
+	//body.insert(body.end(), rh.getBuffer().begin() + index, rh.getBuffer().end());
 	rh.getRequest()->setBody(body);
 	if (body.size() == content_length)
 		rh.getRequest()->setRequestFinalized(true);
-	return index + content_length;
+	return index + count;
 }
 
 int
@@ -232,6 +241,7 @@ parseBody(RequestHandler &rh)
 	return index;
 }
 
+#define MULTIPART "multipart/form-data; boundary="
 int
 parseRequest(Connection *raw_request, Server &server, TicketsType &tickets, ReqHandlersType &request_handlers)
 {
@@ -246,7 +256,11 @@ parseRequest(Connection *raw_request, Server &server, TicketsType &tickets, ReqH
 	RequestHandler &rh = it->second;
 	if (rh.getRequest()->isRequestFinalized() == true)
 		return 1;
-	if (isCompleteLine(rh.getBuffer()) && !rh.getBuffer().empty())
+	//std::cout << "buffer size : " << rh.getBuffer().size() << std::endl;
+	std::string content_type = rh.getRequest()->getHeaderValue("Content-type");
+	std::cout << content_type << std::endl;
+	if ((isCompleteLine(rh.getBuffer()) && !rh.getBuffer().empty())
+		|| (rh.getRequest()->isHeadersInitialized() == true && content_type.find(MULTIPART) != std::string::npos))
 	{
 		if (rh.getRequest()->iStartLineInitialized() == false)
 			rh.setIdx(parseStartLine(rh));
@@ -262,12 +276,13 @@ parseRequest(Connection *raw_request, Server &server, TicketsType &tickets, ReqH
 			// std::cout << "headers initialized" << std::endl;
 			//std::cout << "body parsing" << std::endl;
 			rh.setIdx(parseBody(rh));
+			//print_buffer(rh.getBuffer()); // for debug purpose
 		}
 		rh.clearBuffer();
 		if (rh.getRequest()->isRequestFinalized() == true || !rh.getRequest()->getValid())
 		{
 			//UNCOMENT TO SEE REQUEST INFOS
-			//std::cout << *rh.getRequest() << std::endl;
+			std::cout << *rh.getRequest() << std::endl;
 			Ticket my_ticket(*raw_request, rh.getRequest(), server, it);
 			tickets.push(my_ticket);
 		}
