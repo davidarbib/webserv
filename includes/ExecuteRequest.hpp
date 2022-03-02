@@ -14,8 +14,18 @@
 #include <cctype>
 
 #define HTTP_METHOD_NOT_IMPLEMENTED_NB 6
+#define CRLFCRLF_S "\r\n\r\n"
+#define CRLF_S "\r\n"
 
 #define MULTIPART "multipart/form-data; boundary="
+
+typedef struct s_headers
+{
+	std::string content_type;
+	std::string filename;
+	std::string charset;
+} 				t_headers;
+
 
 class ExecuteRequest
 {
@@ -35,6 +45,9 @@ class ExecuteRequest
 		
 		void
 		processMultipart(Ticket const &ticket);
+
+		void
+		processMultipartHeaders(std::string headers_part, t_headers *headers);
 
     public:
         static std::string method_not_implemented[HTTP_METHOD_NOT_IMPLEMENTED_NB];

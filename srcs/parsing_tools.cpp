@@ -39,7 +39,7 @@ getHeader(int index, std::string &src, Response &response)
 }
 
 bool
-isItEndLine(AHttpMessage::body_type::iterator it)
+isItEndLine(AHttpMessage::body_type::const_iterator it)
 {
 	if (it[0] == '\r' && it[1] == '\n')
 		return true;
@@ -47,7 +47,7 @@ isItEndLine(AHttpMessage::body_type::iterator it)
 }
 
 bool
-isItEndSection(AHttpMessage::body_type::iterator it)
+isItEndSection(AHttpMessage::body_type::const_iterator it)
 {
 	if (isItEndLine(it) && isItEndLine(it + 2))
 		return true;

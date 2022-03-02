@@ -41,18 +41,6 @@ ExecuteRequest::isMultipartProcessing(Ticket const &ticket) const
 	return true;
 }
 
-typedef std::vector<char> body_type;
-
-typedef struct s_headers
-{
-	std::string content_type;
-	std::string filename;
-	std::string charset;
-} 				t_headers;
-
-#define CRLFCRLF_S "\r\n\r\n"
-#define CRLF_S "\r\n"
-
 void
 ExecuteRequest::processMultipartHeaders(std::string headers_part, t_headers *headers)
 {
@@ -74,7 +62,8 @@ ExecuteRequest::processMultipartHeaders(std::string headers_part, t_headers *hea
 	std::string content_disposition = mp_headers["Content-Disposition"];
 	size_t fpos = content_disposition.find(fname_mark);
 	size_t quote_pos = fpos + fname_mark.size();
-	std::string fname = content_disposition.substr(quote_pos + 1, content_disposition.size() - (quote_pos + 1));
+	std::string fname = content_disposition.substr(quote_pos + 1,
+			content_disposition.size() - (quote_pos + 1));
 	fname.assign(fname.substr(0, fname.find("\"")));
 	headers->filename = fname;
 	headers->content_type = mp_headers["Content-type"]; 
@@ -93,11 +82,11 @@ processMultipart(Ticket const &ticket)
 	std::string last_boundary = key + '-' + '-';
 	std::string end_section(CRLFCRLF_S);
 
-	body_type::iterator body_cursor = ticket.getRequest().getBody().begin();
-	body_type::iterator body_end = ticket.getRequest().getBody().end();
-	body_type::iterator multipart_end =
+	AHttpMessage::body_type::const_iterator body_cursor = ticket.getRequest().getBody().begin();
+	AHttpMessage::body_type::const_iterator body_end = ticket.getRequest().getBody().end();
+	AHttpMessage::body_type::const_iterator multipart_end =
 		search(body_cursor, body_end, last_boundary.begin(), last_boundary.end());
-	body_type::iterator it = search(body_cursor, body_end, key.begin(), key.end());
+	AHttpMessage::body_type::const_iterator it = search(body_cursor, body_end, key.begin(), key.end());
 	while (it != multipart_end)
 	{
 		it += key.size();		
