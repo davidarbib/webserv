@@ -23,3 +23,40 @@ p
     font-size: 1.3rem;
     color: rgb(17,17,17);
 }
+
+a
+{
+    color: rgb(78, 185, 185);
+    transition: 0.6s;
+}
+
+a:hover
+{
+    color: rgb(255, 255, 255);
+    text-decoration: none;
+}
+
+button
+{
+    font-size: 3rem;
+    background-color: rgb(255, 255, 255);
+    border: 5px solid rgb(78, 185, 185);
+    border-radius: 5px;
+    display: inline-block;
+}
+
+button a
+{
+    text-decoration: none;
+}
+
+button:hover
+{
+    background-color: rgb(78, 185, 185);
+    transition: 0.6s;
+}
+
+button a:hover
+{
+    color: rgb(255, 255, 255);
+}
