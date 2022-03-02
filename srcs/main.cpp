@@ -265,8 +265,17 @@ main(int ac, char **av)
 	Server::initFdset();
 	
 	processArgs(ac, av, servers, config);
-	listenNetwork(servers);
 
+	try
+	{
+		listenNetwork(servers);
+	}
+	catch(const std::exception& e)
+	{
+		std::cerr << e.what();
+		exit(1);
+	}
+	
 	tv.tv_sec = DELAY;
 	tv.tv_usec = 0;
 
