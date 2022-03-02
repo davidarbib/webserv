@@ -221,5 +221,15 @@ Response::searchForBody(int code, std::string const &body_path, std::string cons
 	}
 }
 
+void
+Response::serverErrorResponse(void)
+{
+	this->_start_line.reason_phrase = "Internal Server Error";
+	this->_start_line.status_code = INTERNAL_SERVER_ERROR;
+	this->_headers["Server"] = SERVER_VERSION;
+	this->_headers["Date"] = getDate();
+	this->_headers["Connection"] = "close";
+}
+
 std::map<int, std::string> Response::errors_code;
 std::map<std::string, std::string> Response::handled_extensions;

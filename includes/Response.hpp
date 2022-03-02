@@ -29,7 +29,7 @@
 #define NOT_ALLOWED 405
 #define PAYLOAD_TO_LARGE 413
 #define URI_TO_LONG 414
-#define INTERNAL_SERVER_ERROR 500
+#define INTERNAL_SERVER_ERROR 500 
 #define NOT_IMPLEMENTED 501
 #define VERSION_NOT_SUPPORTED 505
 
@@ -83,6 +83,9 @@ class Response : public AHttpMessage
 
 		void
 		searchForBody(int code, std::string const &body_path, std::string const &file_type);
+
+		void
+		serverErrorResponse(void);
 };
 
 std::ostream &

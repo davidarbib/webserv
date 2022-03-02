@@ -221,7 +221,9 @@ processRequest(TicketsType &tickets, ReqHandlersType &request_handlers)
 			{
 				try
 				{
-					executor.setStatusCode(parseCgiResponse(response, executor.execCgi(current.getRequest(), uri, resolved_uri, query, config, location, index_page_idx)));
+					executor.setStatusCode(parseCgiResponse(response,
+														executor.execCgi(current.getRequest(), uri, resolved_uri,
+																		query, config, location, index_page_idx)));
 				}
 				catch(const std::exception& e)
 				{
