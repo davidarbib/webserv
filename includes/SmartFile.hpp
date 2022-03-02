@@ -6,6 +6,9 @@
 # include <cstdio>
 #include "Server.hpp"
 
+#define TMP_SUFFIX "-XXXXXX"
+#define TMP_SUFFIX_LEN 7
+
 class SmartFile
 {
 	public:
@@ -15,16 +18,17 @@ class SmartFile
 		virtual	~SmartFile(void);
 		SmartFile	&operator=(SmartFile const &rhs);
 
-		char *
-		read(char*, int);
+		int
+		gets(char*, int);
 
 		int
-		write(const char*);
+		puts(const char*, int);
 
 		
 	private:
-		FILE		*_file;
+		fd_t		_file;
 		std::string _name;
 		std::string _mode;
+		char 		_tmpname[32];
 };
 #endif

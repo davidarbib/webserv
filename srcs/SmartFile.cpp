@@ -6,13 +6,21 @@ SmartFile::SmartFile(void)
 SmartFile::SmartFile(std::string const &name, std::string const &mode)
 : _name(name), _mode(mode)
 {
-    _file = fopen(_name.c_str(), _mode.c_str());
-    if (!_file)
+    if (mode == "t")
+    {
+        bzero(_tmpname, sizeof(_tmpname));
+        strncpy(_tmpname, _name.c_str(), name.size());
+        strncpy(_tmpname + name.size(), TMP_SUFFIX, TMP_SUFFIX_LEN);
+        _file = mkstemp(_tmpname);
+        fcntl(_file, F_SETFD, (fcntl(_file, F_GETFD) | O_NONBLOCK));
+    }
+    else
+        _file = open(_name.c_str(), O_RDWR | O_NONBLOCK);
+    if (_file < 1)
         throw std::exception();
     else
     {
-        fcntl(fileno(_file), F_SETFD, (fcntl(fileno(_file), F_GETFD) | O_NONBLOCK));
-        Server::addWatchedFd(fileno(_file));
+        Server::addWatchedFd(_file);
     }
 }
 
@@ -23,8 +31,10 @@ SmartFile::SmartFile(SmartFile const &src)
 
 SmartFile::~SmartFile(void)
 {
-    if (_file)
-        fclose(_file);
+    if (_mode == "t")
+        unlink(_tmpname);
+    else
+        close(_file);
 }
 
 SmartFile &SmartFile::operator=(SmartFile const &rhs)
@@ -35,20 +45,20 @@ SmartFile &SmartFile::operator=(SmartFile const &rhs)
     return *this;
 }
 
-char *
-SmartFile::read(char *buf, int size)
+int
+SmartFile::gets(char *buf, int size)
 {
-	if (Server::isThereSomethingToRead(fileno(_file)))
-		return fgets(buf, size, _file);
+	if (Server::isThereSomethingToRead(_file))
+		return read(_file, buf, size);
 	else
-		return NULL;
+		return 0;
 }
 
 int
-SmartFile::write(const char *buf)
+SmartFile::puts(const char *buf, int size)
 {
-	if (Server::isPossibleToWrite(fileno(_file)))
-		return fputs(buf, _file);
+	if (Server::isPossibleToWrite(_file))
+		return write(_file, buf, size);
 	else
 		return 0;
 }
