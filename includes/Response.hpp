@@ -3,6 +3,7 @@
 
 #include <iostream>
 #include "AHttpMessage.hpp"
+#include "SmartFile.hpp"
 #include <sstream>
 #include <fstream>
 #include <cstring>

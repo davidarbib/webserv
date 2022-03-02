@@ -106,17 +106,16 @@ Response::serialize_response(void)
 int
 Response::buildBody(std::string const& path)
 {
-	int fd = 0;
-	fd = open(path.c_str(), O_RDONLY);
+	SmartFile smartfile(path, "r");
 	int size = 0;
-	if (path.size() > 0 && fd > 0)
+	if (path.size() > 0)
 	{
 		char line[BUFFER_SIZE];
 		bzero(line, BUFFER_SIZE);
 		_body.reserve(BUFFER_SIZE);
 		int ret = 0;
 		int sum = 0;
-		while ((ret =read(fd, line, BUFFER_SIZE)) > 0)
+		while ((ret = smartfile.gets(line, BUFFER_SIZE) > 0))
 		{
 			sum += ret;
 			for (int i = 0; i < BUFFER_SIZE; i++)
@@ -125,11 +124,9 @@ Response::buildBody(std::string const& path)
 		}
 		size = _body.size();
 		std::stringstream s;
-		//s << size;
 		s << sum;
 		if (size > 0)
 			this->_headers["Content-Length"] =  s.str();
-		close(fd);
 		return size;
 	}
 	else

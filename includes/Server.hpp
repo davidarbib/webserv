@@ -1,6 +1,8 @@
 #ifndef SERVER_HPP
 # define SERVER_HPP
 
+class RequestHandler;
+
 # include <string>
 # include <iostream>
 # include <fcntl.h>
