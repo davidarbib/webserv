@@ -1,7 +1,7 @@
 #include "main.hpp"
 #define D_SIZE 45000
 
-int 
+int
 processArgs(int ac, char **av, ServersType &servers, Config &conf)
 {
 	std::string config_path;
@@ -147,7 +147,7 @@ void
 cutQuery(Request &request, std::string &query)
 {
 	size_t query_pos = request.getStartLine().request_URI.find(QUERYCHAR);
-	
+
 	query = request.getStartLine().request_URI.substr(query_pos + 1);
 	request.setRequestURI(request.getStartLine().request_URI.substr(0, query_pos));
 }
@@ -289,8 +289,15 @@ main(int ac, char **av)
 
 	Server::max_fd = 0;
 	Server::initFdset();
-	
-	processArgs(ac, av, servers, config);
+
+	try {
+		processArgs(ac, av, servers, config);
+	}
+	catch(const std::runtime_error& e) {
+		std::cerr << "Error. Wrong configuration, please provide a valid \"webserv.conf\" file." << std::endl;
+		std::cerr << e.what() << std::endl;
+		return (1);
+	}
 
 	try
 	{

@@ -27,7 +27,7 @@ createServers(ServersType &servers, conf_mm &hostport_configs,
 		config_v	candidate_configs;
 		createCandidateConfigsList(hostport_configs, hostport, candidate_configs);
 		servers.push_back(Server(hostport->getIp(), hostport->getPort(),
-									candidate_configs));	
+									candidate_configs));
 	}
 	return 0;
 }
@@ -47,23 +47,16 @@ classConfigs(Config &conf, conf_mm &hostport_configs,
 	return 0;
 }
 
-int 
+int
 processConfigFile(ServersType &servers, std::string &config_path, Config &conf)
-{	
+{
 	conf_mm					hostport_configs;
 	std::vector<HostPort>	hostports;
 	std::string				conf_file;
 
 	if ((conf_file = read_config(config_path)) == "")
 		return (-1);
-	try {
-		conf.setServers(conf_file);
-	}
-	catch(char const *error) {
-		std::cerr << "Error. Wrong configuration, please provide a valid \"webserv.conf\" file:" << std::endl;
-		std::cerr << error << std::endl;
-		return (-1);
-	}
+	conf.setServers(conf_file);
 	//TODO config file error handling
 	classConfigs(conf, hostport_configs, hostports);
 	std::vector<HostPort>::iterator hp_end_it;
@@ -74,4 +67,3 @@ processConfigFile(ServersType &servers, std::string &config_path, Config &conf)
 	createServers(servers, hostport_configs, unique_hostports);
 	return 0;
 }
-

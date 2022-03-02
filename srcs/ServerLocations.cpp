@@ -15,9 +15,9 @@ ServerLocations::ServerLocations (ServerLocations const &src) {
 
 void
 ServerLocations::setAll(std::string const &confFile)
-{	
+{
 	int pos_start;
-	
+
 	if ((pos_start = confFile.find("location")) != -1)
 		this->setPath(parse(confFile, pos_start));
 	if ((pos_start = confFile.find("methods_allowed")) != -1)
@@ -45,7 +45,7 @@ ServerLocations::setPath(std::string const &path)
 	if (str && str[0] != '{')
 		this->_path = str;
 	else
-		throw("Wrong location block format, missing root directive.");
+		throw std::runtime_error("Wrong location block format, missing root directive.");
 }
 
 void
@@ -53,21 +53,21 @@ ServerLocations::setMethods(std::string const &methods)
 {
 	char *str;
 	std::string lst[3] = {"GET", "POST", "DELETE"};
-	
+
 	if (methods == "")
-		throw("Wrong methods rule format, missing methods.");
+		throw std::runtime_error("Wrong methods rule format, missing methods.");
 	str = strtok((char *)&methods[0], " ");
 	while (str)
 	{
 		this->_methods.push_back(str);
 		str = strtok(NULL, " ");
 	}
-	
+
 	size_t i = 0;
 	while (i < this->_methods.size())
 	{
 		if (std::find(lst, lst + lst->size(), this->_methods[i]) == lst + lst->size())
-			throw("Wrong methods rule format, unknown method name.");
+			throw std::runtime_error("Wrong methods rule format, unknown method name.");
 		i++;
 	}
 }
@@ -76,22 +76,22 @@ void
 ServerLocations::setAutoIndex(std::string const &auto_index)
 {
 	if (auto_index == "")
-		throw("Wrong auto_index rule format, missing auto index param.");
+		throw std::runtime_error("Wrong auto_index rule format, missing auto index param.");
 	else if (auto_index == "on")
 		this->_auto_index = 1;
 	else if (auto_index == "off")
 		this->_auto_index = 0;
 	else
-		throw("Wrong auto_index rule format, auto_index param not valid.");
+		throw std::runtime_error("Wrong auto_index rule format, auto_index param not valid.");
 }
 
 void
 ServerLocations::setIndex(std::string const &index)
 {
 	char *str;
-	
+
 	if (index == "")
-		throw("Wrong index rule format, missing index.");
+		throw std::runtime_error("Wrong index rule format, missing index.");
 	str = strtok((char *)&index[0], " ");
 	while (str)
 	{
@@ -104,7 +104,7 @@ void
 ServerLocations::setRoot(std::string const &root)
 {
 	if (root == "")
-		throw("Wrong root rule format, missing root.");
+		throw std::runtime_error("Wrong root rule format, missing root.");
 	this->_root = root;
 }
 
@@ -112,7 +112,7 @@ void
 ServerLocations::setCgiPath(std::string const &cgi_path)
 {
 	if (cgi_path == "")
-		throw("Wrong cgi_path rule format, missing path.");
+		throw std::runtime_error("Wrong cgi_path rule format, missing path.");
 	this->_cgi_path = cgi_path;
 }
 
@@ -120,9 +120,9 @@ void
 ServerLocations::setRedir(std::string const &redir)
 {
 	char *str;
-	
+
 	if (redir == "")
-		throw("Wrong redir rule format, missing redir.");
+		throw std::runtime_error("Wrong redir rule format, missing redir.");
 	str = strtok((char *)&redir[0], " ");
 	this->_redir.from = str;
 	str = strtok(NULL, " ");
