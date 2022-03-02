@@ -1,4 +1,5 @@
 #include "main.hpp"
+#define D_SIZE 45000
 
 int 
 processArgs(int ac, char **av, ServersType &servers, Config &conf)
@@ -198,23 +199,17 @@ processRequest(TicketsType &tickets, ReqHandlersType &request_handlers)
 		{
 			if (isCgiRequested(uri, resolved_uri, location, index_page_idx))
 			{
-				std::cout << "COUCOU LES COPAINS" << std::endl;
 				try
 				{
 					executor.setStatusCode(parseCgiResponse(response,
 														executor.execCgi(current.getRequest(), uri, resolved_uri,
 																		query, config, location, index_page_idx)));
 				}
-				catch(ExecveException &e)
+				catch(const std::exception& e)
 				{
-					while(!tickets.empty())
-					{
-						response.serverErrorResponse();
-						body_path = executor.buildBodyPath(config);
-						tickets.front().getConnection() << response.serialize_response();
-						tickets.pop();
-					}
-					std::cout << "EXECVE A CRASH" << std::endl;
+					executor.setStatusCode(INTERNAL_SERVER_ERROR);
+					body_path = executor.buildBodyPath(config);
+					response.searchForBody(executor.getStatusCode(), body_path, response.getFileExtension(body_path));
 				}
 			}
 			else if (location.getRedir().from == current.getRequest().getStartLine().request_URI)
@@ -245,11 +240,9 @@ processRequest(TicketsType &tickets, ReqHandlersType &request_handlers)
 		else
 			body_path = executor.buildBodyPath(config);
 		response.buildPreResponse(executor.getStatusCode());
+		std::cout << body_path << std::endl;
 		request_handlers.erase(tickets.front().getRhIt());
-		//response.setHeader("Content-Length", "0"); //TODO multipart test
-		std::cout << "Body size after exec : " << response.getBody().size() << std::endl;	
 		tickets.front().getConnection() << response.serialize_response();
-		#define D_SIZE 45000
 		char debug[D_SIZE];
 		bzero(debug, D_SIZE);
 		tickets.front().getConnection().dumpOutBufferData(debug, D_SIZE);
@@ -277,22 +270,16 @@ main(int ac, char **av)
 	
 	processArgs(ac, av, servers, config);
 
-	/* ------------ TODO for tests without configuration file ----------------*/
-	//(void)ac;
-	//(void)av;
-	//ConfigServer conf;
-	//conf.setName("127.0.0.1:8003");
-	//conf.setHost("127.0.0.1:8003");
-	//conf.setPort("8003");
-	//conf.setMaxBody("200");
-	//std::vector<ConfigServer> configs;
-	//configs.push_back(conf);
-	//servers.push_back(Server("127.0.0.1", "8003", configs));
-
-	/* -----------------------------------------------------------------------*/
+	try
+	{
+		listenNetwork(servers);
+	}
+	catch(const std::exception& e)
+	{
+		std::cerr << e.what();
+		exit(1);
+	}
 	
-	listenNetwork(servers);
-
 	tv.tv_sec = DELAY;
 	tv.tv_usec = 0;
 
