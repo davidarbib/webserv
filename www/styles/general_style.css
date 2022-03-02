@@ -36,6 +36,12 @@ a:hover
     text-decoration: none;
 }
 
+input
+{
+    font-size: 3rem;
+    background-color: rgb(144,230,229);
+}
+
 button
 {
     font-size: 3rem;
