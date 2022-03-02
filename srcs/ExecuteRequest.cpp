@@ -70,8 +70,11 @@ ExecuteRequest::processMultipartHeaders(std::string headers_part, t_headers *hea
 	headers->charset = mp_headers["charset"]; 
 }
 
+#define HEADERS 1
+#define BODY 2
+
 void
-processMultipart(Ticket const &ticket)
+split_parts(std::vector<std::vector<char> > &v_parts, Ticket const &ticket)
 {
 	std::string content_type = ticket.getRequest().getHeaderValue("Content-Type");
 	size_t xpos = content_type.find(MULTIPART);
@@ -87,22 +90,52 @@ processMultipart(Ticket const &ticket)
 	AHttpMessage::body_type::const_iterator multipart_end =
 		search(body_cursor, body_end, last_boundary.begin(), last_boundary.end());
 	AHttpMessage::body_type::const_iterator it = search(body_cursor, body_end, key.begin(), key.end());
+	split_parts(v_parts, ticket);
 	while (it != multipart_end)
 	{
-		it += key.size();		
-		if (isItEndLine(it))
-		
+		it += key.size();
 
-
-		it = search(body_cursor, body_end, key.begin(), key.end());
+		AHttpMessage::body_type::const_iterator next_boundary =
+			search(it, body_end, key.begin(), key.end());
+		std::vector<char> part;
+		part.assign(it, next_boundary);
+		v_parts.push_back(part);
+		it = next_boundary;
 	}
-	//search key
+}
+
+void
+processMultipart(Ticket const &ticket)
+{
+	std::vector<std::vector<char> > v_parts;
+
+	split_parts(v_parts, ticket);
+	for (std::vector<std::vector<char> >::iterator it = v_parts.begin();
+			it != v_parts.end(); it++)
+	{
+		std::cout << "----New file----"	<< std::endl;
+		for (std::vector<char>::iterator it2 = it->begin();
+				it2 != it->end(); it2++)
+			std::cout << *it2;
+		std::cout << std::endl;
+	}
+	//if (isItEndSection(it))
+	//{
+	//	if (flags & HEADERS)
+	//		flags |= BODY;
+	//}
+	//else if (isItEndLine(it))
+	//{
+	//	(void)it;
+	//}
+
 	//detect end line or end section
 	//if end line
 	//	parse headers
 	//if end section
 	//  store body on disk
 	//
+
 	//std::string const &body = ticket.getRequest().getBody();	
 	//(void)body;
 }

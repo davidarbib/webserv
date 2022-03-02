@@ -155,6 +155,7 @@ getBodyWithContentLength(RequestHandler &rh, int index)
 
 	ss << rh.getRequest()->getHeaderValue("Content-Length");
 	ss >> content_length;
+	std::cout << "content-length : " << content_length << std::endl;
 	body.insert(body.end(), rh.getBuffer().begin() + index, rh.getBuffer().begin() + content_length);
 	rh.getRequest()->setBody(body);
 	rh.getRequest()->setRequestFinalized(true);
