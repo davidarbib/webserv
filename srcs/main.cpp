@@ -1,4 +1,5 @@
 #include "main.hpp"
+#define D_SIZE 45000
 
 int 
 processArgs(int ac, char **av, ServersType &servers, Config &conf)
@@ -196,11 +197,21 @@ processRequest(TicketsType &tickets, ReqHandlersType &request_handlers)
 			index_page_idx = matchIndex(location, resolved_uri);
 		if (executor.isValidRequest(current.getRequest(), config, location) == true)
 		{
-			if (isCgiRequested(uri, resolved_uri, location, index_page_idx))
+			if (!isCgiRequested(uri, resolved_uri, location, index_page_idx))
 			{
+				try
+				{
+					/* code */
 				executor.setStatusCode(parseCgiResponse(response,
 														executor.execCgi(current.getRequest(), uri, resolved_uri,
 																			query, config, location, index_page_idx)));
+				}
+				catch(const std::exception& e)
+				{
+					executor.setStatusCode(INTERNAL_SERVER_ERROR);
+					body_path = executor.buildBodyPath(config);
+					response.searchForBody(executor.getStatusCode(), body_path, response.getFileExtension(body_path));
+				}
 			}
 			else if (location.getRedir().from == current.getRequest().getStartLine().request_URI)
 				body_path = executor.getRedirected(location, response);
@@ -229,10 +240,7 @@ processRequest(TicketsType &tickets, ReqHandlersType &request_handlers)
 			body_path = executor.buildBodyPath(config);
 		response.buildPreResponse(executor.getStatusCode());
 		request_handlers.erase(tickets.front().getRhIt());
-		//response.setHeader("Content-Length", "0"); //TODO multipart test
-		std::cout << "Body size after exec : " << response.getBody().size() << std::endl;	
 		tickets.front().getConnection() << response.serialize_response();
-		#define D_SIZE 45000
 		char debug[D_SIZE];
 		bzero(debug, D_SIZE);
 		tickets.front().getConnection().dumpOutBufferData(debug, D_SIZE);
