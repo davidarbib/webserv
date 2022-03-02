@@ -5,6 +5,7 @@
 #include "AHttpMessage.hpp"
 #include <sstream>
 #include <fstream>
+#include <cstring>
 #include <unistd.h>
 #include <fcntl.h>
 
