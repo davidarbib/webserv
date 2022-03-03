@@ -114,23 +114,27 @@ Response::buildBody(std::string const& path)
 		bzero(line, BUFFER_SIZE);
 		_body.reserve(BUFFER_SIZE);
 		int ret = 0;
-		int sum = 0;
 		while ((ret = smartfile.gets(line, BUFFER_SIZE) > 0))
 		{
-			sum += ret;
 			for (int i = 0; i < BUFFER_SIZE; i++)
+			{
         			_body.push_back(line[i]);
+				write(1, &line[i], 1);
+			}
 			bzero(line, BUFFER_SIZE);
 		}
 		size = _body.size();
 		std::stringstream s;
-		s << sum;
+		s << size;
 		if (size > 0)
 			this->_headers["Content-Length"] =  s.str();
 		return size;
 	}
 	else
+	{
+		std::cout << "YA PROBLEME " << std::endl;
 		return 0;
+	}
 }
 
 std::ostream &

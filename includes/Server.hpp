@@ -92,6 +92,9 @@ class Server
 		static bool
 		isPossibleToWrite(fd_t);
 
+		static void
+		delWatchedFd(fd_t);
+
 		std::vector<ConfigServer> const&
 		getCandidateConfs(void) const;
 
@@ -113,9 +116,6 @@ class Server
 
 		void
 		recvSend(void);
-
-		void
-		delWatchedFd(fd_t);
 };
 
 #endif

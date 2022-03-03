@@ -38,8 +38,6 @@ CgiHandler::CgiHandler(Request const &request, std::string const &pgm_path,
 
 CgiHandler::~CgiHandler(void)
 {
-	fclose(_sender);
-	fclose(_receiver);
 }
 
 void

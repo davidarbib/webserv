@@ -19,9 +19,7 @@ SmartFile::SmartFile(std::string const &name, std::string const &mode)
     if (_file < 1)
         throw std::exception();
     else
-    {
         Server::addWatchedFd(_file);
-    }
 }
 
 SmartFile::SmartFile(SmartFile const &src)
@@ -31,6 +29,7 @@ SmartFile::SmartFile(SmartFile const &src)
 
 SmartFile::~SmartFile(void)
 {
+   Server::delWatchedFd(_file);
     if (_mode == "t")
         unlink(_tmpname);
     else
@@ -48,7 +47,13 @@ SmartFile &SmartFile::operator=(SmartFile const &rhs)
 int
 SmartFile::gets(char *buf, int size)
 {
-	if (Server::isThereSomethingToRead(_file))
+	struct timeval				tv;
+	tv.tv_sec = DELAY;
+	tv.tv_usec = 0;
+	fd_set fds;
+	FD_ZERO(&fds);
+	FD_SET(_file, &fds);
+	if (select(_file + 1, &fds, 0, 0, &tv) == 1)
 		return read(_file, buf, size);
 	else
 		return 0;
@@ -57,7 +62,13 @@ SmartFile::gets(char *buf, int size)
 int
 SmartFile::puts(const char *buf, int size)
 {
-	if (Server::isPossibleToWrite(_file))
+	struct timeval				tv;
+	tv.tv_sec = DELAY;
+	tv.tv_usec = 0;
+	fd_set fds;
+	FD_ZERO(&fds);
+	FD_SET(_file, &fds);
+	if (select(_file + 1, 0, &fds, 0, &tv) == 1)
 		return write(_file, buf, size);
 	else
 		return 0;

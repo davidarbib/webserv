@@ -118,7 +118,6 @@ isCgiRequested(std::string const &original_uri, std::string const &resolved_uri,
 		tested_uri = original_uri;
 	else
 		tested_uri = resolved_uri;
-	std::cout << "uri : " << tested_uri << std::endl;
 	size_t extension_pos = tested_uri.find(php_extension);
 	if (extension_pos == std::string::npos)
 		return false;
@@ -198,10 +197,6 @@ processRequest(TicketsType &tickets, ReqHandlersType &request_handlers)
 	while (!tickets.empty() && tickets.front().getRequest().isRequestFinalized() == true)
 	{
 		Ticket current(tickets.front());
-
-	std::cout << "Request" << std::endl;
-	std::cout << current.getRequest() << std::endl;
-
 		ConfigServer const& config = getConfig(current);
 		std::string query;
 		cutQuery(current.getRequest(), query);
@@ -250,7 +245,6 @@ processRequest(TicketsType &tickets, ReqHandlersType &request_handlers)
 			{
 				body_path = executor.postMethod(current.getRequest().getStartLine().request_URI, config, location, current);
 				response.searchForBody(executor.getStatusCode(), body_path, response.getFileExtension(body_path));
-				std::cout << "probe" << std::endl;
 			}
 			else
 			{
@@ -261,14 +255,13 @@ processRequest(TicketsType &tickets, ReqHandlersType &request_handlers)
 		else
 			body_path = executor.buildBodyPath(config);
 		response.buildPreResponse(executor.getStatusCode());
-		std::cout << body_path << std::endl;
 		request_handlers.erase(tickets.front().getRhIt());
 		tickets.front().getConnection() << response.serialize_response();
 		//#define D_SIZE 45000
-		//char debug[D_SIZE];
-		//bzero(debug, D_SIZE);
-		//tickets.front().getConnection().dumpOutBufferData(debug, D_SIZE);
-		//write(1, debug, D_SIZE);
+		char debug[D_SIZE];
+		bzero(debug, D_SIZE);
+		tickets.front().getConnection().dumpOutBufferData(debug, D_SIZE);
+		write(1, debug, D_SIZE);
 		tickets.pop();
 	}
 	return response;
