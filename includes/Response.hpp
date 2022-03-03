@@ -41,7 +41,7 @@ class Response : public AHttpMessage
 		status_line	_start_line; 
 
 		int
-		buildBody(std::string const &path);
+		buildBody(SmartFile const& path);
 
 	public:
 		static std::map<int, std::string> errors_code;

@@ -239,6 +239,7 @@ processRequest(TicketsType &tickets, ReqHandlersType &request_handlers)
 			else if (current.getRequest().getStartLine().method_token == "GET")
 			{
 				body_path = executor.getMethod(current.getRequest().getStartLine().request_URI, config, location, resolved_uri);
+				std::cout << "BODY PATH" << body_path << std::endl;
 				response.searchForBody(executor.getStatusCode(), body_path, response.getFileExtension(body_path));
 			}
 			else if (current.getRequest().getStartLine().method_token == "POST")

@@ -19,7 +19,7 @@ class SmartFile
 		SmartFile	&operator=(SmartFile const &rhs);
 
 		int
-		gets(char*, int);
+		gets(char*, int) const;
 
 		int
 		puts(const char*, int);

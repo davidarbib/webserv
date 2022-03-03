@@ -14,12 +14,12 @@ SmartFile::SmartFile(std::string const &name, std::string const &mode)
         _file = mkstemp(_tmpname);
         fcntl(_file, F_SETFD, (fcntl(_file, F_GETFD) | O_NONBLOCK));
     }
-    else
-        _file = open(_name.c_str(), O_RDWR | O_NONBLOCK);
+    else if (mode == "r")
+        _file = open(_name.c_str(), O_RDONLY | O_NONBLOCK);
+    else if (mode == "w")
+        _file = open(_name.c_str(), O_WRONLY | O_NONBLOCK);
     if (_file < 1)
-        throw std::exception();
-    else
-        Server::addWatchedFd(_file);
+        throw std::bad_alloc();
 }
 
 SmartFile::SmartFile(SmartFile const &src)
@@ -29,7 +29,6 @@ SmartFile::SmartFile(SmartFile const &src)
 
 SmartFile::~SmartFile(void)
 {
-   Server::delWatchedFd(_file);
     if (_mode == "t")
         unlink(_tmpname);
     else
@@ -45,7 +44,7 @@ SmartFile &SmartFile::operator=(SmartFile const &rhs)
 }
 
 int
-SmartFile::gets(char *buf, int size)
+SmartFile::gets(char *buf, int size) const
 {
 	struct timeval				tv;
 	tv.tv_sec = DELAY;
