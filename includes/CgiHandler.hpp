@@ -9,7 +9,7 @@
 # include <unistd.h>
 # include <map>
 # include "Request.hpp"
-# include ""
+# include "SmartFile.hpp"
 # include "Server.hpp"
 # include "safe_wrappers.hpp"
 #include <sys/types.h>
@@ -30,7 +30,7 @@ class CgiHandler
 		void
 		buildCgi(void);
 
-		FILE *
+		SmartFile
 		getCgiResponse(void);
 
 		std::string const& getPgm() const;
@@ -48,8 +48,8 @@ class CgiHandler
 		
 		std::string							_request;
 		std::map<std::string, std::string>	_cgi_env;
-		FILE								*_sender;
-		FILE								*_receiver;
+		SmartFile								_sender;
+		SmartFile								_receiver;
 		
 		char **
 		getCgiEnv(void);

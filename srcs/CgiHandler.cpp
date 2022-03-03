@@ -27,13 +27,16 @@ CgiHandler::CgiHandler(Request const &request, std::string const &pgm_path,
 	//addCgiEnv("SERVER_PROTOCOL", "");
 	//addCgiEnv("SERVER_SOFTWARE", "");
 
-	_sender = __tmpfile__();
-	_receiver = __tmpfile__();
+	_sender = SmartFile("/tmp/sender", "t");
+	_receiver = SmartFile("/tmp/receiver", "t");
 	
 	std::string body;
 	body.assign(request.getBody().begin(), request.getBody().end());
-	write(fileno(_sender), body.c_str(), body.size()); //TODO Exception handling , and fd select checking
-	rewind(_sender);
+	_sender.puts(body.c_str(), body.size());
+//	write(fileno(_sender), body.c_str(), body.size()); //TODO Exception handling , and fd select checking
+//	rewind(_sender);
+	lseek(_sender.getFd(), 0, SEEK_SET);
+	std::cout << "SCRIPT PATH : " <<script_path << std::endl;
 }
 
 CgiHandler::~CgiHandler(void)
@@ -97,18 +100,18 @@ CgiHandler::sendCgi(void)
 	pid_t pid = __fork__();	
 	if (pid == 0)
 	{
-		_dup2_(fileno(_sender), STDIN_FILENO);
-		_dup2_(fileno(_receiver), STDOUT_FILENO);
+		_dup2_(_sender.getFd(), STDIN_FILENO);
+		//_dup2_(_receiver.getFd(), STDOUT_FILENO);
 		_execve_(_pgm_path.c_str(), argv, env);
 	}
 	else
 	{
 		waitpid(pid, NULL, 0);
 	}
-	rewind(_receiver);
+	lseek(_sender.getFd(), 0, SEEK_SET);
 }
 
-FILE *
+SmartFile
 CgiHandler::getCgiResponse(void)
 {
 	return _receiver;

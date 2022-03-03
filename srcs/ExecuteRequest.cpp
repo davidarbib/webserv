@@ -337,15 +337,20 @@ ExecuteRequest::execCgi(Request const &request,
 	handler.sendCgi();
 	handler.getCgiResponse();
 
-	char line[FGET_SIZE + 1];
+    char line[FGET_SIZE + 1];
     bzero(line, FGET_SIZE + 1);
     AHttpMessage::body_type cgi_response;
-	while (fgets(line, FGET_SIZE, handler.getCgiResponse()))
+    while (handler.getCgiResponse().gets(line, FGET_SIZE) > 0)
     {
-	for (int i = 0; line[i] && i < FGET_SIZE; i++)
+	std::cout << "LINE : " << std::endl;
+	for (int i = 0; i < FGET_SIZE; i++)
+	{
+		write(1, &line[i], 1);
         	cgi_response.push_back(line[i]);
+	}	
+	bzero(line, FGET_SIZE + 1);
     }
-	return cgi_response;
+    return cgi_response;
 }
 
 std::string

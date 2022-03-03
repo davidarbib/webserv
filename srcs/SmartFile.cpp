@@ -54,9 +54,15 @@ SmartFile::gets(char *buf, int size)
 	FD_ZERO(&fds);
 	FD_SET(_file, &fds);
 	if (select(_file + 1, &fds, 0, 0, &tv) == 1)
+	{
+		std::cout << "J'essaie de passer" << std::endl;
 		return read(_file, buf, size);
+	}
 	else
+	{
+		std::cout << "J'arrive pas a lire" << std::endl;
 		return 0;
+	}
 }
 
 int
@@ -72,4 +78,10 @@ SmartFile::puts(const char *buf, int size)
 		return write(_file, buf, size);
 	else
 		return 0;
+}
+
+fd_t
+SmartFile::getFd(void) const
+{
+	return _file;
 }

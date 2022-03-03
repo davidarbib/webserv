@@ -18,6 +18,9 @@ class SmartFile
 		virtual	~SmartFile(void);
 		SmartFile	&operator=(SmartFile const &rhs);
 
+		fd_t
+		getFd(void) const;
+
 		int
 		gets(char*, int);
 
