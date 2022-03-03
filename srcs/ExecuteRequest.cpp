@@ -85,15 +85,16 @@ split_parts(std::vector<std::vector<char> > &v_parts, Ticket const &ticket)
 	std::string key = content_type.substr(std::string(MULTIPART).size());
 	std::string last_boundary = key + '-' + '-';
 	std::string end_section(CRLFCRLF_S);
+	std::cout << "key = " << key << std::endl;
 
 	AHttpMessage::body_type::const_iterator body_cursor = ticket.getRequest().getBody().begin();
 	AHttpMessage::body_type::const_iterator body_end = ticket.getRequest().getBody().end();
 	AHttpMessage::body_type::const_iterator multipart_end =
 		search(body_cursor, body_end, last_boundary.begin(), last_boundary.end());
 	AHttpMessage::body_type::const_iterator it = search(body_cursor, body_end, key.begin(), key.end());
-	split_parts(v_parts, ticket);
 	while (it != multipart_end)
 	{
+		std::cout << "store part " << std::endl;
 		it += key.size();
 
 		AHttpMessage::body_type::const_iterator next_boundary =
@@ -106,11 +107,12 @@ split_parts(std::vector<std::vector<char> > &v_parts, Ticket const &ticket)
 }
 
 void
-processMultipart(Ticket const &ticket)
+ExecuteRequest::processMultipart(Ticket const &ticket)
 {
 	std::vector<std::vector<char> > v_parts;
 
 	split_parts(v_parts, ticket);
+	std::cout << "----debug split parts-----" << std::endl;
 	for (std::vector<std::vector<char> >::iterator it = v_parts.begin();
 			it != v_parts.end(); it++)
 	{
@@ -120,6 +122,7 @@ processMultipart(Ticket const &ticket)
 			std::cout << *it2;
 		std::cout << std::endl;
 	}
+	std::cout << "--------------------" << std::endl;
 	//if (isItEndSection(it))
 	//{
 	//	if (flags & HEADERS)
@@ -308,8 +311,8 @@ ExecuteRequest::postMethod(std::string const &URI, ConfigServer const &config,
 	std::cout << "POST METHOD" << std::endl;
 	std::string uri = "./" + URI;
 	//check multipart marks in headers
-	//if (isMultipartProcessing(ticket))
-	//      processMultipart(ticket);
+	if (isMultipartProcessing(ticket))
+	      processMultipart(ticket);
 	//
 	//return buildBodyPath(ticket.get, location.getRoot());
 	return "OK"; //TODO not OK
