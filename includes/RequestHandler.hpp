@@ -1,6 +1,8 @@
 #ifndef REQUESTHANDLER_HPP
 # define REQUESTHANDLER_HPP
 
+class Request;
+
 # include "typedefs.hpp"
 # include <string>
 # include <iostream>
@@ -37,9 +39,9 @@ class RequestHandler
 		getIdx(void) const;
 
 		void
-		fillBuffer(char *raw_buffer);
+		fillBuffer(char *raw_buffer, int size);
 
-		std::string &
+		std::vector<char> &
 		getBuffer(void);
 
 		Request *

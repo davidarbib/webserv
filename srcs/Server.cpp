@@ -63,7 +63,7 @@ Server::listenSocket()
 
 	if (bind(_listen_fd, reinterpret_cast<sockaddr*>(&sin), sizeof(sin)) == -1)
 		throw ListenException();
-	listen(_listen_fd, 1);
+	listen(_listen_fd, QUEUE_LIMIT);
 	addWatchedFd(_listen_fd);
 	return _listen_fd;
 }
@@ -97,18 +97,18 @@ Server::createConnection(void)
 	fd_t			new_sock_fd;
 	socklen_t sinsize = sizeof(new_sin);
 
-//	std::cout << "connection" << std::endl;
+	std::cout << "Try to create connection" << std::endl;
 	new_sock_fd = accept(_listen_fd, reinterpret_cast<sockaddr*>(&new_sin), &sinsize);
-//	std::cout << "client port : " << (int)ntohs(new_sin.sin_port) << std::endl;
-//	std::cout << "client IP : " << inet_ntoa(new_sin.sin_addr) << std::endl;
-//	std::cout << "client IP : " << ((unsigned char *)&new_sin.sin_addr)[0] << ".";
-//	std::cout << (int)((unsigned char *)&new_sin.sin_addr)[1] << ".";
-//	std::cout << (int)((unsigned char *)&new_sin.sin_addr)[2] << ".";
-//	std::cout << (int)((unsigned char *)&new_sin.sin_addr)[3] << std::endl;
 	if (new_sock_fd < 0)
+	{
+		std::cout << "NEW SOCK FD PAS BON" << std::endl;
 		throw ConnectionException();
+	}
 	if (fcntl(new_sock_fd, F_SETFL, O_NONBLOCK) < 0)
+	{
+		std::cout << "blabla" << std::endl;
 		throw ConnectionException();
+	}
 	addWatchedFd(new_sock_fd);
 	_connections[new_sock_fd] = new Connection(new_sock_fd,
 								static_cast<unsigned long>(new_sin.sin_addr.s_addr),
@@ -117,9 +117,9 @@ Server::createConnection(void)
 }
 
 void
-Server::transferToBuffer(fd_t connection_fd, char *buf)
+Server::transferToBuffer(fd_t connection_fd, char *buf, int size)
 {
-	_connections[connection_fd]->fillBuffer(buf);
+	_connections[connection_fd]->fillBuffer(buf, size);
 }
 
 void
@@ -148,9 +148,7 @@ Server::watchInput(std::map<fd_t, RequestHandler> &request_handlers)
 		}
 		else
 		{
-			//std::cout << "buf content : " << std::endl << buf << std::endl;
-			//std::cout << "----------------------------------------" << std::endl;
-			transferToBuffer(connection_it->first, buf);
+			transferToBuffer(connection_it->first, buf, recvret);
 			FD_CLR(connection_it->first, &Server::read_fds);
 			connection_it++;
 		}
@@ -164,18 +162,20 @@ Server::send()
 	connection_it = _connections.begin();
 	for (; connection_it != _connections.end(); connection_it++)
 	{
-		if (connection_it->second->getOutBufferData().size() == 0)
+		if (connection_it->second->getOutBuffer().size() == 0)
 			continue;
 		fd_t fd = connection_it->second->getSocketFd();
 		if (isPossibleToWrite(fd))
 		{
+			char buf[BUFSIZE];
+			bzero(buf, BUFSIZE);
 			size_t bufsize = BUFSIZE;
-			size_t write_size = std::min(bufsize,
-									connection_it->second->getOutBufferData().size());
-			std::cout << connection_it->second->getOutBufferData().data();
-			write(fd, connection_it->second->getOutBufferData().data(), write_size); 
+			size_t write_size = std::min(bufsize - 1,
+									connection_it->second->getOutBuffer().size());
+			connection_it->second->dumpOutBufferData(buf, write_size);
+			write(fd, buf, write_size); 
 			//TODO write wrapper
-			connection_it->second->eatOutBufferData(BUFSIZE);
+			connection_it->second->eatOutBufferData(write_size);
 		}
 	}
 }
@@ -184,16 +184,16 @@ bool
 Server::isThereSomethingToRead(fd_t fd)
 {
 	if (FD_ISSET(fd, &Server::read_fds))
-		return 1;
-	return 0;
+		return true;
+	return false;
 }
 
 bool
 Server::isPossibleToWrite(fd_t fd)
 {
 	if (FD_ISSET(fd, &Server::write_fds))
-		return 1;
-	return 0;
+		return true;
+	return false;
 }
 
 void

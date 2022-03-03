@@ -40,14 +40,20 @@ class Connection
 		Buffer &
 		getOutBuffer(void);
 
-		std::string &
-		getOutBufferData(void);
+		void
+		dumpOutBufferData(char *dump, int size);
 		
 		void
-		fillBuffer(char *buf);
+		expectFullBodyNextRequest(void);
+		
+		void
+		fillBuffer(char *buf, int size);
 
 		void
 		eatOutBufferData(int);
+
+		bool
+		isFullBodyExpected(void);
 
 	private:
 		Connection(Connection const &src);
@@ -64,6 +70,7 @@ class Connection
 		std::string		_client_port_str;
 		Buffer			_in_buffer;
 		Buffer			_out_buffer;
+		bool			_expect_body;
 
 		Connection(void);
 
@@ -75,6 +82,10 @@ class Connection
 
 		friend Connection &
 		operator<<(Connection &connection, std::string const & message);
+
+		friend Connection &
+		operator<<(Connection &connection,
+				std::vector<char> const & message);
 
 		friend bool
 		operator<(Connection const &lhs, Connection const &rhs)

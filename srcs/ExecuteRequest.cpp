@@ -2,7 +2,8 @@
 #include <cstring>
 
 ExecuteRequest::ExecuteRequest() : _status_code(0)
-{}
+{
+}
 
 ExecuteRequest::ExecuteRequest(ExecuteRequest &cpy)
 {
@@ -32,23 +33,112 @@ ExecuteRequest::isAllowedMethod(std::string const &method, std::vector<std::stri
 }
 
 bool
-ExecuteRequest::isMultipartProcessing(Ticket &ticket) const
+ExecuteRequest::isMultipartProcessing(Ticket const &ticket) const
 {
-	std::string content_type = ticket.getRequest().get_header_value("Content-Type");
-		return true;
-	return false;
+	std::string content_type = ticket.getRequest().getHeaderValue("Content-Type");
+	size_t xpos = content_type.find(MULTIPART);
+	if (xpos != 0)
+		return false;
+	return true;
 }
 
 void
-ExecuteRequest::processMultipart(Ticket &ticket)
+ExecuteRequest::processMultipartHeaders(std::string headers_part, t_headers *headers)
 {
-	std::string content_type = ticket.getRequest().get_header_value("Content-Type");
+	std::map<std::string, std::string> mp_headers;
+
+	size_t i = 0;
+	while (i < headers_part.size())
+	{
+		size_t colon_pos = headers_part.find(":");
+		size_t endline_pos = headers_part.find(CRLF_S);
+		
+		mp_headers[headers_part.substr(0, colon_pos)] =
+			headers_part.substr(colon_pos + 1,  endline_pos - (colon_pos + 1));
+		
+		i = endline_pos + 2;
+	}
+
+	std::string fname_mark("filename=");
+	std::string content_disposition = mp_headers["Content-Disposition"];
+	size_t fpos = content_disposition.find(fname_mark);
+	size_t quote_pos = fpos + fname_mark.size();
+	std::string fname = content_disposition.substr(quote_pos + 1,
+			content_disposition.size() - (quote_pos + 1));
+	fname.assign(fname.substr(0, fname.find("\"")));
+	headers->filename = fname;
+	headers->content_type = mp_headers["Content-type"]; 
+	headers->charset = mp_headers["charset"]; 
+}
+
+#define HEADERS 1
+#define BODY 2
+
+void
+split_parts(std::vector<std::vector<char> > &v_parts, Ticket const &ticket)
+{
+	std::string content_type = ticket.getRequest().getHeaderValue("Content-Type");
 	size_t xpos = content_type.find(MULTIPART);
 	if (xpos != 0)
 		throw std::exception();
+
 	std::string key = content_type.substr(std::string(MULTIPART).size());
-	std::string const &body = ticket.getRequest().getBody();	
-	(void)body;
+	std::string last_boundary = key + '-' + '-';
+	std::string end_section(CRLFCRLF_S);
+
+	AHttpMessage::body_type::const_iterator body_cursor = ticket.getRequest().getBody().begin();
+	AHttpMessage::body_type::const_iterator body_end = ticket.getRequest().getBody().end();
+	AHttpMessage::body_type::const_iterator multipart_end =
+		search(body_cursor, body_end, last_boundary.begin(), last_boundary.end());
+	AHttpMessage::body_type::const_iterator it = search(body_cursor, body_end, key.begin(), key.end());
+	split_parts(v_parts, ticket);
+	while (it != multipart_end)
+	{
+		it += key.size();
+
+		AHttpMessage::body_type::const_iterator next_boundary =
+			search(it, body_end, key.begin(), key.end());
+		std::vector<char> part;
+		part.assign(it, next_boundary);
+		v_parts.push_back(part);
+		it = next_boundary;
+	}
+}
+
+void
+processMultipart(Ticket const &ticket)
+{
+	std::vector<std::vector<char> > v_parts;
+
+	split_parts(v_parts, ticket);
+	for (std::vector<std::vector<char> >::iterator it = v_parts.begin();
+			it != v_parts.end(); it++)
+	{
+		std::cout << "----New file----"	<< std::endl;
+		for (std::vector<char>::iterator it2 = it->begin();
+				it2 != it->end(); it2++)
+			std::cout << *it2;
+		std::cout << std::endl;
+	}
+	//if (isItEndSection(it))
+	//{
+	//	if (flags & HEADERS)
+	//		flags |= BODY;
+	//}
+	//else if (isItEndLine(it))
+	//{
+	//	(void)it;
+	//}
+
+	//detect end line or end section
+	//if end line
+	//	parse headers
+	//if end section
+	//  store body on disk
+	//
+
+	//std::string const &body = ticket.getRequest().getBody();	
+	//(void)body;
 }
 
 int
@@ -79,7 +169,7 @@ ExecuteRequest::isValidRequest(Request const& request, ConfigServer const& confi
 {
     bool valid = true;
     if (request.getStartLine().method_token.empty() || request.getStartLine().request_URI.empty()
-    || request.getStartLine().http_version.empty() || request.get_header_value("Host").empty()
+    || request.getStartLine().http_version.empty() || request.getHeaderValue("Host").empty()
     || !request.isContentLengthCorrect() || !request.getValid())
     {
         _status_code = BAD_REQUEST;
@@ -143,11 +233,8 @@ std::string
 ExecuteRequest::getRedirected(ServerLocations const& location, Response &response)
 {
     _status_code = MOVED_PERMANTLY;
-    std::string redir = location.getRedir().to;
-    std::cout << "REDIR TO : " << redir << std::endl;
-    response.setHeader("Location", redir);
-    response.setHeader("Content-Length", "0");
-    return redir;
+    response.setHeader("Location", location.getRedir().to);
+    return std::string();
 }
 
 std::string
@@ -213,26 +300,25 @@ ExecuteRequest::fillMethodNotImplemented(void)
 
 std::string
 ExecuteRequest::postMethod(std::string const &URI, ConfigServer const &config,
-					ServerLocations const& location)
+					ServerLocations const& location, Ticket const& ticket)
 {
 	(void)config;
 	(void)location;
+	(void)ticket;
 	std::cout << "POST METHOD" << std::endl;
-    std::string uri = "./" + URI;
+	std::string uri = "./" + URI;
 	//check multipart marks in headers
 	//if (isMultipartProcessing(ticket))
-	//	processMultipart(ticket);
-	
-	//ticket.getRequest();
-	//if multipart :
-	//	process multipart
-    //return buildBodyPath(ticket.get, location.getRoot());
+	//      processMultipart(ticket);
+	//
+	//return buildBodyPath(ticket.get, location.getRoot());
 	return "OK"; //TODO not OK
 }
 
 #define FGET_SIZE 42
+#define EMPTY_STR ""
 
-std::string
+AHttpMessage::body_type
 ExecuteRequest::execCgi(Request const &request,
 							std::string const &original_uri,
 							std::string const &resolved_uri,
@@ -247,18 +333,30 @@ ExecuteRequest::execCgi(Request const &request,
 		ressource = original_uri;
 	else
 		ressource = resolved_uri;
+	ressource = location.getRoot() + ressource;
 	CgiHandler handler(request, location.getCgiPath(), ressource, query);
 	handler.sendCgi();
 	handler.getCgiResponse();
 
 	char line[FGET_SIZE + 1];
     bzero(line, FGET_SIZE + 1);
-    std::string cgi_response;
+    AHttpMessage::body_type cgi_response;
 	while (fgets(line, FGET_SIZE, handler.getCgiResponse()))
     {
-        cgi_response += std::string(line);
+	for (int i = 0; line[i] && i < FGET_SIZE; i++)
+        	cgi_response.push_back(line[i]);
     }
 	return cgi_response;
+}
+
+std::string
+ExecuteRequest::continueGeneration(Ticket const &ticket)
+{
+	ticket.getConnection().expectFullBodyNextRequest();
+	_continue_requests[ticket.getConnection().getSocketFd()]
+		= ticket.getRequest();
+	setStatusCode(CONTINUE);
+	return std::string(EMPTY_STR);
 }
 
 std::string ExecuteRequest::method_not_implemented[HTTP_METHOD_NOT_IMPLEMENTED_NB];

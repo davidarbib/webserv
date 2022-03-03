@@ -20,8 +20,6 @@ class CgiHandler
 	public:
 		CgiHandler(void);
 		CgiHandler(CgiHandler const &src);
-		//CgiHandler(Request &request);
-		//TODO remove second and third arg
 		CgiHandler(Request const &, std::string const &, std::string &, std::string const &);
 		virtual	~CgiHandler(void);
 		
@@ -31,14 +29,8 @@ class CgiHandler
 		void
 		buildCgi(void);
 
-		char **
-		getCgiEnv(void); //TODO go private 
-
 		FILE *
-		getCgiResponse(void); //TODO go private 
-
-		FILE *
-		getCgiRequest(void); //TODO delete 
+		getCgiResponse(void);
 
 		std::string const& getPgm() const;
 
@@ -57,5 +49,8 @@ class CgiHandler
 		std::map<std::string, std::string>	_cgi_env;
 		FILE								*_sender;
 		FILE								*_receiver;
+		
+		char **
+		getCgiEnv(void);
 };
 #endif

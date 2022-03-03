@@ -3,15 +3,22 @@
 
 #include <string>
 #include "Response.hpp"
+#include <vector>
 #define HEADER_SEP ":"
 
 bool
-isEndLine(std::string &line, int index);
+isEndLine(AHttpMessage::body_type &line, int index);
 
 bool
-isEndSection(std::string &line, int index);
+isEndSection(AHttpMessage::body_type &line, int index);
 
 int
 getHeader(int index, std::string &src, Response &response);
+
+bool
+isItEndLine(AHttpMessage::body_type::const_iterator it);
+
+bool
+isItEndSection(AHttpMessage::body_type::const_iterator it);
 
 #endif

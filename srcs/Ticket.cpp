@@ -17,13 +17,13 @@ Ticket::~Ticket(void)
 }
 
 Connection &
-Ticket::getConnection(void)
+Ticket::getConnection(void) const
 {
 	return _connection;
 }
 
 Request &
-Ticket::getRequest(void)
+Ticket::getRequest(void) const
 {
 	return *_request;
 }

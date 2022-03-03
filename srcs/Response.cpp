@@ -41,12 +41,6 @@ Response::setReasonPhrase(std::string const &reason_phrase)
 }
 
 void
-Response::setBody(std::string const& body)
-{
-	this->_body = body;
-}
-
-void
 Response::setHeader(std::string const &key, std::string const &value)
 {
 	this->_headers[key] = value;
@@ -65,15 +59,18 @@ Response::buildPreResponse(int code)
 {
 	this->_start_line.status_code = code;
 	this->_start_line.reason_phrase = Response::errors_code.find(code)->second;
-	this->_headers["Server"] = SERVER_VERSION;
-	this->_headers["Date"] = getDate();
-	if (code != BAD_REQUEST)
-		this->_headers["Connection"] = "keep-alive";
-	else
-		this->_headers["Connection"] = "close";
+	if (code != CONTINUE)
+	{
+		this->_headers["Server"] = SERVER_VERSION;
+		this->_headers["Date"] = getDate();
+		if (code != BAD_REQUEST)
+			this->_headers["Connection"] = "keep-alive";
+		else
+			this->_headers["Connection"] = "close";
+	}
 }
 
-std::string
+AHttpMessage::body_type
 Response::serialize_response(void)
 {
 	std::stringstream status_line;
@@ -83,42 +80,61 @@ Response::serialize_response(void)
 	status_line << _start_line.status_code;
 	status_line << " ";
 	status_line << _start_line.reason_phrase.append(CRLF_str);
-	std::string serialized(status_line.str());
+	AHttpMessage::body_type serialized;
+	serialized.reserve(status_line.str().size());
+	std::string tmp(status_line.str());
+	serialized.insert(serialized.end(), tmp.begin(), tmp.end());
 
 	hash_map::iterator it = _headers.begin();
 	while (it != _headers.end())
 	{
-		serialized += it->first;
-		serialized += ": ";
-		serialized += it->second;
-		serialized += CRLF_str;
+		serialized.insert(serialized.end(), it->first.begin(), it->first.end());
+		serialized.push_back(':');
+		serialized.push_back(' ');
+		serialized.insert(serialized.end(), it->second.begin(), it->second.end());
+		serialized.push_back('\r');
+		serialized.push_back('\n');
 		it++;
 	}
-	serialized += CRLF_str;
-	serialized += _body;
+	serialized.push_back('\r');
+	serialized.push_back('\n');
+	for (size_t i = 0; i < _body.size(); i++)
+		serialized.push_back(_body[i]);
 	return serialized;
 }
 
 int
 Response::buildBody(std::string const& path)
 {
-	std::ifstream web_page(path.c_str());
+	SmartFile smartfile(path, "r");
 	int size = 0;
-	if (path.size() > 0 && web_page)
+	if (path.size() > 0)
 	{
-		std::string line;
-		while (getline(web_page, line))
-			_body += line;
-		size = _body.length();
+		char line[BUFFER_SIZE];
+		bzero(line, BUFFER_SIZE);
+		_body.reserve(BUFFER_SIZE);
+		int ret = 0;
+		while ((ret = smartfile.gets(line, BUFFER_SIZE) > 0))
+		{
+			for (int i = 0; i < BUFFER_SIZE; i++)
+			{
+        			_body.push_back(line[i]);
+				write(1, &line[i], 1);
+			}
+			bzero(line, BUFFER_SIZE);
+		}
+		size = _body.size();
 		std::stringstream s;
 		s << size;
 		if (size > 0)
 			this->_headers["Content-Length"] =  s.str();
-		web_page.close();
 		return size;
 	}
 	else
+	{
+		std::cout << "YA PROBLEME " << std::endl;
 		return 0;
+	}
 }
 
 std::ostream &
@@ -134,7 +150,7 @@ Response::getFileExtension(std::string const &uri) const
 	if (!uri.empty())
 	{
 		size_t  extension_begin = uri.find_last_of(".");
-		if (extension_begin == std::string::npos)
+		if (extension_begin == std::string::npos) 
 			return std::string();
 		return uri.substr(extension_begin, uri.size());
 	}
@@ -146,6 +162,7 @@ Response::fillResponseCodes(void)
 {
 	std::map<int, std::string> codes;
 
+	codes.insert(std::make_pair(CONTINUE, "Continue"));
 	codes.insert(std::make_pair(OK, "OK"));
 	codes.insert(std::make_pair(NO_CONTENT, "No Content"));
 	codes.insert(std::make_pair(MOVED_PERMANTLY, "Moved permantly"));
@@ -156,6 +173,7 @@ Response::fillResponseCodes(void)
 	codes.insert(std::make_pair(NOT_ALLOWED, "Not Allowed"));
 	codes.insert(std::make_pair(PAYLOAD_TO_LARGE, "Payload To Large"));
 	codes.insert(std::make_pair(URI_TO_LONG, "Uri To Long"));
+	codes.insert(std::make_pair(INTERNAL_SERVER_ERROR, "Internal Server Error"));
 	codes.insert(std::make_pair(NOT_IMPLEMENTED, "Not Implemented"));
 	codes.insert(std::make_pair(VERSION_NOT_SUPPORTED, "Version Not Supported"));
 
@@ -168,6 +186,7 @@ Response::fillHandledExtensions(void)
 	std::map<std::string, std::string> extensions;
 
 	extensions.insert(std::make_pair(".html" ,"text/html"));
+	extensions.insert(std::make_pair(".php" ,"text/html"));
 	extensions.insert(std::make_pair(".mp3" ,"audio/mp3"));
 	extensions.insert(std::make_pair(".mp4" ,"video/mp4"));
 	extensions.insert(std::make_pair(".ttf" ,"font/ttf"));
@@ -201,6 +220,16 @@ Response::searchForBody(int code, std::string const &body_path, std::string cons
 				setHeader("Content-Type", it->second);
 		}
 	}
+}
+
+void
+Response::serverErrorResponse(void)
+{
+	this->_start_line.reason_phrase = "Internal Server Error";
+	this->_start_line.status_code = INTERNAL_SERVER_ERROR;
+	this->_headers["Server"] = SERVER_VERSION;
+	this->_headers["Date"] = getDate();
+	this->_headers["Connection"] = "close";
 }
 
 std::map<int, std::string> Response::errors_code;

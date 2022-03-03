@@ -19,9 +19,9 @@ RequestHandler::~RequestHandler(void)
 }
 
 void
-RequestHandler::fillBuffer(char *raw_buffer)
+RequestHandler::fillBuffer(char *raw_buffer, int size)
 {
-	_connection.getInBuffer().fillBuffer(raw_buffer);
+	_connection.getInBuffer().fillBuffer(raw_buffer, size);
 }
 
 void
@@ -42,7 +42,7 @@ RequestHandler::getIdx(void) const
 	return _connection.getInBuffer().getIdx();
 }
 
-std::string &
+std::vector<char> &
 RequestHandler::getBuffer(void)
 {
 	return _connection.getInBuffer().getBuffer();

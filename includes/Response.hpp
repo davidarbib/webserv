@@ -3,15 +3,22 @@
 
 #include <iostream>
 #include "AHttpMessage.hpp"
+#include "SmartFile.hpp"
 #include <sstream>
 #include <fstream>
+#include <cstring>
+#include <unistd.h>
+#include <cstring>
+#include <fcntl.h>
 
+#define BUFFER_SIZE 1024
 #define HTTP_VERSION "HTTP/1.1"
 #define SERVER_VERSION "webserv/1.0.0"
 #define CRLF_str "\r\n"
 #define CRLFCRLF_str "\r\n\r\n"
 #define MAX_URI_SIZE 32000
 #define MAX_HEADER_SIZE 32000
+#define CONTINUE 100
 #define OK 200
 #define ACCEPTED 202
 #define NO_CONTENT 204
@@ -23,6 +30,7 @@
 #define NOT_ALLOWED 405
 #define PAYLOAD_TO_LARGE 413
 #define URI_TO_LONG 414
+#define INTERNAL_SERVER_ERROR 500 
 #define NOT_IMPLEMENTED 501
 #define VERSION_NOT_SUPPORTED 505
 
@@ -60,9 +68,6 @@ class Response : public AHttpMessage
 		setReasonPhrase(std::string const &reason_phrase);
 
 		void
-		setBody(std::string const &body);
-
-		void
 		setHeader(std::string const &key, std::string const &value);
 
 		void
@@ -74,11 +79,14 @@ class Response : public AHttpMessage
 		std::string
 		getFileExtension(std::string const &uri) const;
 
-		std::string
+		AHttpMessage::body_type
 		serialize_response(void);
 
 		void
 		searchForBody(int code, std::string const &body_path, std::string const &file_type);
+
+		void
+		serverErrorResponse(void);
 };
 
 std::ostream &

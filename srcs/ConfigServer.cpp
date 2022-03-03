@@ -30,14 +30,24 @@ ConfigServer::setAll(std::string const &confFile)
 
 	if ((pos_start = confFile.find("name")) != -1)
 		this->setName(parse(confFile, pos_start));
+	else
+		throw std::runtime_error("Missing server_name rule format, missing name.");
 	if ((pos_start = confFile.find("listen")) != -1)
 		this->setHost(parse(confFile, pos_start));
+	else
+		throw std::runtime_error("Missing listen rule format, missing host/port.");
 	if ((pos_start = confFile.find("listen")) != -1)
 		this->setPort(parse(confFile, pos_start));
+	else
+		throw std::runtime_error("Missing listen rule format, missing host/port.");
 	if ((pos_start = confFile.find("error_pages")) != -1)
 		this->setErrorPages(parse(confFile, pos_start));
+	else
+		throw std::runtime_error("Missing error_pages rule format, missing error codes/path.");
 	if ((pos_start = confFile.find("client_max_body_size")) != -1)
 		this->setMaxBody(parse(confFile, pos_start));
+	else
+		throw std::runtime_error("Missing max_body rule format, missing body size.");
 	if ((pos_start = confFile.find("location")) != -1)
 		this->setLocations(confFile);
 }
@@ -54,30 +64,30 @@ void
 ConfigServer::setHost(std::string const &listen)
 {
 	int i = 0;
-	
+
 	if (listen == "")
-		throw("Wrong listen rule format, missing host/port.");
+		throw std::runtime_error("Wrong listen rule format, missing host/port.");
 	while (listen[i] && listen[i] != ':')
 		++i;
 	if (listen[i] == ':')
 		this->_host = listen.substr(0, i);
 	else
-		throw("Wrong listen block format, missing host/port.");
+		throw std::runtime_error("Wrong listen block format, missing host/port.");
 }
 
 void
 ConfigServer::setPort(std::string const &listen)
 {
 	int i = 0;
-	
+
 	if (listen == "")
-		throw("Wrong listen rule format, missing host/port.");
+		throw std::runtime_error("Wrong listen rule format, missing host/port.");
 	while (listen[i] && listen[i] != ':')
 		++i;
 	if (listen[i] == ':')
 		this->_port = listen.substr(i+1, listen.length());
 	else
-		throw("Wrong listen block format, missing host/port.");
+		throw std::runtime_error("Wrong listen block format, missing host/port.");
 }
 
 void
@@ -86,26 +96,26 @@ ConfigServer::setErrorPages(std::string const &error_pages)
 	char *str;
 
 	if (error_pages == "")
-		throw("Wrong error_pages rule format, missing error codes/path.");
+		throw std::runtime_error("Wrong error_pages rule format, missing error codes/path.");
 	str = strtok((char *)&error_pages[0], " ");
-	while (str && str[0] != '/')
+	while (str && (str[0] <= '9' && str[0] >= '0'))
 	{
 		this->_error_pages.errorCodes.push_back(str);
 		str = strtok(NULL, " ");
 	}
 	if (this->_error_pages.errorCodes.size() == 0)
-		throw("Wrong error_pages block format, missing error codes.");
+		throw std::runtime_error("Wrong error_pages block format, missing error codes.");
 	if (str)
 		this->_error_pages.path = str;
 	else
-		throw("Wrong error_pages block format, missing path.");
+		throw std::runtime_error("Wrong error_pages block format, missing path.");
 }
 
 void
 ConfigServer::setMaxBody(std::string const &max_body)
 {
 	if (max_body == "")
-		throw("Wrong max_body rule format, missing body size.");
+		throw std::runtime_error("Wrong max_body rule format, missing body size.");
 	std::istringstream(max_body) >> this->_max_body;
 }
 
@@ -114,11 +124,11 @@ ConfigServer::setLocations(std::string const &confFile)
 {
 	ServerLocations locations;
 	std::vector<std::string> blocks;
-	
+
 	size_t i = 0;
 	blocks = getBlocks(confFile, "location");
 	if (blocks.size() == 0)
-		throw("Wrong location block format, missing data.");
+		throw std::runtime_error("Wrong location block format, missing data.");
 	while (i < blocks.size())
 	{
 		locations.setAll(blocks[i]);

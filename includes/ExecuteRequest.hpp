@@ -1,11 +1,12 @@
 #ifndef EXECUTE_REQUEST_HPP
-#define EXECUTE_REQUEST_HPP
+# define EXECUTE_REQUEST_HPP
 
 #include "Response.hpp"
 #include "Request.hpp"
 #include "Ticket.hpp"
 #include "ConfigServer.hpp"
 #include "CgiHandler.hpp"
+#include "parsing_tools.hpp"
 #include <fstream>
 #include <iostream>
 #include <ios>
@@ -13,14 +14,25 @@
 #include <cctype>
 
 #define HTTP_METHOD_NOT_IMPLEMENTED_NB 6
+#define CRLFCRLF_S "\r\n\r\n"
+#define CRLF_S "\r\n"
 
 #define MULTIPART "multipart/form-data; boundary="
+
+typedef struct s_headers
+{
+	std::string content_type;
+	std::string filename;
+	std::string charset;
+} 				t_headers;
+
 
 class ExecuteRequest
 {
 
     private:
-        int             _status_code;
+        int						_status_code;
+		std::map<fd_t, Request> _continue_requests;
 
 		bool
 		isAllowedMethod(std::string const &method, std::vector<std::string> method_allowed) const;
@@ -29,10 +41,13 @@ class ExecuteRequest
         autoindexPath(void) const;
 
 		bool
-		isMultipartProcessing(Ticket &ticket) const;
+		isMultipartProcessing(Ticket const &ticket) const;
 		
 		void
-		processMultipart(Ticket &ticket);
+		processMultipart(Ticket const &ticket);
+
+		void
+		processMultipartHeaders(std::string headers_part, t_headers *headers);
 
     public:
         static std::string method_not_implemented[HTTP_METHOD_NOT_IMPLEMENTED_NB];
@@ -73,13 +88,16 @@ class ExecuteRequest
 
         std::string
         postMethod(std::string const &URI, ConfigServer const &config,
-					ServerLocations const& location);
+					ServerLocations const& location, Ticket const& ticket);
 
-		std::string
+	        AHttpMessage::body_type	
 		execCgi(Request const &request, std::string const &original_uri,
 				std::string const &resolved_uri, std::string const &query,
 				ConfigServer const &config, ServerLocations const& location,
 				int index_page_idx);
+
+		std::string
+		continueGeneration(Ticket const &ticket);
 };
 
 #endif

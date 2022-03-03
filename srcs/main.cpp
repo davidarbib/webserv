@@ -1,6 +1,7 @@
 #include "main.hpp"
+#define D_SIZE 45000
 
-int 
+int
 processArgs(int ac, char **av, ServersType &servers, Config &conf)
 {
 	std::string config_path;
@@ -72,7 +73,7 @@ getConfig(Ticket current)
 {
 	for (size_t i = 0; i < current.getServer().getCandidateConfs().size(); i++)
 	{
-		if (current.getServer().getCandidateConfs()[i].getName() == current.getRequest().get_header_value("Host"))
+		if (current.getServer().getCandidateConfs()[i].getName() == current.getRequest().getHeaderValue("Host"))
 			return current.getServer().getCandidateConfs()[i];
 	}
 	return current.getServer().getCandidateConfs()[0];
@@ -113,14 +114,14 @@ isCgiRequested(std::string const &original_uri, std::string const &resolved_uri,
 	size_t len_extension = php_extension.size();
 	std::string tested_uri;
 
-	if (index != -1)
+	if (index == -1)
 		tested_uri = original_uri;
 	else
 		tested_uri = resolved_uri;
-	size_t extension_pos = resolved_uri.find(php_extension);
+	size_t extension_pos = tested_uri.find(php_extension);
 	if (extension_pos == std::string::npos)
 		return false;
-	if (extension_pos != resolved_uri.size() - len_extension)
+	if (extension_pos != tested_uri.size() - len_extension)
 		return false;
 	if (access(location.getCgiPath().c_str(), X_OK) != 0)
 		return false;
@@ -145,31 +146,45 @@ void
 cutQuery(Request &request, std::string &query)
 {
 	size_t query_pos = request.getStartLine().request_URI.find(QUERYCHAR);
-	
+
 	query = request.getStartLine().request_URI.substr(query_pos + 1);
 	request.setRequestURI(request.getStartLine().request_URI.substr(0, query_pos));
 }
 
 int
-parseCgiResponse(Response &response, std::string cgi_response)
+parseCgiResponse(Response &response, AHttpMessage::body_type cgi_response)
 {
 	int index = 0;
 	while (!isEndLine(cgi_response, index))
 	{
-		index = getHeader(index, cgi_response, response);
+		std::string tmp;
+		tmp.reserve(cgi_response.size());
+		tmp.assign(cgi_response.begin(), cgi_response.end());
+		index = getHeader(index, tmp, response);
 		if (isEndLine(cgi_response, index))
 		{
-			std::string body(cgi_response.substr(index, cgi_response.size()));
+			AHttpMessage::body_type body;
+			body.insert(body.begin(), cgi_response.begin() + index, cgi_response.end());
 			std::stringstream ss;
 			ss << body.size();
 			response.setBody(body);
 			response.setHeader("Content-Length", ss.str());
 		}
 	}
-	std::string status_code = response.get_header_value("Status");
+	std::string status_code = response.getHeaderValue("Status");
 	if (!status_code.empty())
 		return std::atoi(status_code.c_str());
 	return OK;
+}
+
+#define CONTINUE_VALUE "100-continue"
+
+bool
+is100Continue(Request const &request)
+{
+	if (request.getHeaderValue("Expect") == CONTINUE_VALUE)
+		return true;
+	return false;
 }
 
 Response
@@ -178,6 +193,7 @@ processRequest(TicketsType &tickets, ReqHandlersType &request_handlers)
 	ExecuteRequest executor;
 	Response response;
 	std::string body_path;
+	
 	while (!tickets.empty() && tickets.front().getRequest().isRequestFinalized() == true)
 	{
 		Ticket current(tickets.front());
@@ -192,11 +208,24 @@ processRequest(TicketsType &tickets, ReqHandlersType &request_handlers)
 			index_page_idx = matchIndex(location, resolved_uri);
 		if (executor.isValidRequest(current.getRequest(), config, location) == true)
 		{
+			std::string query;
+			cutQuery(current.getRequest(), query);
+			if (is100Continue(current.getRequest()))
+				body_path = executor.continueGeneration(current);
 			if (isCgiRequested(uri, resolved_uri, location, index_page_idx))
 			{
-				executor.setStatusCode(parseCgiResponse(response,
+				try
+				{
+					executor.setStatusCode(parseCgiResponse(response,
 														executor.execCgi(current.getRequest(), uri, resolved_uri,
-																			query, config, location, index_page_idx)));
+																		query, config, location, index_page_idx)));
+				}
+				catch(const std::exception& e)
+				{
+					executor.setStatusCode(INTERNAL_SERVER_ERROR);
+					body_path = executor.buildBodyPath(config);
+					response.searchForBody(executor.getStatusCode(), body_path, response.getFileExtension(body_path));
+				}
 			}
 			else if (location.getRedir().from == current.getRequest().getStartLine().request_URI)
 			{
@@ -214,7 +243,7 @@ processRequest(TicketsType &tickets, ReqHandlersType &request_handlers)
 			}
 			else if (current.getRequest().getStartLine().method_token == "POST")
 			{
-				body_path = executor.postMethod(current.getRequest().getStartLine().request_URI, config, location);
+				body_path = executor.postMethod(current.getRequest().getStartLine().request_URI, config, location, current);
 				response.searchForBody(executor.getStatusCode(), body_path, response.getFileExtension(body_path));
 			}
 			else
@@ -228,6 +257,11 @@ processRequest(TicketsType &tickets, ReqHandlersType &request_handlers)
 		response.buildPreResponse(executor.getStatusCode());
 		request_handlers.erase(tickets.front().getRhIt());
 		tickets.front().getConnection() << response.serialize_response();
+		//#define D_SIZE 45000
+		char debug[D_SIZE];
+		bzero(debug, D_SIZE);
+		tickets.front().getConnection().dumpOutBufferData(debug, D_SIZE);
+		write(1, debug, D_SIZE);
 		tickets.pop();
 	}
 	return response;
@@ -248,25 +282,26 @@ main(int ac, char **av)
 
 	Server::max_fd = 0;
 	Server::initFdset();
+
+	try {
+		processArgs(ac, av, servers, config);
+	}
+	catch(const std::runtime_error& e) {
+		std::cerr << "Error. Wrong configuration, please provide a valid \"webserv.conf\" file." << std::endl;
+		std::cerr << e.what() << std::endl;
+		return (1);
+	}
+
+	try
+	{
+		listenNetwork(servers);
+	}
+	catch(const std::exception& e)
+	{
+		std::cerr << e.what();
+		exit(1);
+	}
 	
-	processArgs(ac, av, servers, config);
-
-	/* ------------ TODO for tests without configuration file ----------------*/
-	//(void)ac;
-	//(void)av;
-	//ConfigServer conf;
-	//conf.setName("127.0.0.1:8003");
-	//conf.setHost("127.0.0.1:8003");
-	//conf.setPort("8003");
-	//conf.setMaxBody("200");
-	//std::vector<ConfigServer> configs;
-	//configs.push_back(conf);
-	//servers.push_back(Server("127.0.0.1", "8003", configs));
-
-	/* -----------------------------------------------------------------------*/
-	
-	listenNetwork(servers);
-
 	tv.tv_sec = DELAY;
 	tv.tv_usec = 0;
 
