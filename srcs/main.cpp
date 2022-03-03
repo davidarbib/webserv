@@ -123,7 +123,7 @@ isCgiRequested(std::string const &original_uri, std::string const &resolved_uri,
 		return false;
 	if (extension_pos != tested_uri.size() - len_extension)
 		return false;
-	if (access(location.getCgiPath().c_str(), X_OK) != 0)
+	if (location.getCgiPath().empty())
 		return false;
 	return true;
 }
@@ -216,11 +216,11 @@ processRequest(TicketsType &tickets, ReqHandlersType &request_handlers)
 			{
 				try
 				{
-					executor.setStatusCode(parseCgiResponse(response,
-														executor.execCgi(current.getRequest(), uri, resolved_uri,
-																		query, config, location, index_page_idx)));
+					AHttpMessage::body_type cgi_exec = executor.execCgi(current.getRequest(), uri, resolved_uri, query, location, index_page_idx);
+					int cgi_response = parseCgiResponse(response, cgi_exec);
+					executor.setStatusCode(cgi_response);
 				}
-				catch(const std::exception& e)
+				catch(std::exception& e)
 				{
 					executor.setStatusCode(INTERNAL_SERVER_ERROR);
 					body_path = executor.buildBodyPath(config);

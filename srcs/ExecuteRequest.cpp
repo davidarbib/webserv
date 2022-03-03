@@ -323,11 +323,9 @@ ExecuteRequest::execCgi(Request const &request,
 							std::string const &original_uri,
 							std::string const &resolved_uri,
 							std::string const &query,
-							ConfigServer const &config,
 							ServerLocations const& location,
 							int index_page_idx)
 {	
-	(void)config; // TODO
 	std::string ressource;
 	if (index_page_idx == -1)
 		ressource = original_uri;
@@ -343,9 +341,11 @@ ExecuteRequest::execCgi(Request const &request,
     AHttpMessage::body_type cgi_response;
 	while (fgets(line, FGET_SIZE, handler.getCgiResponse()))
     {
-	for (int i = 0; line[i] && i < FGET_SIZE; i++)
+		for (int i = 0; line[i] && i < FGET_SIZE; i++)
         	cgi_response.push_back(line[i]);
     }
+	if (cgi_response.empty())
+		throw std::exception();
 	return cgi_response;
 }
 
