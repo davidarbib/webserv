@@ -7,6 +7,7 @@
 #include "ConfigServer.hpp"
 #include "CgiHandler.hpp"
 #include "parsing_tools.hpp"
+#include "SmartFile.hpp"
 #include <fstream>
 #include <iostream>
 #include <ios>
@@ -16,6 +17,7 @@
 #define HTTP_METHOD_NOT_IMPLEMENTED_NB 6
 #define CRLFCRLF_S "\r\n\r\n"
 #define CRLF_S "\r\n"
+#define CRLF_LEN 2
 
 #define MULTIPART "multipart/form-data; boundary="
 
@@ -47,7 +49,7 @@ class ExecuteRequest
 		processMultipart(Ticket const &ticket);
 
 		void
-		processMultipartHeaders(std::string headers_part, t_headers *headers);
+		processMultipartHeaders(std::string &headers_part, t_headers *headers);
 
     public:
         static std::string method_not_implemented[HTTP_METHOD_NOT_IMPLEMENTED_NB];
