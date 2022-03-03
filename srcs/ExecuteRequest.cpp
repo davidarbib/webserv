@@ -333,6 +333,7 @@ ExecuteRequest::execCgi(Request const &request,
 		ressource = original_uri;
 	else
 		ressource = resolved_uri;
+	ressource = location.getRoot() + ressource;
 	CgiHandler handler(request, location.getCgiPath(), ressource, query);
 	handler.sendCgi();
 	handler.getCgiResponse();

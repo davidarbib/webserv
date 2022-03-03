@@ -212,7 +212,7 @@ processRequest(TicketsType &tickets, ReqHandlersType &request_handlers)
 			cutQuery(current.getRequest(), query);
 			if (is100Continue(current.getRequest()))
 				body_path = executor.continueGeneration(current);
-			else if (isCgiRequested(uri, resolved_uri, location, index_page_idx))
+			if (isCgiRequested(uri, resolved_uri, location, index_page_idx))
 			{
 				try
 				{
