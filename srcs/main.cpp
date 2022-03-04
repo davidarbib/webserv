@@ -193,7 +193,7 @@ processRequest(TicketsType &tickets, ReqHandlersType &request_handlers)
 	ExecuteRequest executor;
 	Response response;
 	std::string body_path;
-	
+
 	while (!tickets.empty() && tickets.front().getRequest().isRequestFinalized() == true)
 	{
 		Ticket current(tickets.front());
@@ -208,8 +208,6 @@ processRequest(TicketsType &tickets, ReqHandlersType &request_handlers)
 			index_page_idx = matchIndex(location, resolved_uri);
 		if (executor.isValidRequest(current.getRequest(), config, location) == true)
 		{
-			std::string query;
-			cutQuery(current.getRequest(), query);
 			if (is100Continue(current.getRequest()))
 				body_path = executor.continueGeneration(current);
 			if (isCgiRequested(uri, resolved_uri, location, index_page_idx))
@@ -297,7 +295,7 @@ main(int ac, char **av)
 		std::cerr << e.what();
 		exit(1);
 	}
-	
+
 	tv.tv_sec = DELAY;
 	tv.tv_usec = 0;
 
