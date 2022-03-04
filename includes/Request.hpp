@@ -5,7 +5,6 @@
 #include <cctype>
 #include <cstdlib>
 #include "AHttpMessage.hpp"
-#include "Response.hpp"
 
 class Request : public AHttpMessage
 {

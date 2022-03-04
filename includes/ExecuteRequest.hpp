@@ -94,8 +94,7 @@ class ExecuteRequest
 
 	        AHttpMessage::body_type	
 		execCgi(Request const &request, std::string const &original_uri,
-				std::string const &resolved_uri, std::string const &query,
-				ConfigServer const &config, ServerLocations const& location,
+				std::string const &resolved_uri, std::string const &query, ServerLocations const& location,
 				int index_page_idx);
 
 		std::string

@@ -1,6 +1,8 @@
 #ifndef SERVER_HPP
 # define SERVER_HPP
 
+class RequestHandler;
+
 # include <string>
 # include <iostream>
 # include <fcntl.h>
@@ -90,6 +92,9 @@ class Server
 		static bool
 		isPossibleToWrite(fd_t);
 
+		static void
+		delWatchedFd(fd_t);
+
 		std::vector<ConfigServer> const&
 		getCandidateConfs(void) const;
 
@@ -111,9 +116,6 @@ class Server
 
 		void
 		recvSend(void);
-
-		void
-		delWatchedFd(fd_t);
 };
 
 #endif

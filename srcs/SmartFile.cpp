@@ -6,14 +6,20 @@ SmartFile::SmartFile(void)
 SmartFile::SmartFile(std::string const &name, std::string const &mode)
 : _name(name), _mode(mode)
 {
-    _file = fopen(_name.c_str(), _mode.c_str());
-    if (!_file)
-        throw std::exception();
-    else
+    if (mode == "t")
     {
-        fcntl(fileno(_file), F_SETFD, (fcntl(fileno(_file), F_GETFD) | O_NONBLOCK));
-        Server::addWatchedFd(fileno(_file));
+        bzero(_tmpname, sizeof(_tmpname));
+        strncpy(_tmpname, _name.c_str(), name.size());
+        strncpy(_tmpname + name.size(), TMP_SUFFIX, TMP_SUFFIX_LEN);
+        _file = mkstemp(_tmpname);
+        fcntl(_file, F_SETFD, (fcntl(_file, F_GETFD) | O_NONBLOCK));
     }
+    else if (mode == "r")
+        _file = open(_name.c_str(), O_RDONLY | O_NONBLOCK);
+    else if (mode == "w")
+        _file = open(_name.c_str(), O_WRONLY | O_NONBLOCK);
+    if (_file < 1)
+        throw std::bad_alloc();
 }
 
 SmartFile::SmartFile(SmartFile const &src)
@@ -23,8 +29,10 @@ SmartFile::SmartFile(SmartFile const &src)
 
 SmartFile::~SmartFile(void)
 {
-    if (_file)
-        fclose(_file);
+    if (_mode == "t")
+        unlink(_tmpname);
+    else
+        close(_file);
 }
 
 SmartFile &SmartFile::operator=(SmartFile const &rhs)
@@ -35,20 +43,32 @@ SmartFile &SmartFile::operator=(SmartFile const &rhs)
     return *this;
 }
 
-char *
-SmartFile::read(char *buf, int size)
+int
+SmartFile::gets(char *buf, int size) const
 {
-	if (Server::isThereSomethingToRead(fileno(_file)))
-		return fgets(buf, size, _file);
+	struct timeval				tv;
+	tv.tv_sec = DELAY;
+	tv.tv_usec = 0;
+	fd_set fds;
+	FD_ZERO(&fds);
+	FD_SET(_file, &fds);
+	if (select(_file + 1, &fds, 0, 0, &tv) == 1)
+		return read(_file, buf, size);
 	else
-		return NULL;
+		return 0;
 }
 
 int
-SmartFile::write(const char *buf)
+SmartFile::puts(const char *buf, int size)
 {
-	if (Server::isPossibleToWrite(fileno(_file)))
-		return fputs(buf, _file);
+	struct timeval				tv;
+	tv.tv_sec = DELAY;
+	tv.tv_usec = 0;
+	fd_set fds;
+	FD_ZERO(&fds);
+	FD_SET(_file, &fds);
+	if (select(_file + 1, 0, &fds, 0, &tv) == 1)
+		return write(_file, buf, size);
 	else
 		return 0;
 }

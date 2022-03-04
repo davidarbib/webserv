@@ -84,7 +84,6 @@ Response::serialize_response(void)
 	serialized.reserve(status_line.str().size());
 	std::string tmp(status_line.str());
 	serialized.insert(serialized.end(), tmp.begin(), tmp.end());
-
 	hash_map::iterator it = _headers.begin();
 	while (it != _headers.end())
 	{
@@ -104,36 +103,25 @@ Response::serialize_response(void)
 }
 
 int
-Response::buildBody(std::string const& path)
+Response::buildBody(SmartFile const& path)
 {
-	int fd = 0;
-	fd = open(path.c_str(), O_RDONLY);
 	int size = 0;
-	if (path.size() > 0 && fd > 0)
+	char line[BUFFER_SIZE];
+	bzero(line, BUFFER_SIZE);
+	_body.reserve(BUFFER_SIZE);
+	int ret = 0;
+	while ((ret = path.gets(line, BUFFER_SIZE) > 0))
 	{
-		char line[BUFFER_SIZE];
+		for (int i = 0; i < BUFFER_SIZE; i++)
+        	_body.push_back(line[i]);
 		bzero(line, BUFFER_SIZE);
-		_body.reserve(BUFFER_SIZE);
-		int ret = 0;
-		int sum = 0;
-		while ((ret =read(fd, line, BUFFER_SIZE)) > 0)
-		{
-			sum += ret;
-			for (int i = 0; i < BUFFER_SIZE; i++)
-        			_body.push_back(line[i]);
-			bzero(line, BUFFER_SIZE);
-		}
-		size = _body.size();
-		std::stringstream s;
-		//s << size;
-		s << sum;
-		if (size > 0)
-			this->_headers["Content-Length"] =  s.str();
-		close(fd);
-		return size;
 	}
-	else
-		return 0;
+	size = _body.size();
+	std::stringstream s;
+	s << size;
+	if (size > 0)
+		this->_headers["Content-Length"] =  s.str();
+	return size;
 }
 
 std::ostream &
@@ -197,7 +185,17 @@ Response::fillHandledExtensions(void)
 void
 Response::searchForBody(int code, std::string const &body_path, std::string const &file_type)
 {
-	if (buildBody(body_path) == 0)
+	SmartFile smartfile;
+	try
+	{
+	  smartfile = SmartFile(body_path, "r");
+	}
+	catch (std::exception &e)
+	{
+		setHeader("Content-Length", "0");		
+		return ;
+	}
+	if (buildBody(smartfile) == 0)
 	{
 		if (code == OK)
 		{

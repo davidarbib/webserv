@@ -118,13 +118,12 @@ isCgiRequested(std::string const &original_uri, std::string const &resolved_uri,
 		tested_uri = original_uri;
 	else
 		tested_uri = resolved_uri;
-	std::cout << "uri : " << tested_uri << std::endl;
 	size_t extension_pos = tested_uri.find(php_extension);
 	if (extension_pos == std::string::npos)
 		return false;
 	if (extension_pos != tested_uri.size() - len_extension)
 		return false;
-	if (access(location.getCgiPath().c_str(), X_OK) != 0)
+	if (location.getCgiPath().empty())
 		return false;
 	return true;
 }
@@ -198,10 +197,6 @@ processRequest(TicketsType &tickets, ReqHandlersType &request_handlers)
 	while (!tickets.empty() && tickets.front().getRequest().isRequestFinalized() == true)
 	{
 		Ticket current(tickets.front());
-
-	std::cout << "Request" << std::endl;
-	std::cout << current.getRequest() << std::endl;
-
 		ConfigServer const& config = getConfig(current);
 		std::string query;
 		cutQuery(current.getRequest(), query);
@@ -217,15 +212,15 @@ processRequest(TicketsType &tickets, ReqHandlersType &request_handlers)
 			cutQuery(current.getRequest(), query);
 			if (is100Continue(current.getRequest()))
 				body_path = executor.continueGeneration(current);
-			else if (isCgiRequested(uri, resolved_uri, location, index_page_idx))
+			if (isCgiRequested(uri, resolved_uri, location, index_page_idx))
 			{
 				try
 				{
-					executor.setStatusCode(parseCgiResponse(response,
-														executor.execCgi(current.getRequest(), uri, resolved_uri,
-																		query, config, location, index_page_idx)));
+					AHttpMessage::body_type cgi_exec = executor.execCgi(current.getRequest(), uri, resolved_uri, query, location, index_page_idx);
+					int cgi_response = parseCgiResponse(response, cgi_exec);
+					executor.setStatusCode(cgi_response);
 				}
-				catch(const std::exception& e)
+				catch(std::exception& e)
 				{
 					executor.setStatusCode(INTERNAL_SERVER_ERROR);
 					body_path = executor.buildBodyPath(config);
@@ -244,13 +239,13 @@ processRequest(TicketsType &tickets, ReqHandlersType &request_handlers)
 			else if (current.getRequest().getStartLine().method_token == "GET")
 			{
 				body_path = executor.getMethod(current.getRequest().getStartLine().request_URI, config, location, resolved_uri);
+				std::cout << "BODY PATH" << body_path << std::endl;
 				response.searchForBody(executor.getStatusCode(), body_path, response.getFileExtension(body_path));
 			}
 			else if (current.getRequest().getStartLine().method_token == "POST")
 			{
 				body_path = executor.postMethod(current.getRequest().getStartLine().request_URI, config, location, current);
 				response.searchForBody(executor.getStatusCode(), body_path, response.getFileExtension(body_path));
-				std::cout << "probe" << std::endl;
 			}
 			else
 			{
@@ -261,14 +256,13 @@ processRequest(TicketsType &tickets, ReqHandlersType &request_handlers)
 		else
 			body_path = executor.buildBodyPath(config);
 		response.buildPreResponse(executor.getStatusCode());
-		std::cout << body_path << std::endl;
 		request_handlers.erase(tickets.front().getRhIt());
 		tickets.front().getConnection() << response.serialize_response();
 		//#define D_SIZE 45000
-		//char debug[D_SIZE];
-		//bzero(debug, D_SIZE);
-		//tickets.front().getConnection().dumpOutBufferData(debug, D_SIZE);
-		//write(1, debug, D_SIZE);
+		char debug[D_SIZE];
+		bzero(debug, D_SIZE);
+		tickets.front().getConnection().dumpOutBufferData(debug, D_SIZE);
+		write(1, debug, D_SIZE);
 		tickets.pop();
 	}
 	return response;

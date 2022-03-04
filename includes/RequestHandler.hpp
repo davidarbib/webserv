@@ -1,6 +1,8 @@
 #ifndef REQUESTHANDLER_HPP
 # define REQUESTHANDLER_HPP
 
+class Request;
+
 # include "typedefs.hpp"
 # include <string>
 # include <iostream>
