@@ -13,6 +13,7 @@
 #include "Response.hpp"
 #include "ExecuteRequest.hpp"
 #include "ServerLocations.hpp"
+#include <csignal>
 
 typedef std::queue<Ticket>						TicketsType;
 typedef std::map<fd_t, RequestHandler>			ReqHandlersType;

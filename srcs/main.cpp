@@ -264,6 +264,18 @@ processRequest(TicketsType &tickets, ReqHandlersType &request_handlers)
 	return response;
 }
 
+
+void signalHandler( int signum )
+{
+  std::cout << "Interrupt signal (" << signum << ") received.\n";
+
+   // cleanup and close up stuff here  
+   // terminate program  
+
+   throw std::runtime_error("CTRL-C capture");  
+}
+
+
 int
 main(int ac, char **av)
 {
@@ -302,15 +314,23 @@ main(int ac, char **av)
 	tv.tv_sec = DELAY;
 	tv.tv_usec = 0;
 
-	while (1)
+	try
 	{
-		Server::setFdset();
-		select(Server::max_fd + 1, &Server::read_fds, &Server::write_fds, NULL, &tv);
-		handleConnectionRequest(servers);
-		networkInputToBuffers(servers, request_handlers);
-		handleRequestBuffers(servers, tickets, request_handlers);
-		processRequest(tickets, request_handlers);
-		sendToNetwork(servers);
+		signal(SIGINT, signalHandler);
+		while (1)
+		{
+			Server::setFdset();
+			select(Server::max_fd + 1, &Server::read_fds, &Server::write_fds, NULL, &tv);
+			handleConnectionRequest(servers);
+			networkInputToBuffers(servers, request_handlers);
+			handleRequestBuffers(servers, tickets, request_handlers);
+			processRequest(tickets, request_handlers);
+			sendToNetwork(servers);
+		}
+	}
+	catch (std::exception &e)
+	{
+		return 0;
 	}
 	return 0;
 }

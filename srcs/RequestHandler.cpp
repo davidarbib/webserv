@@ -15,7 +15,6 @@ RequestHandler::RequestHandler(RequestHandler const &src):
 
 RequestHandler::~RequestHandler(void)
 {
-
 }
 
 void

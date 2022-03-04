@@ -19,6 +19,12 @@ Server::Server(Server const &src)
 
 Server::~Server(void)
 {
+    std::cout << "GO TO SERVER DESTRUCTOR" << std::endl;
+    for(size_t i = 0; i < _connections.size(); i++)
+    {
+	std::cout << "coucou je detruit un serveur" << std::endl;
+        delete _connections[i];
+    }
 }
 
 std::map<fd_t, Connection*> &
