@@ -18,7 +18,7 @@ CgiHandler::CgiHandler(Request const &request, std::string const &pgm_path,
 	//cutting URI in start line for env
 	//addCgiEnv("AUTH_TYPE", "");
 	//addCgiEnv("REMOTE_ADDR", "");
-	//addCgiEnv("REMOTE_HOST", ""); 
+	//addCgiEnv("REMOTE_HOST", "");
 	//addCgiEnv("REMOTE_IDENT", "");
 	//addCgiEnv("REMOTE_USER", "");
 	//addCgiEnv("REQUEST_METHOD", "POST");
@@ -29,7 +29,7 @@ CgiHandler::CgiHandler(Request const &request, std::string const &pgm_path,
 
 	_sender = __tmpfile__();
 	_receiver = __tmpfile__();
-	
+
 	std::string body;
 	body.assign(request.getBody().begin(), request.getBody().end());
 	write(fileno(_sender), body.c_str(), body.size()); //TODO Exception handling , and fd select checking
@@ -57,6 +57,7 @@ CgiHandler::getCgiEnv(void)
 	}
 	catch (std::bad_alloc &e)
 	{
+		delete [] env;
 		std::cout << e.what() << std::endl;
 	}
 
@@ -73,8 +74,9 @@ CgiHandler::getCgiEnv(void)
 		catch(std::bad_alloc &e)
 		{
 			for (int j = i - 1; j <= 0; j--)
-				delete env[i];
-			delete env;
+				delete [] env[i];
+			delete [] env;
+			env = NULL;
 			std::cout << e.what() << std::endl;
 		}
 		strcpy(env[i], concat.c_str());
@@ -88,13 +90,13 @@ CgiHandler::sendCgi(void)
 {
 
 	char *argv[3];
-	char *const *env = getCgiEnv();	
+	char *const *env = getCgiEnv();
 
 	argv[0] = const_cast<char*>(_pgm_path.c_str());
 	argv[1] = const_cast<char*>(_script_path.c_str());
 	argv[2] = NULL;
 
-	pid_t pid = __fork__();	
+	pid_t pid = __fork__();
 	if (pid == 0)
 	{
 		_dup2_(fileno(_sender), STDIN_FILENO);
@@ -106,6 +108,9 @@ CgiHandler::sendCgi(void)
 		waitpid(pid, NULL, 0);
 	}
 	rewind(_receiver);
+	for (int i = 0; env[i]; i++)
+		delete [] env[i];
+	delete [] env;
 }
 
 FILE *
