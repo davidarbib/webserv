@@ -109,8 +109,7 @@ Response::buildBody(SmartFile const& path)
 	char line[BUFFER_SIZE];
 	bzero(line, BUFFER_SIZE);
 	_body.reserve(BUFFER_SIZE);
-	int ret = 0;
-	while ((ret = path.gets(line, BUFFER_SIZE) > 0))
+	while (path.gets(line, BUFFER_SIZE) > 0)
 	{
 		for (int i = 0; i < BUFFER_SIZE; i++)
         	_body.push_back(line[i]);
@@ -185,37 +184,37 @@ Response::fillHandledExtensions(void)
 void
 Response::searchForBody(int code, std::string const &body_path, std::string const &file_type)
 {
-	SmartFile smartfile;
 	try
 	{
-	  smartfile = SmartFile(body_path, "r");
+	  SmartFile smartfile(body_path, "r");
+	  if (buildBody(smartfile) == 0)
+	  {
+		  if (code == OK)
+		  {
+			  this->_start_line.reason_phrase = "No Content";
+			  this->_start_line.status_code = NO_CONTENT;
+		  }
+		  setHeader("Content-Length", "0");
+	  }
+	  else
+	  {
+		  if (file_type.empty())
+			  setHeader("Content-Type", handled_extensions.find("")->second);
+		  else
+		  {
+			  std::map<std::string, std::string>::iterator it = handled_extensions.find(file_type);
+			  if (it == handled_extensions.end())
+				  setHeader("Content-Type", handled_extensions.find("")->second);
+			  else
+				  setHeader("Content-Type", it->second);
+		  }
+	  }
 	}
 	catch (std::exception &e)
 	{
+		std::cerr << e.what() << std::endl;
 		setHeader("Content-Length", "0");		
 		return ;
-	}
-	if (buildBody(smartfile) == 0)
-	{
-		if (code == OK)
-		{
-			this->_start_line.reason_phrase = "No Content";
-			this->_start_line.status_code = NO_CONTENT;
-		}
-		setHeader("Content-Length", "0");
-	}
-	else
-	{
-		if (file_type.empty())
-			setHeader("Content-Type", handled_extensions.find("")->second);
-		else
-		{
-			std::map<std::string, std::string>::iterator it = handled_extensions.find(file_type);
-			if (it == handled_extensions.end())
-				setHeader("Content-Type", handled_extensions.find("")->second);
-			else
-				setHeader("Content-Type", it->second);
-		}
 	}
 }
 
