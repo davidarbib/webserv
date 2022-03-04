@@ -12,12 +12,12 @@ SmartFile::SmartFile(std::string const &name, std::string const &mode)
         strncpy(_tmpname, _name.c_str(), name.size());
         strncpy(_tmpname + name.size(), TMP_SUFFIX, TMP_SUFFIX_LEN);
         _file = mkstemp(_tmpname);
-        fcntl(_file, F_SETFD, (fcntl(_file, F_GETFD) | O_NONBLOCK));
+        //fcntl(_file, F_SETFD, (fcntl(_file, F_GETFD) | O_NONBLOCK));
     }
     else if (mode == "r")
-        _file = open(_name.c_str(), O_RDONLY | O_NONBLOCK);
+        _file = open(_name.c_str(), O_RDONLY);
     else if (mode == "w")
-        _file = open(_name.c_str(), O_WRONLY | O_NONBLOCK);
+        _file = open(_name.c_str(), O_WRONLY);
     if (_file < 1)
         throw std::bad_alloc();
 }
@@ -46,29 +46,11 @@ SmartFile &SmartFile::operator=(SmartFile const &rhs)
 int
 SmartFile::gets(char *buf, int size) const
 {
-	struct timeval				tv;
-	tv.tv_sec = DELAY;
-	tv.tv_usec = 0;
-	fd_set fds;
-	FD_ZERO(&fds);
-	FD_SET(_file, &fds);
-	if (select(_file + 1, &fds, 0, 0, &tv) == 1)
-		return read(_file, buf, size);
-	else
-		return 0;
+	return read(_file, buf, size);
 }
 
 int
 SmartFile::puts(const char *buf, int size)
 {
-	struct timeval				tv;
-	tv.tv_sec = DELAY;
-	tv.tv_usec = 0;
-	fd_set fds;
-	FD_ZERO(&fds);
-	FD_SET(_file, &fds);
-	if (select(_file + 1, 0, &fds, 0, &tv) == 1)
-		return write(_file, buf, size);
-	else
-		return 0;
+	return write(_file, buf, size);
 }
