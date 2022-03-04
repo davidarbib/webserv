@@ -208,6 +208,7 @@ processRequest(TicketsType &tickets, ReqHandlersType &request_handlers)
 			index_page_idx = matchIndex(location, resolved_uri);
 		if (executor.isValidRequest(current.getRequest(), config, location) == true)
 		{
+			std::cout << "URI : " << uri << std::endl;
 			std::string query;
 			cutQuery(current.getRequest(), query);
 			if (is100Continue(current.getRequest()))
@@ -239,7 +240,7 @@ processRequest(TicketsType &tickets, ReqHandlersType &request_handlers)
 			else if (current.getRequest().getStartLine().method_token == "GET")
 			{
 				body_path = executor.getMethod(current.getRequest().getStartLine().request_URI, config, location, resolved_uri);
-				std::cout << "BODY PATH" << body_path << std::endl;
+				//std::cout << "BODY PATH" << body_path << std::endl;
 				response.searchForBody(executor.getStatusCode(), body_path, response.getFileExtension(body_path));
 			}
 			else if (current.getRequest().getStartLine().method_token == "POST")

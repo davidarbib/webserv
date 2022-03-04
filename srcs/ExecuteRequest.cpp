@@ -61,13 +61,13 @@ ExecuteRequest::processMultipartHeaders(std::string &headers_part,
 		i = endline_pos + CRLF_LEN;
 	}
 	
-	for (std::map<std::string, std::string>::iterator it = mp_headers.begin();
-			it != mp_headers.end();
-			it++)
-	{
-		std::cout << "key : " << it->first << ", value : " << it->second;
-		std::cout << std::endl;
-	}
+	//for (std::map<std::string, std::string>::iterator it = mp_headers.begin();
+	//		it != mp_headers.end();
+	//		it++)
+	//{
+	//	std::cout << "key : " << it->first << ", value : " << it->second;
+	//	std::cout << std::endl;
+	//}
 
 	std::string fname_mark("filename=");
 	std::string content_disposition = mp_headers["Content-Disposition"];
@@ -136,7 +136,7 @@ ExecuteRequest::processMultipart(Ticket const &ticket)
 	for (std::vector<std::vector<char> >::iterator part = v_parts.begin();
 			part != v_parts.end(); part++)
 	{
-		std::cout << "process part" << std::endl;
+		//std::cout << "process part" << std::endl;
 		std::string header_part;
 		t_headers headers;
 		AHttpMessage::body_type::iterator headers_end =
@@ -145,16 +145,16 @@ ExecuteRequest::processMultipart(Ticket const &ticket)
 		header_part.assign(part->begin(), headers_end);
 		processMultipartHeaders(header_part, &headers);
 		
-		std::cout << "content_type" << headers.content_type << std::endl;
-		std::cout << "filename" << headers.filename << std::endl;
-		std::cout << "charset" << headers.charset << std::endl;
+		//std::cout << "content_type" << headers.content_type << std::endl;
+		//std::cout << "filename" << headers.filename << std::endl;
+		//std::cout << "charset" << headers.charset << std::endl;
 
-		std::cout << "--------body------------" << std::endl;
+		//std::cout << "--------body------------" << std::endl;
 
-		for (AHttpMessage::body_type::iterator it = headers_end + CRLF_LEN * 2;
-				it != part->end(); it++)
-			std::cout << *it;
-		std::cout << "------------------------" << std::endl;
+		//for (AHttpMessage::body_type::iterator it = headers_end + CRLF_LEN * 2;
+		//		it != part->end(); it++)
+		//	std::cout << *it;
+		//std::cout << "------------------------" << std::endl;
 
 		SmartFile file(headers.filename, "w");	
 		int body_size = part->end() - (headers_end + CRLF_LEN * 2); 
@@ -354,7 +354,7 @@ ExecuteRequest::postMethod(std::string const &URI, ConfigServer const &config,
 	(void)config;
 	(void)location;
 	(void)ticket;
-	std::cout << "POST METHOD" << std::endl;
+	//std::cout << "POST METHOD" << std::endl;
 	std::string uri = "./" + URI;
 	//check multipart marks in headers
 	if (isMultipartProcessing(ticket))
