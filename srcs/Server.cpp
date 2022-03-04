@@ -97,18 +97,11 @@ Server::createConnection(void)
 	fd_t			new_sock_fd;
 	socklen_t sinsize = sizeof(new_sin);
 
-	std::cout << "Try to create connection" << std::endl;
 	new_sock_fd = accept(_listen_fd, reinterpret_cast<sockaddr*>(&new_sin), &sinsize);
 	if (new_sock_fd < 0)
-	{
-		std::cout << "NEW SOCK FD PAS BON" << std::endl;
 		throw ConnectionException();
-	}
 	if (fcntl(new_sock_fd, F_SETFL, O_NONBLOCK) < 0)
-	{
-		std::cout << "blabla" << std::endl;
 		throw ConnectionException();
-	}
 	addWatchedFd(new_sock_fd);
 	_connections[new_sock_fd] = new Connection(new_sock_fd,
 								static_cast<unsigned long>(new_sin.sin_addr.s_addr),

@@ -239,7 +239,6 @@ processRequest(TicketsType &tickets, ReqHandlersType &request_handlers)
 			else if (current.getRequest().getStartLine().method_token == "GET")
 			{
 				body_path = executor.getMethod(current.getRequest().getStartLine().request_URI, config, location, resolved_uri);
-				std::cout << "BODY PATH" << body_path << std::endl;
 				response.searchForBody(executor.getStatusCode(), body_path, response.getFileExtension(body_path));
 			}
 			else if (current.getRequest().getStartLine().method_token == "POST")
@@ -258,11 +257,6 @@ processRequest(TicketsType &tickets, ReqHandlersType &request_handlers)
 		response.buildPreResponse(executor.getStatusCode());
 		request_handlers.erase(tickets.front().getRhIt());
 		tickets.front().getConnection() << response.serialize_response();
-		//#define D_SIZE 45000
-		char debug[D_SIZE];
-		bzero(debug, D_SIZE);
-		tickets.front().getConnection().dumpOutBufferData(debug, D_SIZE);
-		write(1, debug, D_SIZE);
 		tickets.pop();
 	}
 	return response;
