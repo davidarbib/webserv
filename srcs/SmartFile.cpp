@@ -19,7 +19,7 @@ SmartFile::SmartFile(std::string const &name, std::string const &mode)
     else if (mode == "w")
         _file = open(_name.c_str(), O_WRONLY | O_NONBLOCK);
     if (_file < 1)
-        throw std::bad_alloc();
+        throw std::exception();
 }
 
 SmartFile::SmartFile(SmartFile const &src)

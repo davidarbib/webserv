@@ -212,7 +212,6 @@ Response::searchForBody(int code, std::string const &body_path, std::string cons
 	}
 	catch (std::exception &e)
 	{
-		std::cerr << e.what() << std::endl;
 		setHeader("Content-Length", "0");		
 		return ;
 	}
