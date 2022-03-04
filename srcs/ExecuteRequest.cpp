@@ -250,6 +250,7 @@ ExecuteRequest::getMethod(std::string const& uri, ConfigServer const& config, Se
     std::string complete_uri = location.getRoot() + uri;
     if (uri == location.getpath())
         complete_uri = resolved_uri;
+    std::cout << "COMPLETE URI" << complete_uri << std::endl;
     ressource.open(complete_uri.c_str(), std::ifstream::in);
     if (ressource.is_open() && complete_uri[complete_uri.size() - 1] != '/')
     {

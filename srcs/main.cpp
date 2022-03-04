@@ -259,7 +259,6 @@ processRequest(TicketsType &tickets, ReqHandlersType &request_handlers)
 			response.searchForBody(executor.getStatusCode(), body_path, response.getFileExtension(body_path));
 		}
 		response.buildPreResponse(executor.getStatusCode());
-		std::cout << response << std::endl;
 		request_handlers.erase(tickets.front().getRhIt());
 		tickets.front().getConnection() << response.serialize_response();
 		tickets.pop();
