@@ -58,8 +58,6 @@ getBlocks(std::string const &confFile, std::string const &block_name)
 	{
 		if (is_block(confFile, pos_start))
 			blocks.push_back(getNextBlock(confFile, pos_start));
-		else
-			throw std::runtime_error("Invalid block found.");
 		pos_start += 1;
 		pos_start = confFile.find(block_name, pos_start);
 	}

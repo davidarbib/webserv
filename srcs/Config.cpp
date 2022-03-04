@@ -4,7 +4,7 @@ Config::Config(void) {
 }
 
 Config::~Config(void) {
-	
+
 }
 
 Config::Config (Config const &src) {
@@ -29,7 +29,7 @@ Config::setServers(std::string confFile)
 	size_t i = 0;
 	blocks = getBlocks(confFile, "server");
 	if (blocks.size() == 0)
-		throw ("Wrong server block format, missing data.");
+			throw std::runtime_error("Wrong server block format, missing data.");
 	while (i < blocks.size())
 	{
 		servers.setAll(blocks[i]);
