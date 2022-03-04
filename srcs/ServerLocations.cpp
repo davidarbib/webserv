@@ -114,6 +114,8 @@ ServerLocations::setCgiPath(std::string const &cgi_path)
 	if (cgi_path == "")
 		throw std::runtime_error("Wrong cgi_path rule format, missing path.");
 	this->_cgi_path = cgi_path;
+	if (access(this->getCgiPath().c_str(), X_OK) != 0)
+		throw std::runtime_error("Wrong cgi_path rule format, cgi_path is not a valid path for CGI.");
 }
 
 void
