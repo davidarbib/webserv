@@ -13,7 +13,8 @@ parse(std::string const &confFile, int pos_start)
 		pos_start++;
 	}
 	pos_end = confFile.find('\n', pos_start);
-
+	while(confFile[pos_end - 1] == ' ')
+		pos_end--;
 	return (confFile.substr(pos_start, pos_end - pos_start));
 }
 
@@ -22,7 +23,7 @@ getNextBlock(std::string const &confFile, int pos_start)
 {
 	int pos_end = pos_start + 1;
 	int brackets = 0;
-	
+
 	while (confFile[pos_end] && !(confFile[pos_end - 1] == '}' && brackets == 0))
 	{
 		if (confFile[pos_end] == '{')
@@ -69,13 +70,13 @@ read_config(std::string config_path)
 {
 	std::stringstream buffer;
 	std::ifstream file(config_path.c_str());
-	
+
   	if (file.is_open())
   	{
     	buffer << file.rdbuf();
 		file.close();
   	}
-	else 
+	else
 	{
 		std::cout << "Unable to open " << config_path << std::endl;
 		return ("");
