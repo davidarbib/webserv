@@ -22,7 +22,7 @@ getNextBlock(std::string const &confFile, int pos_start)
 {
 	int pos_end = pos_start + 1;
 	int brackets = 0;
-	
+
 	while (confFile[pos_end] && !(confFile[pos_end - 1] == '}' && brackets == 0))
 	{
 		if (confFile[pos_end] == '{')
@@ -37,7 +37,7 @@ getNextBlock(std::string const &confFile, int pos_start)
 int
 is_block(std::string const &confFile, int pos)
 {
-	while (confFile[pos] != '\n')
+	while (confFile[pos] && confFile[pos] != '\n')
 	{
 		if (confFile[pos] == '{')
 			return (1);
@@ -69,16 +69,13 @@ read_config(std::string config_path)
 {
 	std::stringstream buffer;
 	std::ifstream file(config_path.c_str());
-	
+
   	if (file.is_open())
   	{
     	buffer << file.rdbuf();
 		file.close();
   	}
-	else 
-	{
-		std::cout << "Unable to open " << config_path << std::endl;
-		return ("");
-	}
+	else
+		throw std::runtime_error("Unable to open " + config_path);
 	return (buffer.str());
 }
