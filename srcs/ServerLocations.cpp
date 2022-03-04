@@ -32,7 +32,6 @@ ServerLocations::setAll(std::string const &confFile)
 		this->setRedir(parse(confFile, pos_start));
 	if ((pos_start = confFile.find("cgi_path")) != -1)
 		this->setCgiPath(parse(confFile, pos_start));
-	std::cout << this->getRoot() << std::endl;
 }
 
 //SETTERS
