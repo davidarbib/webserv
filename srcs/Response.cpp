@@ -51,7 +51,7 @@ Response::printMessage(std::ostream &flux) const
 {
 	flux << "---------------------" << "Start line :" << "---------------------" << std::endl;
 	flux << this->_start_line.protocol_version << " " << this->_start_line.status_code << " " << this->_start_line.reason_phrase << std::endl;
-	AHttpMessage::printMessage(flux);
+//	AHttpMessage::printMessage(flux);
 }
 
 void
