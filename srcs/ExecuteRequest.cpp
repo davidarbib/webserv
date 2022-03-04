@@ -233,6 +233,7 @@ std::string
 ExecuteRequest::getRedirected(ServerLocations const& location, Response &response)
 {
     _status_code = MOVED_PERMANTLY;
+    response.setHeader("Content-Length", "0");
     response.setHeader("Location", location.getRedir().to);
     return std::string();
 }
@@ -249,7 +250,6 @@ ExecuteRequest::getMethod(std::string const& uri, ConfigServer const& config, Se
     std::string complete_uri = location.getRoot() + uri;
     if (uri == location.getpath())
 		complete_uri = resolved_uri;
-	std::cout << "complete uri : " << complete_uri << std::endl;
     ressource.open(complete_uri.c_str(), std::ifstream::in);
     if (ressource.is_open() && complete_uri[complete_uri.size() - 1] != '/')
     {

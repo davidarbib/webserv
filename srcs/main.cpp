@@ -249,10 +249,14 @@ processRequest(TicketsType &tickets, ReqHandlersType &request_handlers)
 			{
 				executor.setStatusCode(NOT_ALLOWED);
 				body_path = executor.buildBodyPath(config);
+				response.searchForBody(executor.getStatusCode(), body_path, response.getFileExtension(body_path));
 			}
 		}
 		else
+		{
 			body_path = executor.buildBodyPath(config);
+			response.searchForBody(executor.getStatusCode(), body_path, response.getFileExtension(body_path));
+		}
 		response.buildPreResponse(executor.getStatusCode());
 		request_handlers.erase(tickets.front().getRhIt());
 		tickets.front().getConnection() << response.serialize_response();
