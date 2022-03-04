@@ -109,6 +109,9 @@ ConfigServer::setErrorPages(std::string const &error_pages)
 		this->_error_pages.path = str;
 	else
 		throw std::runtime_error("Wrong error_pages block format, missing path.");
+	if (access(this->getErrorPages().path.c_str(), X_OK) != 0)
+		throw std::runtime_error("Wrong error_pages block format, error_pages path is not a valid path for Error Pages.");
+
 }
 
 void
