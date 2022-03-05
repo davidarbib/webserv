@@ -1,8 +1,5 @@
 #include "RequestHandler.hpp"
 
-RequestHandler::RequestHandler(void)
-{}
-
 RequestHandler::RequestHandler(Request *request, Connection *connection):
 	_request(request),
 	_connection(connection)
@@ -62,10 +59,3 @@ RequestHandler::clearBuffer(void)
 	_connection->getInBuffer().clearBuffer();
 }
 
-void
-RequestHandler::clearRequest()
-{
-	if (_request != NULL)
-		delete _request;
-	_request = NULL;
-}

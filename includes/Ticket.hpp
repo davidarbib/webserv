@@ -34,9 +34,6 @@ class Ticket
 		Ticket
 		&operator=(Ticket const &rhs);
 		
-		void
-		clear(void);
-
 	private:
 		Connection		&_connection;
 		Request			*_request;

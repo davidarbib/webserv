@@ -69,11 +69,13 @@ sendToNetwork(ServersType &servers)
 }
 
 ConfigServer const &
-getConfig(Ticket current)
+getConfig(Ticket const& current)
 {
+	std::string resolved_hostname(current.getRequest().getHeaderValue("Host"));
+	resolved_hostname = resolved_hostname.substr(0, resolved_hostname.find_last_of(":"));
 	for (size_t i = 0; i < current.getServer().getCandidateConfs().size(); i++)
 	{
-		if (current.getServer().getCandidateConfs()[i].getName() == current.getRequest().getHeaderValue("Host"))
+		if (current.getServer().getCandidateConfs()[i].getName() == resolved_hostname)
 			return current.getServer().getCandidateConfs()[i];
 	}
 	return current.getServer().getCandidateConfs()[0];
@@ -257,7 +259,6 @@ processRequest(TicketsType &tickets, ReqHandlersType &request_handlers)
 			response.searchForBody(executor.getStatusCode(), body_path, response.getFileExtension(body_path));
 		}
 		response.buildPreResponse(executor.getStatusCode());
-		//tickets.front().getRhIt()->second.clearRequest();
 		request_handlers.erase(tickets.front().getRhIt());
 		tickets.front().getConnection() << response.serialize_response();
 		tickets.pop();
@@ -330,15 +331,6 @@ main(int ac, char **av)
 	}
 	catch (std::exception &e)
 	{
-//		std::cout << "rh size before free :" << request_handlers.size() << std::endl;
-//		std::cout << "tickets size before free :" << tickets.size() << std::endl;
-		for (ReqHandlersType::iterator it = request_handlers.begin(); it != request_handlers.end(); it++)
-			it->second.clearRequest();
-		request_handlers.clear();
-		while (!tickets.empty())
-			tickets.pop();
-//		std::cout << "rh size before free :" << request_handlers.size() << std::endl;
-//		std::cout << "tickets size before free :" << tickets.size() << std::endl;
 		return 0;
 	}
 	return 0;
