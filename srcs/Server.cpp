@@ -1,6 +1,6 @@
 #include "Server.hpp"
 
-Server::Server(std::string ip, std::string port, 
+Server::Server(std::string ip, std::string port,
 				std::vector<ConfigServer> candidate_confs)
 : _ip(ip), _port(port), _candidate_confs(candidate_confs)
 {
@@ -19,8 +19,6 @@ Server::Server(Server const &src)
 
 Server::~Server(void)
 {
-    for(size_t i = 0; i < _connections.size(); i++)
-        delete _connections[i];
 }
 
 std::map<fd_t, Connection*> &
@@ -70,7 +68,7 @@ Server::listenSocket()
 	return _listen_fd;
 }
 
-bool				
+bool
 Server::isThereConnectionRequest(void)
 {
 	if (FD_ISSET(_listen_fd, &Server::read_fds))
@@ -78,7 +76,7 @@ Server::isThereConnectionRequest(void)
 	return 0;
 }
 
-void 
+void
 Server::addWatchedFd(fd_t fd)
 {
 	FD_SET(fd, &Server::origin_fds);
@@ -169,7 +167,7 @@ Server::send()
 			size_t write_size = std::min(bufsize - 1,
 									connection_it->second->getOutBuffer().size());
 			connection_it->second->dumpOutBufferData(buf, write_size);
-			write(fd, buf, write_size); 
+			write(fd, buf, write_size);
 			//TODO write wrapper
 			connection_it->second->eatOutBufferData(write_size);
 		}
@@ -195,8 +193,8 @@ Server::isPossibleToWrite(fd_t fd)
 void
 Server::setFdset()
 {
-	Server::read_fds = Server::origin_fds; 
-	Server::write_fds = Server::origin_fds; 
+	Server::read_fds = Server::origin_fds;
+	Server::write_fds = Server::origin_fds;
 }
 
 void

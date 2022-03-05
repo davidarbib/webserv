@@ -29,9 +29,10 @@ Config::setServers(std::string confFile)
 	size_t i = 0;
 	blocks = getBlocks(confFile, "server");
 	if (blocks.size() == 0)
-			throw std::runtime_error("Wrong server block format, missing data.");
+		throw std::runtime_error("Wrong server block format, missing data.");
 	while (i < blocks.size())
 	{
+		servers = ConfigServer();
 		servers.setAll(blocks[i]);
 		this->_servers.push_back(servers);
 		i++;
