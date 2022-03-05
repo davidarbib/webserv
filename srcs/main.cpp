@@ -269,10 +269,10 @@ void signalHandler( int signum )
 {
   std::cout << "Interrupt signal (" << signum << ") received.\n";
 
-   // cleanup and close up stuff here  
-   // terminate program  
+   // cleanup and close up stuff here
+   // terminate program
 
-   throw std::runtime_error("CTRL-C capture");  
+   throw std::runtime_error("CTRL-C capture");
 }
 
 
@@ -330,6 +330,13 @@ main(int ac, char **av)
 	}
 	catch (std::exception &e)
 	{
+		for(size_t i = 0; i < servers.size(); i++)
+		{
+			for(size_t j = 0; j < servers[i].getConnections().size(); j++)
+			{
+				delete servers[i].getConnections()[j];
+			}
+		}
 		return 0;
 	}
 	return 0;
