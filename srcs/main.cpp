@@ -74,9 +74,9 @@ getConfig(Ticket current)
 	for (size_t i = 0; i < current.getServer().getCandidateConfs().size(); i++)
 	{
 		if (current.getServer().getCandidateConfs()[i].getName() == current.getRequest().getHeaderValue("Host"))
-			return current.getServer().getCandidateConfs()[i];
+			return current.getServer().getCandidateConfs()[2];
 	}
-	return current.getServer().getCandidateConfs()[0];
+	return current.getServer().getCandidateConfs()[2];
 }
 
 size_t
@@ -269,10 +269,10 @@ void signalHandler( int signum )
 {
   std::cout << "Interrupt signal (" << signum << ") received.\n";
 
-   // cleanup and close up stuff here  
-   // terminate program  
+   // cleanup and close up stuff here
+   // terminate program
 
-   throw std::runtime_error("CTRL-C capture");  
+   throw std::runtime_error("CTRL-C capture");
 }
 
 
