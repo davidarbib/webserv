@@ -19,12 +19,8 @@ Server::Server(Server const &src)
 
 Server::~Server(void)
 {
-    std::cout << "GO TO SERVER DESTRUCTOR" << std::endl;
     for(size_t i = 0; i < _connections.size(); i++)
-    {
-	std::cout << "coucou je detruit un serveur" << std::endl;
         delete _connections[i];
-    }
 }
 
 std::map<fd_t, Connection*> &
@@ -141,6 +137,7 @@ Server::watchInput(std::map<fd_t, RequestHandler> &request_handlers)
 		{
 			delWatchedFd(connection_it->first);
 			close(connection_it->first);
+		//	request_handlers[connection_it->second->getSocketFd()].clearRequest();
 			request_handlers.erase(connection_it->second->getSocketFd());
 			_connections.erase(connection_it);
 			connection_it = _connections.begin();

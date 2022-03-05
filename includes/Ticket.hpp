@@ -31,7 +31,11 @@ class Ticket
 		rh_iterator
 		getRhIt(void) const;
 
-		Ticket	&operator=(Ticket const &rhs);
+		Ticket
+		&operator=(Ticket const &rhs);
+		
+		void
+		clear(void);
 
 	private:
 		Connection		&_connection;

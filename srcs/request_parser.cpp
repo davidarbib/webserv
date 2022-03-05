@@ -259,7 +259,6 @@ parseRequest(Connection *raw_request, Server &server, TicketsType &tickets, ReqH
 		else if (rh.getRequest()->isRequestFinalized() == false && rh.getRequest()->getValid())
 		{
 			rh.setIdx(parseBody(rh));
-			//print_buffer(rh.getBuffer()); // for debug purpose
 		}
 		rh.clearBuffer();
 		if (rh.getRequest()->isRequestFinalized() == true || !rh.getRequest()->getValid())

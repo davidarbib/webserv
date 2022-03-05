@@ -14,14 +14,14 @@ class RequestHandler
 	private:
 
 		Request					*_request;
-		Connection				&_connection;
+		Connection				*_connection;
+
+	public:
 
 		RequestHandler
 		&operator=(RequestHandler const &rhs);
 
 		RequestHandler(void);
-
-	public:
 
 		RequestHandler(Request *request, Connection *connection);
 
@@ -49,6 +49,9 @@ class RequestHandler
 
 		void
 		clearBuffer(void);
+		
+		void
+		clearRequest();
 };
 
 #endif

@@ -39,3 +39,10 @@ Ticket::getRhIt(void) const
 {
 	return _rh_it;
 }
+
+void
+Ticket::clear()
+{
+	std::cout << "DELETE THE REQUEST" << std::endl;
+	delete _request;
+}

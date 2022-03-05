@@ -187,7 +187,7 @@ is100Continue(Request const &request)
 	return false;
 }
 
-Response
+void
 processRequest(TicketsType &tickets, ReqHandlersType &request_handlers)
 {
 	ExecuteRequest executor;
@@ -257,11 +257,11 @@ processRequest(TicketsType &tickets, ReqHandlersType &request_handlers)
 			response.searchForBody(executor.getStatusCode(), body_path, response.getFileExtension(body_path));
 		}
 		response.buildPreResponse(executor.getStatusCode());
+		//tickets.front().getRhIt()->second.clearRequest();
 		request_handlers.erase(tickets.front().getRhIt());
 		tickets.front().getConnection() << response.serialize_response();
 		tickets.pop();
 	}
-	return response;
 }
 
 
@@ -330,6 +330,15 @@ main(int ac, char **av)
 	}
 	catch (std::exception &e)
 	{
+//		std::cout << "rh size before free :" << request_handlers.size() << std::endl;
+//		std::cout << "tickets size before free :" << tickets.size() << std::endl;
+		for (ReqHandlersType::iterator it = request_handlers.begin(); it != request_handlers.end(); it++)
+			it->second.clearRequest();
+		request_handlers.clear();
+		while (!tickets.empty())
+			tickets.pop();
+//		std::cout << "rh size before free :" << request_handlers.size() << std::endl;
+//		std::cout << "tickets size before free :" << tickets.size() << std::endl;
 		return 0;
 	}
 	return 0;

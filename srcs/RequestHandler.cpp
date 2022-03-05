@@ -1,8 +1,11 @@
 #include "RequestHandler.hpp"
 
+RequestHandler::RequestHandler(void)
+{}
+
 RequestHandler::RequestHandler(Request *request, Connection *connection):
 	_request(request),
-	_connection(*connection)
+	_connection(connection)
 {
 
 }
@@ -20,31 +23,31 @@ RequestHandler::~RequestHandler(void)
 void
 RequestHandler::fillBuffer(char *raw_buffer, int size)
 {
-	_connection.getInBuffer().fillBuffer(raw_buffer, size);
+	_connection->getInBuffer().fillBuffer(raw_buffer, size);
 }
 
 void
 RequestHandler::setIdx(int value)
 {
-	_connection.getInBuffer().setIdx(value);
+	_connection->getInBuffer().setIdx(value);
 }
 
 void
 RequestHandler::incIdx(int value)
 {
-	_connection.getInBuffer().incIdx(value);
+	_connection->getInBuffer().incIdx(value);
 }
 
 int
 RequestHandler::getIdx(void) const
 {
-	return _connection.getInBuffer().getIdx();
+	return _connection->getInBuffer().getIdx();
 }
 
 std::vector<char> &
 RequestHandler::getBuffer(void)
 {
-	return _connection.getInBuffer().getBuffer();
+	return _connection->getInBuffer().getBuffer();
 }
 
 Request *
@@ -56,5 +59,13 @@ RequestHandler::getRequest(void) const
 void
 RequestHandler::clearBuffer(void)
 {
-	_connection.getInBuffer().clearBuffer();
+	_connection->getInBuffer().clearBuffer();
+}
+
+void
+RequestHandler::clearRequest()
+{
+	if (_request != NULL)
+		delete _request;
+	_request = NULL;
 }
