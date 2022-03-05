@@ -13,7 +13,8 @@ parse(std::string const &confFile, int pos_start)
 		pos_start++;
 	}
 	pos_end = confFile.find('\n', pos_start);
-
+	while(confFile[pos_end - 1] == ' ')
+		pos_end--;
 	return (confFile.substr(pos_start, pos_end - pos_start));
 }
 
