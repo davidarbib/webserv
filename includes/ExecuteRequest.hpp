@@ -12,7 +12,9 @@
 #include <iostream>
 #include <ios>
 #include <cstdio>
+#include <ctime>
 #include <cctype>
+#include <unistd.h>
 
 #define HTTP_METHOD_NOT_IMPLEMENTED_NB 6
 #define CRLFCRLF_S "\r\n\r\n"

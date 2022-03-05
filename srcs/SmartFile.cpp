@@ -17,9 +17,13 @@ SmartFile::SmartFile(std::string const &name, std::string const &mode)
     else if (mode == "r")
         _file = open(_name.c_str(), O_RDONLY | O_NONBLOCK);
     else if (mode == "w")
-        _file = open(_name.c_str(), O_WRONLY | O_NONBLOCK);
+        _file = open(_name.c_str(), O_WRONLY | O_CREAT | O_NONBLOCK,
+						S_IRUSR | S_IWUSR | S_IRGRP | S_IWGRP | S_IROTH | S_IWOTH);
     if (_file < 1)
+	{
+		perror("smartfile");
         throw std::bad_alloc();
+	}
 }
 
 SmartFile::SmartFile(SmartFile const &src)
