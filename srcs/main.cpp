@@ -255,7 +255,6 @@ processRequest(TicketsType &tickets, ReqHandlersType &request_handlers)
 		}
 		else
 			body_path = executor.buildBodyPath(config);
-		std::cout << "RESPONSE CODE :" << executor.getStatusCode() << std::endl;
 		response.buildPreResponse(executor.getStatusCode());
 		request_handlers.erase(tickets.front().getRhIt());
 		tickets.front().getConnection() << response.serialize_response();

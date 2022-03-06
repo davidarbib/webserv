@@ -174,7 +174,8 @@ ExecuteRequest::processMultipart(Ticket const &ticket, std::string const& path)
 
 		header_part.assign(part->begin(), headers_end);
 		processMultipartHeaders(header_part, &headers);
-		
+		if (headers.filename.empty())
+				continue;
 		//std::cout << "content_type" << headers.content_type << std::endl;
 		//std::cout << "filename" << headers.filename << std::endl;
 		//std::cout << "charset" << headers.charset << std::endl;
@@ -384,14 +385,21 @@ std::string
 ExecuteRequest::postMethod(std::string const &uri, ConfigServer const &config,
 					ServerLocations const& location, Ticket const& ticket)
 {
-	(void)config;
     std::string complete_uri = location.getRoot() + uri;
 	//check multipart marks in headers
 	if (isMultipartProcessing(ticket))
 	{
-	      processMultipart(ticket, complete_uri);
-		  _status_code = CREATED; 
-		  return EMPTY_STR;
+		try
+		{
+	    	processMultipart(ticket, complete_uri);
+		 	_status_code = CREATED; 
+		 	return EMPTY_STR;
+		}
+		catch(std::exception &e)
+		{
+			_status_code = INTERNAL_SERVER_ERROR;
+    		return buildBodyPath(config);
+		}
 	}
 	_status_code = NO_CONTENT;
 	return EMPTY_STR;
