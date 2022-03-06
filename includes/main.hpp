@@ -14,6 +14,7 @@
 #include "ExecuteRequest.hpp"
 #include "ServerLocations.hpp"
 #include <csignal>
+#include <algorithm>
 
 typedef std::queue<Ticket>						TicketsType;
 typedef std::map<fd_t, RequestHandler>			ReqHandlersType;

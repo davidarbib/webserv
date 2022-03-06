@@ -266,8 +266,9 @@ parseRequest(Connection *raw_request, Server &server, TicketsType &tickets, ReqH
 		{
 			//UNCOMENT TO SEE REQUEST INFOS
 			//std::cout << *rh.getRequest() << std::endl;
-			Ticket my_ticket(*raw_request, rh.getRequest(), server, it);
+			Ticket my_ticket(*raw_request, rh.getRequest(), server);
 			tickets.push(my_ticket);
+			request_handlers.erase(it);	
 		}
 	}
 	else

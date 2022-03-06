@@ -20,11 +20,6 @@ Server::Server(Server const &src)
 Server::~Server(void)
 {
     std::cout << "GO TO SERVER DESTRUCTOR" << std::endl;
-    for(size_t i = 0; i < _connections.size(); i++)
-    {
-	std::cout << "coucou je detruit un serveur" << std::endl;
-        delete _connections[i];
-    }
 }
 
 std::map<fd_t, Connection*> &
@@ -43,6 +38,13 @@ std::vector<ConfigServer> const&
 Server::getCandidateConfs(void) const
 {
 	return _candidate_confs;
+}
+
+void
+Server::clearConnections(void)
+{
+    for (size_t i = 0; i < _connections.size(); i++)
+        delete _connections[i];
 }
 
 fd_t
@@ -141,7 +143,11 @@ Server::watchInput(std::map<fd_t, RequestHandler> &request_handlers)
 		{
 			delWatchedFd(connection_it->first);
 			close(connection_it->first);
-			request_handlers.erase(connection_it->second->getSocketFd());
+			std::map<fd_t, RequestHandler>::iterator rh_to_del =
+				request_handlers.find(connection_it->second->getSocketFd());
+			rh_to_del->second.clearRequest();
+			request_handlers.erase(rh_to_del);
+			delete connection_it->second;
 			_connections.erase(connection_it);
 			connection_it = _connections.begin();
 		}
@@ -173,7 +179,6 @@ Server::send()
 									connection_it->second->getOutBuffer().size());
 			connection_it->second->dumpOutBufferData(buf, write_size);
 			write(fd, buf, write_size); 
-			//TODO write wrapper
 			connection_it->second->eatOutBufferData(write_size);
 		}
 	}

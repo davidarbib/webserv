@@ -69,6 +69,9 @@ class Server
 		isThereConnectionRequest(void);
 
 		void
+		clearConnections(void);
+
+		void
 		createConnection(void);
 
 		void
