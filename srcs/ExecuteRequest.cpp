@@ -115,6 +115,37 @@ split_parts(std::vector<std::vector<char> > &v_parts, Ticket const &ticket)
 	}
 }
 
+std::string
+cutExtension(std::string filename, std::string &extension)
+{
+	size_t dotpos = filename.find_last_of(".");
+	if (dotpos == std::string::npos)
+	{
+		extension = "";
+		return filename;
+	}
+	extension = filename.substr(dotpos + 1);
+	filename = filename.substr(0, dotpos);
+	return filename;
+}
+
+std::string
+add_timestamp(std::string &filename)
+{
+	std::stringstream stream;
+	std::string s;
+	std::string extension;
+
+	 std::time_t tm = time(NULL); //time since epoch
+	 stream << static_cast<long>(tm) << std::endl;
+	 stream >> s;
+	 filename = cutExtension(filename, extension);
+	 filename = filename + s;
+	 if (extension.size() != 0)
+			 filename += "." + extension;
+	 return filename;
+}
+
 void
 ExecuteRequest::processMultipart(Ticket const &ticket, std::string const& path)
 {
@@ -154,8 +185,11 @@ ExecuteRequest::processMultipart(Ticket const &ticket, std::string const& path)
 		//		it != part->end(); it++)
 		//	std::cout << *it;
 		//std::cout << "------------------------" << std::endl;
-		std::cout << "WRITE IN : " << path << headers.filename << std::endl;
-		SmartFile file(path + headers.filename, "w");
+        add_timestamp(headers.filename);
+        if (access(headers.filename.c_str(), F_OK) == 0)
+	        headers.filename += "_";
+		headers.filename = path + headers.filename;
+		SmartFile file(headers.filename, "w");
 		int body_size = part->end() - (headers_end + CRLF_LEN * 2); 
 		char *buf = new char [body_size];
 		int i = 0;
@@ -351,8 +385,6 @@ ExecuteRequest::postMethod(std::string const &uri, ConfigServer const &config,
 					ServerLocations const& location, Ticket const& ticket)
 {
 	(void)config;
-	std::cout << "POST METHOD" << std::endl;
-	std::cout << "uri is : " << uri << std::endl;
     std::string complete_uri = location.getRoot() + uri;
 	//check multipart marks in headers
 	if (isMultipartProcessing(ticket))
