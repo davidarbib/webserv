@@ -7,6 +7,8 @@
 # include <string>
 # include <string.h>
 # include <sstream>
+# include <stdlib.h>
+# include <arpa/inet.h>
 
 # include "ConfigUtils.hpp"
 

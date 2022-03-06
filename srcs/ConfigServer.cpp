@@ -73,6 +73,9 @@ ConfigServer::setHost(std::string const &listen)
 		this->_host = listen.substr(0, i);
 	else
 		throw std::runtime_error("Wrong listen block format, missing host/port.");
+	struct sockaddr_in sa;
+	if (inet_pton(AF_INET, this->_host.c_str(), &(sa.sin_addr)) != 1)
+		throw std::runtime_error("Wrong listen block format, invalid host.");
 }
 
 void
@@ -88,6 +91,9 @@ ConfigServer::setPort(std::string const &listen)
 		this->_port = listen.substr(i+1, listen.length());
 	else
 		throw std::runtime_error("Wrong listen block format, missing host/port.");
+	std::cout << atoi(this->_port.c_str()) << std::endl;
+	if (atoi(this->_port.c_str()) <= 0 || atoi(this->_port.c_str()) > 65535)
+		throw std::runtime_error("Wrong listen rule format, invalid port.");
 }
 
 void

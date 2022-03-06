@@ -106,12 +106,13 @@ int
 Response::buildBody(SmartFile const& path)
 {
 	int size = 0;
+	int ret;
 	char line[BUFFER_SIZE];
 	bzero(line, BUFFER_SIZE);
 	_body.reserve(BUFFER_SIZE);
-	while (path.gets(line, BUFFER_SIZE) > 0)
+	while ((ret = path.gets(line, BUFFER_SIZE)) > 0)
 	{
-		for (int i = 0; i < BUFFER_SIZE; i++)
+		for (int i = 0; i < ret; i++)
         	_body.push_back(line[i]);
 		bzero(line, BUFFER_SIZE);
 	}
