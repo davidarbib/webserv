@@ -17,21 +17,24 @@ void
 ServerLocations::setAll(std::string const &confFile)
 {
 	int pos_start;
+	int flag = 0;
 
 	if ((pos_start = confFile.find("location")) != -1)
 		this->setPath(parse(confFile, pos_start));
-	if ((pos_start = confFile.find("methods_allowed")) != -1)
+	if ((pos_start = confFile.find("methods_allowed")) != -1 && (flag = 1))
 		this->setMethods(parse(confFile, pos_start));
-	if ((pos_start = confFile.find("auto_index")) != -1)
+	if ((pos_start = confFile.find("auto_index")) != -1 && (flag = 1))
 		this->setAutoIndex(parse(confFile, pos_start));
-	if ((pos_start = confFile.find("root")) != -1)
+	if ((pos_start = confFile.find("root")) != -1 && (flag = 1))
 		this->setRoot(parse(confFile, pos_start));
-	if ((pos_start = confFile.find("index")) != -1)
+	if ((pos_start = confFile.find("index")) != -1 && (flag = 1))
 		this->setIndex(parse(confFile, pos_start));
-	if ((pos_start = confFile.find("redir")) != -1)
+	if ((pos_start = confFile.find("redir")) != -1 && (flag = 1))
 		this->setRedir(parse(confFile, pos_start));
-	if ((pos_start = confFile.find("cgi_path")) != -1)
+	if ((pos_start = confFile.find("cgi_path")) != -1 && (flag = 1))
 		this->setCgiPath(parse(confFile, pos_start));
+	if (flag == 0)
+		throw std::runtime_error("Wrong location block format, missing directives.");
 }
 
 //SETTERS

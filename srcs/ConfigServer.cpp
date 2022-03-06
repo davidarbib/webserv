@@ -31,25 +31,27 @@ ConfigServer::setAll(std::string const &confFile)
 	if ((pos_start = confFile.find("name")) != -1)
 		this->setName(parse(confFile, pos_start));
 	else
-		throw std::runtime_error("Missing server_name rule format, missing name.");
+		throw std::runtime_error("Missing server_name rule, missing name.");
 	if ((pos_start = confFile.find("listen")) != -1)
 		this->setHost(parse(confFile, pos_start));
 	else
-		throw std::runtime_error("Missing listen rule format, missing host/port.");
+		throw std::runtime_error("Missing listen rule, missing host/port.");
 	if ((pos_start = confFile.find("listen")) != -1)
 		this->setPort(parse(confFile, pos_start));
 	else
-		throw std::runtime_error("Missing listen rule format, missing host/port.");
+		throw std::runtime_error("Missing listen rule, missing host/port.");
 	if ((pos_start = confFile.find("error_pages")) != -1)
 		this->setErrorPages(parse(confFile, pos_start));
 	else
-		throw std::runtime_error("Missing error_pages rule format, missing error codes/path.");
+		throw std::runtime_error("Missing error_pages rule, missing error codes/path.");
 	if ((pos_start = confFile.find("client_max_body_size")) != -1)
 		this->setMaxBody(parse(confFile, pos_start));
 	else
-		throw std::runtime_error("Missing max_body rule format, missing body size.");
+		throw std::runtime_error("Missing max_body rule, missing body size.");
 	if ((pos_start = confFile.find("location")) != -1)
 		this->setLocations(confFile);
+	else
+		throw std::runtime_error("Missing location rule, missing location.");
 }
 
 //SETTERS
