@@ -82,17 +82,27 @@ void
 ConfigServer::setPort(std::string const &listen)
 {
 	int i = 0;
+	long int port;
 
 	if (listen == "")
 		throw std::runtime_error("Wrong listen rule format, missing host/port.");
 	while (listen[i] && listen[i] != ':')
 		++i;
-	if (listen[i] == ':')
-		this->_port = listen.substr(i+1, listen.length());
-	else
+	if (listen[i] != ':')
 		throw std::runtime_error("Wrong listen block format, missing host/port.");
-	std::cout << atoi(this->_port.c_str()) << std::endl;
-	if (atoi(this->_port.c_str()) <= 0 || atoi(this->_port.c_str()) > 65535)
+	int j = i + 1;
+	while (listen[j] && listen[j] != ' ' && listen[j] != '\n')
+		++j;
+	this->_port = listen.substr(i + 1, j - i);
+	i = 0;
+	while (listen[i])
+	{
+		if (listen[i] < '0' || listen[i] > '9')
+			throw std::runtime_error("Wrong listen rule format, invalid port.");
+		++i;
+	}
+	port = std::strtol(this->_port.c_str(), NULL, 10);
+	if (port == 0L || port <= 0 || port > 65535)
 		throw std::runtime_error("Wrong listen rule format, invalid port.");
 }
 
