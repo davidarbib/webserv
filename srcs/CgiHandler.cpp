@@ -41,6 +41,13 @@ CgiHandler::~CgiHandler(void)
 }
 
 void
+CgiHandler::close(void)
+{
+	fclose(_sender);
+	fclose(_receiver);
+}
+
+void
 CgiHandler::addCgiEnv(const std::string &var_name, const std::string &value)
 {
 	_cgi_env[var_name] = value;
