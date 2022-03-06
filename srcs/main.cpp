@@ -362,7 +362,6 @@ main(int ac, char **av)
 		clearTickets(tickets);
 		clearRhs(request_handlers);
 		clearConnections(servers);
-		std::cout << "je veux sortir" << std::endl;
 		return 0;
 	}
 	return 0;
