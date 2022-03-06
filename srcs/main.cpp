@@ -212,6 +212,7 @@ processRequest(TicketsType &tickets, ReqHandlersType &request_handlers)
 				body_path = executor.continueGeneration(current);
 			if (isCgiRequested(uri, resolved_uri, location, index_page_idx))
 			{
+
 				try
 				{
 					AHttpMessage::body_type cgi_exec = executor.execCgi(current.getRequest(), uri, resolved_uri, query, location, index_page_idx);

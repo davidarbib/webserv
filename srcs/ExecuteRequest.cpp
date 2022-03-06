@@ -43,7 +43,8 @@ ExecuteRequest::isMultipartProcessing(Ticket const &ticket) const
 }
 
 void
-ExecuteRequest::processMultipartHeaders(std::string headers_part, t_headers *headers)
+ExecuteRequest::processMultipartHeaders(std::string &headers_part,
+											t_headers *headers)
 {
 	std::map<std::string, std::string> mp_headers;
 
@@ -54,10 +55,19 @@ ExecuteRequest::processMultipartHeaders(std::string headers_part, t_headers *hea
 		size_t endline_pos = headers_part.find(CRLF_S);
 		
 		mp_headers[headers_part.substr(0, colon_pos)] =
-			headers_part.substr(colon_pos + 1,  endline_pos - (colon_pos + 1));
-		
-		i = endline_pos + 2;
+		headers_part.substr(colon_pos + 1,  endline_pos - (colon_pos + 1));
+		headers_part = headers_part.substr(endline_pos + 2,
+										headers_part.size() - (endline_pos + 2));
+		i = endline_pos + CRLF_LEN;
 	}
+	
+	//for (std::map<std::string, std::string>::iterator it = mp_headers.begin();
+	//		it != mp_headers.end();
+	//		it++)
+	//{
+	//	std::cout << "key : " << it->first << ", value : " << it->second;
+	//	std::cout << std::endl;
+	//}
 
 	std::string fname_mark("filename=");
 	std::string content_disposition = mp_headers["Content-Disposition"];
@@ -67,12 +77,9 @@ ExecuteRequest::processMultipartHeaders(std::string headers_part, t_headers *hea
 			content_disposition.size() - (quote_pos + 1));
 	fname.assign(fname.substr(0, fname.find("\"")));
 	headers->filename = fname;
-	headers->content_type = mp_headers["Content-type"]; 
+	headers->content_type = mp_headers["Content-Type"]; 
 	headers->charset = mp_headers["charset"]; 
 }
-
-#define HEADERS 1
-#define BODY 2
 
 void
 split_parts(std::vector<std::vector<char> > &v_parts, Ticket const &ticket)
@@ -82,19 +89,22 @@ split_parts(std::vector<std::vector<char> > &v_parts, Ticket const &ticket)
 	if (xpos != 0)
 		throw std::exception();
 
-	std::string key = content_type.substr(std::string(MULTIPART).size());
+	std::string key = "--";
+	key += content_type.substr(std::string(MULTIPART).size());
 	std::string last_boundary = key + '-' + '-';
-	std::string end_section(CRLFCRLF_S);
 
-	AHttpMessage::body_type::const_iterator body_cursor = ticket.getRequest().getBody().begin();
-	AHttpMessage::body_type::const_iterator body_end = ticket.getRequest().getBody().end();
+	AHttpMessage::body_type::const_iterator body_cursor =
+		ticket.getRequest().getBody().begin();
+	AHttpMessage::body_type::const_iterator body_end =
+		ticket.getRequest().getBody().end();
 	AHttpMessage::body_type::const_iterator multipart_end =
 		search(body_cursor, body_end, last_boundary.begin(), last_boundary.end());
 	AHttpMessage::body_type::const_iterator it = search(body_cursor, body_end, key.begin(), key.end());
-	split_parts(v_parts, ticket);
+
 	while (it != multipart_end)
 	{
 		it += key.size();
+		it += CRLF_LEN;
 
 		AHttpMessage::body_type::const_iterator next_boundary =
 			search(it, body_end, key.begin(), key.end());
@@ -105,21 +115,94 @@ split_parts(std::vector<std::vector<char> > &v_parts, Ticket const &ticket)
 	}
 }
 
+std::string
+cutExtension(std::string filename, std::string &extension)
+{
+	size_t dotpos = filename.find_last_of(".");
+	if (dotpos == std::string::npos)
+	{
+		extension = "";
+		return filename;
+	}
+	extension = filename.substr(dotpos + 1);
+	filename = filename.substr(0, dotpos);
+	return filename;
+}
+
+std::string
+add_timestamp(std::string &filename)
+{
+	std::stringstream stream;
+	std::string s;
+	std::string extension;
+
+	 std::time_t tm = time(NULL); //time since epoch
+	 stream << static_cast<long>(tm) << std::endl;
+	 stream >> s;
+	 filename = cutExtension(filename, extension);
+	 filename = filename + s;
+	 if (extension.size() != 0)
+			 filename += "." + extension;
+	 return filename;
+}
+
 void
-processMultipart(Ticket const &ticket)
+ExecuteRequest::processMultipart(Ticket const &ticket, std::string const& path)
 {
 	std::vector<std::vector<char> > v_parts;
 
+	std::string end_section(CRLFCRLF_S);
 	split_parts(v_parts, ticket);
-	for (std::vector<std::vector<char> >::iterator it = v_parts.begin();
-			it != v_parts.end(); it++)
+	//std::cout << "----debug split parts-----" << std::endl;
+	//for (std::vector<std::vector<char> >::iterator it = v_parts.begin();
+	//		it != v_parts.end(); it++)
+	//{
+	//	std::cout << "----New file----"	<< std::endl;
+	//	for (std::vector<char>::iterator it2 = it->begin();
+	//			it2 != it->end(); it2++)
+	//		std::cout << *it2;
+	//	std::cout << std::endl;
+	//}
+	//std::cout << "--------------------" << std::endl;
+	for (std::vector<std::vector<char> >::iterator part = v_parts.begin();
+			part != v_parts.end(); part++)
 	{
-		std::cout << "----New file----"	<< std::endl;
-		for (std::vector<char>::iterator it2 = it->begin();
-				it2 != it->end(); it2++)
-			std::cout << *it2;
-		std::cout << std::endl;
-	}
+		std::string header_part;
+		t_headers headers;
+		AHttpMessage::body_type::iterator headers_end =
+			search(part->begin(), part->end(), end_section.begin(), end_section.end());
+
+		header_part.assign(part->begin(), headers_end);
+		processMultipartHeaders(header_part, &headers);
+		if (headers.filename.empty())
+				continue;
+		//std::cout << "content_type" << headers.content_type << std::endl;
+		//std::cout << "filename" << headers.filename << std::endl;
+		//std::cout << "charset" << headers.charset << std::endl;
+
+		//std::cout << "--------body------------" << std::endl;
+
+		//for (AHttpMessage::body_type::iterator it = headers_end + CRLF_LEN * 2;
+		//		it != part->end(); it++)
+		//	std::cout << *it;
+		//std::cout << "------------------------" << std::endl;
+        add_timestamp(headers.filename);
+        if (access(headers.filename.c_str(), F_OK) == 0)
+	        headers.filename += "_";
+		headers.filename = path + headers.filename;
+		SmartFile file(headers.filename, "w");
+		int body_size = part->end() - (headers_end + CRLF_LEN * 2); 
+		char *buf = new char [body_size];
+		int i = 0;
+		for (AHttpMessage::body_type::iterator it = headers_end + CRLF_LEN * 2;
+				it != part->end(); it++)
+			buf[i++] = *it;
+		//buffer with body
+		//write buffer on file
+		file.puts(buf, body_size);
+		delete [] buf;
+
+	}	
 	//if (isItEndSection(it))
 	//{
 	//	if (flags & HEADERS)
@@ -300,24 +383,28 @@ ExecuteRequest::fillMethodNotImplemented(void)
 }
 
 std::string
-ExecuteRequest::postMethod(std::string const &URI, ConfigServer const &config,
+ExecuteRequest::postMethod(std::string const &uri, ConfigServer const &config,
 					ServerLocations const& location, Ticket const& ticket)
 {
-	(void)config;
-	(void)location;
-	(void)ticket;
-	std::cout << "POST METHOD" << std::endl;
-	std::string uri = "./" + URI;
+    std::string complete_uri = location.getRoot() + uri;
 	//check multipart marks in headers
-	//if (isMultipartProcessing(ticket))
-	//      processMultipart(ticket);
-	//
-	//return buildBodyPath(ticket.get, location.getRoot());
-	return "OK"; //TODO not OK
+	if (isMultipartProcessing(ticket))
+	{
+		try
+		{
+	    	processMultipart(ticket, complete_uri);
+		 	_status_code = CREATED; 
+		 	return EMPTY_STR;
+		}
+		catch(std::exception &e)
+		{
+			_status_code = INTERNAL_SERVER_ERROR;
+    		return buildBodyPath(config);
+		}
+	}
+	_status_code = NO_CONTENT;
+	return EMPTY_STR;
 }
-
-#define FGET_SIZE 42
-#define EMPTY_STR ""
 
 AHttpMessage::body_type
 ExecuteRequest::execCgi(Request const &request,

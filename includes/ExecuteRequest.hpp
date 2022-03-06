@@ -7,15 +7,19 @@
 #include "ConfigServer.hpp"
 #include "CgiHandler.hpp"
 #include "parsing_tools.hpp"
+#include "SmartFile.hpp"
 #include <fstream>
 #include <iostream>
 #include <ios>
 #include <cstdio>
+#include <ctime>
 #include <cctype>
+#include <unistd.h>
 
 #define HTTP_METHOD_NOT_IMPLEMENTED_NB 6
 #define CRLFCRLF_S "\r\n\r\n"
 #define CRLF_S "\r\n"
+#define CRLF_LEN 2
 
 #define MULTIPART "multipart/form-data; boundary="
 
@@ -44,10 +48,10 @@ class ExecuteRequest
 		isMultipartProcessing(Ticket const &ticket) const;
 		
 		void
-		processMultipart(Ticket const &ticket);
+		processMultipart(Ticket const &ticket, std::string const &path);
 
 		void
-		processMultipartHeaders(std::string headers_part, t_headers *headers);
+		processMultipartHeaders(std::string &headers_part, t_headers *headers);
 
     public:
         static std::string method_not_implemented[HTTP_METHOD_NOT_IMPLEMENTED_NB];
@@ -87,7 +91,7 @@ class ExecuteRequest
         deleteMethod(std::string const &uri, ConfigServer const &config, ServerLocations const& location, std::string const &resolved_uri);
 
         std::string
-        postMethod(std::string const &URI, ConfigServer const &config,
+        postMethod(std::string const &uri, ConfigServer const &config,
 					ServerLocations const& location, Ticket const& ticket);
 
 	        AHttpMessage::body_type	

@@ -11,6 +11,8 @@
 #include <cstring>
 #include <fcntl.h>
 
+#define FGET_SIZE 42
+#define EMPTY_STR ""
 #define BUFFER_SIZE 1024
 #define HTTP_VERSION "HTTP/1.1"
 #define SERVER_VERSION "webserv/1.0.0"
@@ -20,6 +22,7 @@
 #define MAX_HEADER_SIZE 32000
 #define CONTINUE 100
 #define OK 200
+#define CREATED 201
 #define ACCEPTED 202
 #define NO_CONTENT 204
 #define MOVED_PERMANTLY 301

@@ -17,7 +17,7 @@ SmartFile::SmartFile(std::string const &name, std::string const &mode)
     else if (mode == "r")
         _file = open(_name.c_str(), O_RDONLY | O_NONBLOCK);
     else if (mode == "w")
-        _file = open(_name.c_str(), O_WRONLY | O_NONBLOCK);
+        _file = open(_name.c_str(), O_WRONLY | O_NONBLOCK | O_CREAT, 0644);
     if (_file < 1)
         throw std::exception();
 }

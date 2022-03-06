@@ -151,6 +151,7 @@ Response::fillResponseCodes(void)
 
 	codes.insert(std::make_pair(CONTINUE, "Continue"));
 	codes.insert(std::make_pair(OK, "OK"));
+	codes.insert(std::make_pair(CREATED, "CREATED"));
 	codes.insert(std::make_pair(NO_CONTENT, "No Content"));
 	codes.insert(std::make_pair(MOVED_PERMANTLY, "Moved permantly"));
 	codes.insert(std::make_pair(BAD_REQUEST, "Bad Request"));

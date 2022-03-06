@@ -270,7 +270,5 @@ parseRequest(Connection *raw_request, Server &server, TicketsType &tickets, ReqH
 			tickets.push(my_ticket);
 		}
 	}
-	else
-		return 0;
 	return 0;
 }
