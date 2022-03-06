@@ -55,7 +55,7 @@ ExecuteRequest::processMultipartHeaders(std::string &headers_part,
 		size_t endline_pos = headers_part.find(CRLF_S);
 		
 		mp_headers[headers_part.substr(0, colon_pos)] =
-			headers_part.substr(colon_pos + 1,  endline_pos - (colon_pos + 1));
+		headers_part.substr(colon_pos + 1,  endline_pos - (colon_pos + 1));
 		headers_part = headers_part.substr(endline_pos + 2,
 										headers_part.size() - (endline_pos + 2));
 		i = endline_pos + CRLF_LEN;
@@ -328,7 +328,6 @@ ExecuteRequest::getMethod(std::string const& uri, ConfigServer const& config, Se
     std::string complete_uri = location.getRoot() + uri;
     if (uri == location.getpath())
 		complete_uri = resolved_uri;
-	std::cout << "complete uri : " << complete_uri << std::endl;
     ressource.open(complete_uri.c_str(), std::ifstream::in);
     if (ressource.is_open() && complete_uri[complete_uri.size() - 1] != '/')
     {
@@ -385,18 +384,19 @@ ExecuteRequest::postMethod(std::string const &URI, ConfigServer const &config,
 	(void)config;
 	(void)location;
 	(void)ticket;
-	//std::cout << "POST METHOD" << std::endl;
+	std::cout << "POST METHOD" << std::endl;
 	std::string uri = "./" + URI;
 	//check multipart marks in headers
 	if (isMultipartProcessing(ticket))
+	{
 	      processMultipart(ticket);
+		  _status_code = CREATED; 
+		  return EMPTY_STR;
+	}
 	//
 	//return buildBodyPath(ticket.get, location.getRoot());
 	return "OK"; //TODO not OK
 }
-
-#define FGET_SIZE 42
-#define EMPTY_STR ""
 
 AHttpMessage::body_type
 ExecuteRequest::execCgi(Request const &request,
