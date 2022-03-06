@@ -152,6 +152,7 @@ ConfigServer::setLocations(std::string const &confFile)
 		throw std::runtime_error("Wrong location block format, missing data.");
 	while (i < blocks.size())
 	{
+		locations = ServerLocations();
 		locations.setAll(blocks[i]);
 		this->_locations.push_back(locations);
 		i++;
