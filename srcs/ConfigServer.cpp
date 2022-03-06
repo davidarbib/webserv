@@ -93,11 +93,11 @@ ConfigServer::setPort(std::string const &listen)
 	int j = i + 1;
 	while (listen[j] && listen[j] != ' ' && listen[j] != '\n')
 		++j;
-	this->_port = listen.substr(i + 1, j - i);
+	this->_port = listen.substr(i + 1, j - i - 1);
 	i = 0;
-	while (listen[i])
+	while (this->_port[i])
 	{
-		if (listen[i] < '0' || listen[i] > '9')
+		if (this->_port[i] < '0' || this->_port[i] > '9')
 			throw std::runtime_error("Wrong listen rule format, invalid port.");
 		++i;
 	}
