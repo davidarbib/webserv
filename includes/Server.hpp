@@ -64,6 +64,9 @@ class Server
 
 		fd_t
 		listenSocket(void);
+		
+		std::string
+		getPort(void);
 
 		bool
 		isThereConnectionRequest(void);

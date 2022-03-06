@@ -8,6 +8,7 @@ Request::Request(void) : _start_line_initialized(false),
 	this->setHeader("Content-Length", "0");
 	this->setHeader("Transfer-Encoding", std::string());
 	this->_body = AHttpMessage::body_type(); 
+	std::cout << "request created" << std::endl;
 }
 
 Request::Request(Request const & cpy)
@@ -131,7 +132,6 @@ operator<<(std::ostream &flux, Request const &request)
 	request.printMessage(flux);
 	return flux;
 }
-
 
 bool
 Request::getValid(void) const

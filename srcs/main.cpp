@@ -23,12 +23,10 @@ handleRequestBuffers(ServersType &servers, TicketsType &tickets,
 	{
 		int ret;
 		if (server->getRefConnections().size() == 0)
-			return 0;
+			continue;
 		std::map<fd_t, Connection*>::iterator it = server->getRefConnections().begin();
 		for (; it != server->getRefConnections().end(); it++)
-		{
 			ret = parseRequest(it->second, *server, tickets, request_handlers);
-		}
 	}
 	return 0;
 }
@@ -187,6 +185,11 @@ is100Continue(Request const &request)
 	return false;
 }
 
+/*
+** request execution module
+** in the end the request attached to ticket is destroyed 
+*/
+
 Response
 processRequest(TicketsType &tickets)
 {
@@ -257,14 +260,12 @@ processRequest(TicketsType &tickets)
 			response.searchForBody(executor.getStatusCode(), body_path, response.getFileExtension(body_path));
 		}
 		response.buildPreResponse(executor.getStatusCode());
-		//request_handlers.erase(tickets.front().getRhIt());
 		tickets.front().getConnection() << response.serialize_response();
 		tickets.front().clearRequest();
 		tickets.pop();
 	}
 	return response;
 }
-
 
 void signalHandler( int signum )
 {
@@ -301,7 +302,6 @@ void clearConnections(ServersType &servers)
 			it++)
 		it->clearConnections();
 }
-
 
 int
 main(int ac, char **av)
@@ -351,7 +351,6 @@ main(int ac, char **av)
 			handleConnectionRequest(servers);
 			networkInputToBuffers(servers, request_handlers);
 			handleRequestBuffers(servers, tickets, request_handlers);
-			//processRequest(tickets, request_handlers);
 			processRequest(tickets);
 			sendToNetwork(servers);
 		}
@@ -361,7 +360,6 @@ main(int ac, char **av)
 		clearTickets(tickets);
 		clearRhs(request_handlers);
 		clearConnections(servers);
-		std::cout << "je veux sortir" << std::endl;
 		return 0;
 	}
 	return 0;

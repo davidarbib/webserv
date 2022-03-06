@@ -4,7 +4,6 @@ RequestHandler::RequestHandler(Request *request, Connection *connection):
 	_request(request),
 	_connection(*connection)
 {
-
 }
 
 RequestHandler::RequestHandler(RequestHandler const &src):
