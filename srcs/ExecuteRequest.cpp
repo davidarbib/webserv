@@ -81,37 +81,6 @@ ExecuteRequest::processMultipartHeaders(std::string &headers_part,
 	headers->charset = mp_headers["charset"]; 
 }
 
-std::string
-cutExtension(std::string filename, std::string &extension)
-{
-	size_t dotpos = filename.find_last_of(".");	
-	if (dotpos == std::string::npos)
-	{
-		extension = "";
-		return filename;
-	}
-	extension = filename.substr(dotpos + 1);
-	filename = filename.substr(0, dotpos);
-	return filename;
-}
-
-std::string
-add_timestamp(std::string &filename)
-{
-	std::stringstream stream;
-	std::string s;
-	std::string extension;
-
-	std::time_t tm = time(NULL); //time since epoch
-	stream << static_cast<long>(tm) << std::endl;
-	stream >> s;
-	filename = cutExtension(filename, extension);
-	filename = filename + s;
-	if (extension.size() != 0)
-		filename += "." + extension;
-	return filename;
-}
-
 void
 split_parts(std::vector<std::vector<char> > &v_parts, Ticket const &ticket)
 {
@@ -147,23 +116,23 @@ split_parts(std::vector<std::vector<char> > &v_parts, Ticket const &ticket)
 }
 
 void
-ExecuteRequest::processMultipart(Ticket const &ticket)
+ExecuteRequest::processMultipart(Ticket const &ticket, std::string const& path)
 {
 	std::vector<std::vector<char> > v_parts;
 
 	std::string end_section(CRLFCRLF_S);
 	split_parts(v_parts, ticket);
-	std::cout << "----debug split parts-----" << std::endl;
-	for (std::vector<std::vector<char> >::iterator it = v_parts.begin();
-			it != v_parts.end(); it++)
-	{
-		std::cout << "----New file----"	<< std::endl;
-		for (std::vector<char>::iterator it2 = it->begin();
-				it2 != it->end(); it2++)
-			std::cout << *it2;
-		std::cout << std::endl;
-	}
-	std::cout << "--------------------" << std::endl;
+	//std::cout << "----debug split parts-----" << std::endl;
+	//for (std::vector<std::vector<char> >::iterator it = v_parts.begin();
+	//		it != v_parts.end(); it++)
+	//{
+	//	std::cout << "----New file----"	<< std::endl;
+	//	for (std::vector<char>::iterator it2 = it->begin();
+	//			it2 != it->end(); it2++)
+	//		std::cout << *it2;
+	//	std::cout << std::endl;
+	//}
+	//std::cout << "--------------------" << std::endl;
 	for (std::vector<std::vector<char> >::iterator part = v_parts.begin();
 			part != v_parts.end(); part++)
 	{
@@ -175,7 +144,9 @@ ExecuteRequest::processMultipart(Ticket const &ticket)
 		header_part.assign(part->begin(), headers_end);
 		processMultipartHeaders(header_part, &headers);
 		
+		//std::cout << "content_type" << headers.content_type << std::endl;
 		//std::cout << "filename" << headers.filename << std::endl;
+		//std::cout << "charset" << headers.charset << std::endl;
 
 		//std::cout << "--------body------------" << std::endl;
 
@@ -183,11 +154,8 @@ ExecuteRequest::processMultipart(Ticket const &ticket)
 		//		it != part->end(); it++)
 		//	std::cout << *it;
 		//std::cout << "------------------------" << std::endl;
-
-		add_timestamp(headers.filename);	
-		if (access(headers.filename.c_str(), F_OK) == 0)
-			headers.filename += "_";
-		SmartFile file(headers.filename, "w");	
+		std::cout << "WRITE IN : " << path << headers.filename << std::endl;
+		SmartFile file(path + headers.filename, "w");
 		int body_size = part->end() - (headers_end + CRLF_LEN * 2); 
 		char *buf = new char [body_size];
 		int i = 0;
@@ -198,6 +166,7 @@ ExecuteRequest::processMultipart(Ticket const &ticket)
 		//write buffer on file
 		file.puts(buf, body_size);
 		delete [] buf;
+
 	}	
 	//if (isItEndSection(it))
 	//{
@@ -378,24 +347,22 @@ ExecuteRequest::fillMethodNotImplemented(void)
 }
 
 std::string
-ExecuteRequest::postMethod(std::string const &URI, ConfigServer const &config,
+ExecuteRequest::postMethod(std::string const &uri, ConfigServer const &config,
 					ServerLocations const& location, Ticket const& ticket)
 {
 	(void)config;
-	(void)location;
-	(void)ticket;
 	std::cout << "POST METHOD" << std::endl;
-	std::string uri = "./" + URI;
+	std::cout << "uri is : " << uri << std::endl;
+    std::string complete_uri = location.getRoot() + uri;
 	//check multipart marks in headers
 	if (isMultipartProcessing(ticket))
 	{
-	      processMultipart(ticket);
+	      processMultipart(ticket, complete_uri);
 		  _status_code = CREATED; 
 		  return EMPTY_STR;
 	}
-	//
-	//return buildBodyPath(ticket.get, location.getRoot());
-	return "OK"; //TODO not OK
+	_status_code = NO_CONTENT;
+	return EMPTY_STR;
 }
 
 AHttpMessage::body_type

@@ -48,7 +48,7 @@ class ExecuteRequest
 		isMultipartProcessing(Ticket const &ticket) const;
 		
 		void
-		processMultipart(Ticket const &ticket);
+		processMultipart(Ticket const &ticket, std::string const &path);
 
 		void
 		processMultipartHeaders(std::string &headers_part, t_headers *headers);
@@ -91,7 +91,7 @@ class ExecuteRequest
         deleteMethod(std::string const &uri, ConfigServer const &config, ServerLocations const& location, std::string const &resolved_uri);
 
         std::string
-        postMethod(std::string const &URI, ConfigServer const &config,
+        postMethod(std::string const &uri, ConfigServer const &config,
 					ServerLocations const& location, Ticket const& ticket);
 
 	        AHttpMessage::body_type	
