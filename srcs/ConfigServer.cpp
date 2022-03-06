@@ -30,8 +30,6 @@ ConfigServer::setAll(std::string const &confFile)
 
 	if ((pos_start = confFile.find("name")) != -1)
 		this->setName(parse(confFile, pos_start));
-	else
-		throw std::runtime_error("Missing server_name rule, missing name.");
 	if ((pos_start = confFile.find("listen")) != -1)
 		this->setHost(parse(confFile, pos_start));
 	else
