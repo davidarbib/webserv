@@ -432,6 +432,7 @@ ExecuteRequest::execCgi(Request const &request,
 		for (int i = 0; line[i] && i < FGET_SIZE; i++)
         	cgi_response.push_back(line[i]);
     }
+	handler.close();
 	if (cgi_response.empty())
 		throw std::exception();
 	return cgi_response;

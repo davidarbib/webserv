@@ -54,6 +54,12 @@ RequestHandler::getRequest(void) const
 }
 
 void
+RequestHandler::clearRequest(void)
+{
+	delete _request;
+}
+
+void
 RequestHandler::clearBuffer(void)
 {
 	_connection.getInBuffer().clearBuffer();

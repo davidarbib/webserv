@@ -1,5 +1,0 @@
-**/*.DS_Store
-**/*.sw*
-**/a.out
-**/*.o
-webserv

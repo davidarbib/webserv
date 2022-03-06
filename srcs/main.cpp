@@ -188,7 +188,7 @@ is100Continue(Request const &request)
 }
 
 Response
-processRequest(TicketsType &tickets, ReqHandlersType &request_handlers)
+processRequest(TicketsType &tickets)
 {
 	ExecuteRequest executor;
 	Response response;
@@ -258,8 +258,9 @@ processRequest(TicketsType &tickets, ReqHandlersType &request_handlers)
 			response.searchForBody(executor.getStatusCode(), body_path, response.getFileExtension(body_path));
 		}
 		response.buildPreResponse(executor.getStatusCode());
-		request_handlers.erase(tickets.front().getRhIt());
+		//request_handlers.erase(tickets.front().getRhIt());
 		tickets.front().getConnection() << response.serialize_response();
+		tickets.front().clearRequest();
 		tickets.pop();
 	}
 	return response;
@@ -274,6 +275,32 @@ void signalHandler( int signum )
    // terminate program
 
    throw std::runtime_error("CTRL-C capture");
+}
+
+void clearTickets(TicketsType &tickets)
+{
+	while (!tickets.empty())
+	{
+		tickets.front().clearRequest();
+		tickets.pop();
+	}
+}
+
+void clearRhs(ReqHandlersType &request_handlers)
+{
+	for (ReqHandlersType::iterator it = request_handlers.begin();
+			it != request_handlers.end();
+			it++)
+		it->second.clearRequest();
+	//request_handlers.clear();
+}
+
+void clearConnections(ServersType &servers)
+{
+	for (ServersType::iterator it = servers.begin();
+			it != servers.end();
+			it++)
+		it->clearConnections();
 }
 
 
@@ -325,12 +352,17 @@ main(int ac, char **av)
 			handleConnectionRequest(servers);
 			networkInputToBuffers(servers, request_handlers);
 			handleRequestBuffers(servers, tickets, request_handlers);
-			processRequest(tickets, request_handlers);
+			//processRequest(tickets, request_handlers);
+			processRequest(tickets);
 			sendToNetwork(servers);
 		}
 	}
 	catch (std::exception &e)
 	{
+		clearTickets(tickets);
+		clearRhs(request_handlers);
+		clearConnections(servers);
+		std::cout << "je veux sortir" << std::endl;
 		return 0;
 	}
 	return 0;

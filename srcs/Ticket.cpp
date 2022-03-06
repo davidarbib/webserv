@@ -1,14 +1,25 @@
 #include "Ticket.hpp"
 
-Ticket::Ticket(Connection &connection, Request *request, Server const &server,
-				std::map<fd_t, RequestHandler>::iterator rh_it)
-: _connection(connection), _request(request), _server(server), _rh_it(rh_it)
+//Ticket::Ticket(Connection &connection, Request *request, Server const &server,
+//				std::map<fd_t, RequestHandler>::iterator rh_it)
+//: _connection(connection), _request(request), _server(server), _rh_it(rh_it)
+//{
+//}
+//
+
+Ticket::Ticket(Connection &connection, Request *request, Server const &server)
+: _connection(connection), _request(request), _server(server)
 {
 }
 
+//Ticket::Ticket(Ticket const &src)
+//: _connection(src._connection), _request(src._request), _server(src._server),
+//	_rh_it(src._rh_it)
+//{
+//}
+
 Ticket::Ticket(Ticket const &src)
-: _connection(src._connection), _request(src._request), _server(src._server),
-	_rh_it(src._rh_it)
+: _connection(src._connection), _request(src._request), _server(src._server)
 {
 }
 
@@ -34,8 +45,14 @@ Ticket::getServer(void) const
 	return _server;
 }
 
-Ticket::rh_iterator
-Ticket::getRhIt(void) const
+//Ticket::rh_iterator
+//Ticket::getRhIt(void) const
+//{
+//	return _rh_it;
+//}
+
+void
+Ticket::clearRequest(void)
 {
-	return _rh_it;
+	delete _request;
 }

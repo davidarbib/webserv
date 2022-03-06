@@ -34,6 +34,8 @@ class CgiHandler
 
 		std::string const& getPgm() const;
 
+		void
+		close(void);
 
 	private:
 		std::string	const					&_pgm_path; 

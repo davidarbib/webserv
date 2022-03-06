@@ -10,15 +10,17 @@
 
 class Ticket
 {
-	typedef std::map<fd_t, RequestHandler>::iterator	rh_iterator;
+	//typedef std::map<fd_t, RequestHandler>::iterator	rh_iterator;
 
 	public:
-		Ticket(Connection &connection, Request *request, Server const &server,
-				std::map<fd_t, RequestHandler>::iterator rh_it);
+		//Ticket(Connection &connection, Request *request, Server const &server,
+		//		std::map<fd_t, RequestHandler>::iterator rh_it);
+		Ticket(Connection &connection, Request *request, Server const &server);
+
 		virtual	~Ticket(void);
 		
 		Ticket(Ticket const &src);
-		
+
 		Connection &
 		getConnection(void) const;
 		
@@ -28,16 +30,17 @@ class Ticket
 		Server const &
 		getServer(void) const;
 
-		rh_iterator
-		getRhIt(void) const;
+		//rh_iterator
+		//getRhIt(void) const;
 
-		Ticket	&operator=(Ticket const &rhs);
+		void
+		clearRequest(void);
 
 	private:
 		Connection		&_connection;
 		Request			*_request;
 		Server const 	&_server;
-		rh_iterator		_rh_it;
+		//rh_iterator		_rh_it;
 
 		Ticket(void);
 };

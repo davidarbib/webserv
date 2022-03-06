@@ -49,6 +49,9 @@ class RequestHandler
 
 		void
 		clearBuffer(void);
+
+		void
+		clearRequest(void);
 };
 
 #endif
