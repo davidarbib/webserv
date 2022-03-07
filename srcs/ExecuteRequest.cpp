@@ -307,9 +307,24 @@ ExecuteRequest::buildBodyPath(ConfigServer const &config)
 }
 
 std::string
-ExecuteRequest::autoindexPath(void) const
+ExecuteRequest::autoindexPath(std::string const &uri) const
 {
-    return std::string("./autoindex.html");
+    DIR *dir;
+    struct dirent *ent;
+    std::cout << "uri : " << uri << std::endl;
+    if ((dir = opendir (uri.c_str())) != NULL)
+    {
+	SmartFile smartfile("./autoindex.html", "w");
+        while ((ent = readdir (dir)) != NULL)	
+	{
+		smartfile.puts(ent->d_name, strlen(ent->d_name));
+		smartfile.puts("<br>", strlen("<br>"));
+	}
+	closedir(dir);
+    	return std::string("./autoindex.html");
+    }
+    else
+	return EMPTY_STR;
 }
 
 std::string
@@ -324,15 +339,15 @@ ExecuteRequest::getRedirected(ServerLocations const& location, Response &respons
 std::string
 ExecuteRequest::getMethod(std::string const& uri, ConfigServer const& config, ServerLocations const& location, std::string const &resolved_uri)
 {
-    if (uri[uri.size() - 1] == '/' && location.getAutoIndex() == 1)
-    {
-       _status_code = OK;
-       return autoindexPath();
-    }
-    std::ifstream ressource;
     std::string complete_uri = location.getRoot() + uri;
     if (uri == location.getpath())
 		complete_uri = resolved_uri;
+    if (uri[uri.size() - 1] == '/' && location.getAutoIndex() == 1)
+    {
+       _status_code = OK;
+       return autoindexPath(location.getRoot() + uri);
+    }
+    std::ifstream ressource;
     ressource.open(complete_uri.c_str(), std::ifstream::in);
     if (ressource.is_open() && complete_uri[complete_uri.size() - 1] != '/')
     {

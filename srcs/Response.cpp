@@ -217,6 +217,11 @@ Response::searchForBody(int code, std::string const &body_path, std::string cons
 		setHeader("Content-Length", "0");		
 		return ;
 	}
+	if (body_path == "./autoindex.html")
+	{
+		if (std::remove("./autoindex.html") != 0)
+			throw std::exception();
+	}
 }
 
 void

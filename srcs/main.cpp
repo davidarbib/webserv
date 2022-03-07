@@ -229,30 +229,42 @@ processRequest(TicketsType &tickets)
 					response.searchForBody(executor.getStatusCode(), body_path, response.getFileExtension(body_path));
 				}
 			}
-			else if (location.getRedir().from == current.getRequest().getStartLine().request_URI)
-			{
-				body_path = executor.getRedirected(location, response);
-			}
-			else if (current.getRequest().getStartLine().method_token == "DELETE")
-			{
-				body_path = executor.deleteMethod(current.getRequest().getStartLine().request_URI, config, location, resolved_uri);
-				response.searchForBody(executor.getStatusCode(), body_path, response.getFileExtension(body_path));
-			}
-			else if (current.getRequest().getStartLine().method_token == "GET")
-			{
-				body_path = executor.getMethod(current.getRequest().getStartLine().request_URI, config, location, resolved_uri);
-				response.searchForBody(executor.getStatusCode(), body_path, response.getFileExtension(body_path));
-			}
-			else if (current.getRequest().getStartLine().method_token == "POST")
-			{
-				body_path = executor.postMethod(current.getRequest().getStartLine().request_URI, config, location, current);
-				response.searchForBody(executor.getStatusCode(), body_path, response.getFileExtension(body_path));
-			}
 			else
 			{
-				executor.setStatusCode(NOT_ALLOWED);
-				body_path = executor.buildBodyPath(config);
-				response.searchForBody(executor.getStatusCode(), body_path, response.getFileExtension(body_path));
+				try
+				{
+					if (location.getRedir().from == current.getRequest().getStartLine().request_URI)
+					{
+						body_path = executor.getRedirected(location, response);
+					}
+					else if (current.getRequest().getStartLine().method_token == "DELETE")
+					{
+						body_path = executor.deleteMethod(current.getRequest().getStartLine().request_URI, config, location, resolved_uri);
+						response.searchForBody(executor.getStatusCode(), body_path, response.getFileExtension(body_path));
+					}
+					else if (current.getRequest().getStartLine().method_token == "GET")
+					{
+						body_path = executor.getMethod(current.getRequest().getStartLine().request_URI, config, location, resolved_uri);
+						response.searchForBody(executor.getStatusCode(), body_path, response.getFileExtension(body_path));
+					}
+					else if (current.getRequest().getStartLine().method_token == "POST")
+					{
+						body_path = executor.postMethod(current.getRequest().getStartLine().request_URI, config, location, current);
+						response.searchForBody(executor.getStatusCode(), body_path, response.getFileExtension(body_path));
+					}
+					else
+					{
+						executor.setStatusCode(NOT_ALLOWED);
+						body_path = executor.buildBodyPath(config);
+						response.searchForBody(executor.getStatusCode(), body_path, response.getFileExtension(body_path));
+					}
+				}
+				catch (std::exception &e)
+				{
+					executor.setStatusCode(INTERNAL_SERVER_ERROR);
+					body_path = executor.buildBodyPath(config);
+					response.searchForBody(executor.getStatusCode(), body_path, response.getFileExtension(body_path));
+				}
 			}
 		}
 		else

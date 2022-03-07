@@ -15,6 +15,8 @@
 #include <ctime>
 #include <cctype>
 #include <unistd.h>
+#include <sys/types.h>
+#include <dirent.h>
 
 #define HTTP_METHOD_NOT_IMPLEMENTED_NB 6
 #define CRLFCRLF_S "\r\n\r\n"
@@ -42,7 +44,7 @@ class ExecuteRequest
 		isAllowedMethod(std::string const &method, std::vector<std::string> method_allowed) const;
 
         std::string
-        autoindexPath(void) const;
+        autoindexPath(std::string const &uri) const;
 
 		bool
 		isMultipartProcessing(Ticket const &ticket) const;
