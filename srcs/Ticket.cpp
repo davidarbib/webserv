@@ -7,8 +7,8 @@
 //}
 //
 
-Ticket::Ticket(Connection &connection, Request *request, Server const &server)
-: _connection(connection), _request(request), _server(server)
+Ticket::Ticket(Connection &connection, RequestIt request_it, Server const &server)
+: _connection(connection), _request_it(request_it), _server(server)
 {
 }
 
@@ -19,7 +19,7 @@ Ticket::Ticket(Connection &connection, Request *request, Server const &server)
 //}
 
 Ticket::Ticket(Ticket const &src)
-: _connection(src._connection), _request(src._request), _server(src._server)
+: _connection(src._connection), _request_it(src._request_it), _server(src._server)
 {
 }
 
@@ -33,10 +33,10 @@ Ticket::getConnection(void) const
 	return _connection;
 }
 
-Request &
+RequestIt
 Ticket::getRequest(void) const
 {
-	return *_request;
+	return _request_it;
 }
 
 Server const &
@@ -54,5 +54,4 @@ Ticket::getServer(void) const
 void
 Ticket::clearRequest(void)
 {
-	delete _request;
 }

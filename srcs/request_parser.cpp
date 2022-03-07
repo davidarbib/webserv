@@ -108,7 +108,8 @@ has_body(RequestHandler &rh)
 
 	ss << rh.getRequest()->getHeaderValue("Content-Length");
 	ss >> content_length;
-	if (content_length == 0 && rh.getRequest()->getHeaderValue("Transfer-Encoding") != "chunked")
+	if (content_length == 0
+		&& rh.getRequest()->getHeaderValue("Transfer-Encoding") != "chunked")
 		return false;
 	else if (rh.getRequest()->isContentLengthCorrect())
 		return true;
@@ -120,7 +121,8 @@ parseHeaders(RequestHandler &rh)
 {
 	int index = 0;
 
-	if (rh.getBuffer().size() == 2 && rh.getBuffer()[0] == '\r' && rh.getBuffer()[1] == '\n')
+	if (rh.getBuffer().size() == 2 && rh.getBuffer()[0] == '\r'
+			&& rh.getBuffer()[1] == '\n')
 	{
 		rh.getRequest()->setHeaderInitialized(true);
 		return index + CRLF;
@@ -156,7 +158,8 @@ getBodyWithContentLength(RequestHandler &rh, int index)
 	ss << rh.getRequest()->getHeaderValue("Content-Length");
 	ss >> content_length;
 	body.reserve(content_length);
-	for (AHttpMessage::body_type::iterator it = rh.getBuffer().begin(); it != rh.getBuffer().end(); it++)
+	for (AHttpMessage::body_type::iterator it = rh.getBuffer().begin();
+			it != rh.getBuffer().end(); it++)
 	{
 		body.push_back(*it);
 		index++;
@@ -229,7 +232,8 @@ parseBody(RequestHandler &rh)
 			index++;
 			sublen++;
 		}
-		body.insert(body.begin(),  rh.getBuffer().begin() + rh.getIdx(), rh.getBuffer().begin() + sublen);
+		body.insert(body.begin(),  rh.getBuffer().begin() + rh.getIdx(),
+				rh.getBuffer().begin() + sublen);
 		rh.getRequest()->setBody(body);
 		rh.getRequest()->setRequestFinalized(true);
 	}
@@ -237,13 +241,14 @@ parseBody(RequestHandler &rh)
 }
 
 int
-parseRequest(Connection *raw_request, Server &server, TicketsType &tickets, ReqHandlersType &request_handlers)
+parseRequest(Connection *raw_request, Server &server, TicketsType &tickets,
+		ReqHandlersType &request_handlers, ReqListType &requests)
 {
 	ReqHandlersType::iterator it = request_handlers.find(raw_request->getSocketFd());
 	if (it == request_handlers.end())
 	{
-		Request *request = new Request();
-		RequestHandler new_rh(request, raw_request);
+		RequestIt request_it = requests.insert(requests.end(), Request());
+		RequestHandler new_rh(request_it, raw_request);
 		request_handlers.insert(std::make_pair(raw_request->getSocketFd(), new_rh));
 		return 0;
 	}

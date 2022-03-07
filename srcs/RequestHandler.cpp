@@ -1,13 +1,13 @@
 #include "RequestHandler.hpp"
 
-RequestHandler::RequestHandler(Request *request, Connection *connection):
-	_request(request),
+RequestHandler::RequestHandler(RequestIt request_it, Connection *connection):
+	_request_it(request_it),
 	_connection(*connection)
 {
 }
 
 RequestHandler::RequestHandler(RequestHandler const &src):
-	_request(src._request),
+	_request_it(src._request_it),
 	_connection(src._connection)
 {
 }
@@ -46,20 +46,19 @@ RequestHandler::getBuffer(void)
 	return _connection.getInBuffer().getBuffer();
 }
 
-Request *
+RequestIt
 RequestHandler::getRequest(void) const
 {
-	return this->_request;
-}
-
-void
-RequestHandler::clearRequest(void)
-{
-	delete _request;
+	return _request_it;
 }
 
 void
 RequestHandler::clearBuffer(void)
 {
 	_connection.getInBuffer().clearBuffer();
+}
+
+void
+RequestHandler::clearRequest(void)
+{
 }

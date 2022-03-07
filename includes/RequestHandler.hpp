@@ -6,15 +6,18 @@ class Request;
 # include "typedefs.hpp"
 # include <string>
 # include <iostream>
+# include <list>
 # include "Request.hpp"
 # include "Connection.hpp"
+
+typedef std::list<Request>::iterator RequestIt;
 
 class RequestHandler
 {
 	private:
 
-		Request					*_request;
-		Connection				&_connection;
+		RequestIt		_request_it;
+		Connection		&_connection;
 
 		RequestHandler
 		&operator=(RequestHandler const &rhs);
@@ -23,7 +26,7 @@ class RequestHandler
 
 	public:
 
-		RequestHandler(Request *request, Connection *connection);
+		RequestHandler(RequestIt request_it, Connection *connection);
 
 		RequestHandler(RequestHandler const &src);
 
@@ -44,7 +47,7 @@ class RequestHandler
 		std::vector<char> &
 		getBuffer(void);
 
-		Request *
+		RequestIt
 		getRequest(void) const;
 
 		void

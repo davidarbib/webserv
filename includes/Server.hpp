@@ -29,6 +29,8 @@ class RequestHandler;
 # define IP				"127.0.0.1"
 # define HOSTNAME		"w3bs0rv.com"
 
+typedef std::list<Request>						ReqListType;
+
 class Server
 {
 	class ListenException : public std::exception
@@ -78,7 +80,7 @@ class Server
 		createConnection(void);
 
 		void
-		watchInput(std::map<fd_t, RequestHandler> &);
+		watchInput(std::map<fd_t, RequestHandler> &, ReqListType &);
 
 		void
 		send();

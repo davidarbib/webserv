@@ -15,7 +15,7 @@ class Ticket
 	public:
 		//Ticket(Connection &connection, Request *request, Server const &server,
 		//		std::map<fd_t, RequestHandler>::iterator rh_it);
-		Ticket(Connection &connection, Request *request, Server const &server);
+		Ticket(Connection &connection, RequestIt request_it, Server const &server);
 
 		virtual	~Ticket(void);
 		
@@ -24,7 +24,7 @@ class Ticket
 		Connection &
 		getConnection(void) const;
 		
-		Request &
+		RequestIt
 		getRequest(void) const;
 		
 		Server const &
@@ -38,9 +38,8 @@ class Ticket
 
 	private:
 		Connection		&_connection;
-		Request			*_request;
+		RequestIt		_request_it;
 		Server const 	&_server;
-		//rh_iterator		_rh_it;
 
 		Ticket(void);
 };

@@ -129,7 +129,8 @@ Server::transferToBuffer(fd_t connection_fd, char *buf, int size)
 }
 
 void
-Server::watchInput(std::map<fd_t, RequestHandler> &request_handlers)
+Server::watchInput(std::map<fd_t, RequestHandler> &request_handlers,
+					ReqListType &requests)
 {
 	char buf[BUFSIZE];
 	memset(reinterpret_cast<void*>(buf), 0, BUFSIZE);
@@ -151,8 +152,10 @@ Server::watchInput(std::map<fd_t, RequestHandler> &request_handlers)
 			std::map<fd_t, RequestHandler>::iterator rh_to_del =
 				request_handlers.find(connection_it->second->getSocketFd());
 			if (rh_to_del != request_handlers.end())
-				rh_to_del->second.clearRequest();
-			request_handlers.erase(rh_to_del);
+			{
+				requests.erase(rh_to_del->second.getRequest());
+				request_handlers.erase(rh_to_del);
+			}
 			delete connection_it->second;
 			_connections.erase(connection_it);
 			connection_it = _connections.begin();

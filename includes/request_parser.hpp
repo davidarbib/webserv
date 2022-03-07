@@ -12,6 +12,7 @@
 
 typedef std::queue<Ticket>						TicketsType;
 typedef std::map<fd_t, RequestHandler>			ReqHandlersType;
+typedef std::list<Request>						ReqListType;
 
 #define NEXT_SPACE_TOKEN 1
 #define CRLF 2
@@ -39,8 +40,8 @@ int
 parseBody(RequestHandler &rh);
 
 int
-parseRequest(Connection *raw_request, Server &server, TicketsType &tickets, ReqHandlersType &request_handlers);
-
+parseRequest(Connection *raw_request, Server &server, TicketsType &tickets,
+		ReqHandlersType &request_handlers, ReqListType &requests);
 int
 getBodyWithContentLength(RequestHandler &rh, int index);
 

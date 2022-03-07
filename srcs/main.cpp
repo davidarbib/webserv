@@ -16,7 +16,7 @@ processArgs(int ac, char **av, ServersType &servers, Config &conf)
 
 int
 handleRequestBuffers(ServersType &servers, TicketsType &tickets,
-							ReqHandlersType &request_handlers)
+							ReqHandlersType &request_handlers, ReqListType &requests)
 {
 	ServersType::iterator server = servers.begin();
 	for (; server != servers.end(); server++)
@@ -26,7 +26,10 @@ handleRequestBuffers(ServersType &servers, TicketsType &tickets,
 			continue;
 		std::map<fd_t, Connection*>::iterator it = server->getRefConnections().begin();
 		for (; it != server->getRefConnections().end(); it++)
-			ret = parseRequest(it->second, *server, tickets, request_handlers);
+		{
+			ret = parseRequest(it->second, *server, tickets,
+					request_handlers, requests);
+		}
 	}
 	return 0;
 }
@@ -43,11 +46,12 @@ handleConnectionRequest(ServersType &servers)
 }
 
 void
-networkInputToBuffers(ServersType &servers, ReqHandlersType &request_handlers)
+networkInputToBuffers(ServersType &servers, ReqHandlersType &request_handlers,
+						ReqListType &requests)
 {
 	ServersType::iterator server = servers.begin();
 	for (; server != servers.end(); server++)
-		server->watchInput(request_handlers);
+		server->watchInput(request_handlers, requests);
 }
 
 void
@@ -71,7 +75,8 @@ getConfig(Ticket current)
 {
 	for (size_t i = 0; i < current.getServer().getCandidateConfs().size(); i++)
 	{
-		if (current.getServer().getCandidateConfs()[i].getName() == current.getRequest().getHeaderValue("Host"))
+		if (current.getServer().getCandidateConfs()[i].getName()
+				== current.getRequest()->getHeaderValue("Host"))
 			return current.getServer().getCandidateConfs()[i];
 	}
 	return current.getServer().getCandidateConfs()[0];
@@ -197,28 +202,27 @@ processRequest(TicketsType &tickets)
 	Response response;
 	std::string body_path;
 
-	while (!tickets.empty() && tickets.front().getRequest().isRequestFinalized() == true)
+	while (!tickets.empty() && tickets.front().getRequest()->isRequestFinalized() == true)
 	{
 		Ticket current(tickets.front());
 		ConfigServer const& config = getConfig(current);
 		std::string query;
-		cutQuery(current.getRequest(), query);
-		std::string uri = current.getRequest().getStartLine().request_URI;
+		cutQuery(*(current.getRequest()), query);
+		std::string uri = current.getRequest()->getStartLine().request_URI;
 		std::string resolved_uri;
 		ServerLocations const& location = getLocation(config, uri);
 		int index_page_idx = -1;
 		if (uri == location.getpath())
 			index_page_idx = matchIndex(location, resolved_uri);
-		if (executor.isValidRequest(current.getRequest(), config, location) == true)
+		if (executor.isValidRequest(*(current.getRequest()), config, location) == true)
 		{
-			if (is100Continue(current.getRequest()))
-				body_path = executor.continueGeneration(current);
 			if (isCgiRequested(uri, resolved_uri, location, index_page_idx))
 			{
-
 				try
 				{
-					AHttpMessage::body_type cgi_exec = executor.execCgi(current.getRequest(), uri, resolved_uri, query, location, index_page_idx);
+					AHttpMessage::body_type cgi_exec =
+						executor.execCgi(*(current.getRequest()), uri, resolved_uri,
+										query, location, index_page_idx);
 					int cgi_response = parseCgiResponse(response, cgi_exec);
 					executor.setStatusCode(cgi_response);
 				}
@@ -226,39 +230,52 @@ processRequest(TicketsType &tickets)
 				{
 					executor.setStatusCode(INTERNAL_SERVER_ERROR);
 					body_path = executor.buildBodyPath(config);
-					response.searchForBody(executor.getStatusCode(), body_path, response.getFileExtension(body_path));
+					response.searchForBody(executor.getStatusCode(), body_path,
+							response.getFileExtension(body_path));
 				}
 			}
-			else if (location.getRedir().from == current.getRequest().getStartLine().request_URI)
+			else if (location.getRedir().from ==
+					current.getRequest()->getStartLine().request_URI)
 			{
 				body_path = executor.getRedirected(location, response);
 			}
-			else if (current.getRequest().getStartLine().method_token == "DELETE")
+			else if (current.getRequest()->getStartLine().method_token == "DELETE")
 			{
-				body_path = executor.deleteMethod(current.getRequest().getStartLine().request_URI, config, location, resolved_uri);
-				response.searchForBody(executor.getStatusCode(), body_path, response.getFileExtension(body_path));
+				body_path =
+				executor.deleteMethod(current.getRequest()->getStartLine().request_URI,
+										config, location, resolved_uri);
+				response.searchForBody(executor.getStatusCode(), body_path,
+						response.getFileExtension(body_path));
 			}
-			else if (current.getRequest().getStartLine().method_token == "GET")
+			else if (current.getRequest()->getStartLine().method_token == "GET")
 			{
-				body_path = executor.getMethod(current.getRequest().getStartLine().request_URI, config, location, resolved_uri);
-				response.searchForBody(executor.getStatusCode(), body_path, response.getFileExtension(body_path));
+				body_path =
+				executor.getMethod(current.getRequest()->getStartLine().request_URI,
+						config, location, resolved_uri);
+				response.searchForBody(executor.getStatusCode(), body_path,
+						response.getFileExtension(body_path));
 			}
-			else if (current.getRequest().getStartLine().method_token == "POST")
+			else if (current.getRequest()->getStartLine().method_token == "POST")
 			{
-				body_path = executor.postMethod(current.getRequest().getStartLine().request_URI, config, location, current);
-				response.searchForBody(executor.getStatusCode(), body_path, response.getFileExtension(body_path));
+				body_path =
+				executor.postMethod(current.getRequest()->getStartLine().request_URI,
+									config, location, current);
+				response.searchForBody(executor.getStatusCode(), body_path,
+										response.getFileExtension(body_path));
 			}
 			else
 			{
 				executor.setStatusCode(NOT_ALLOWED);
 				body_path = executor.buildBodyPath(config);
-				response.searchForBody(executor.getStatusCode(), body_path, response.getFileExtension(body_path));
+				response.searchForBody(executor.getStatusCode(), body_path,
+										response.getFileExtension(body_path));
 			}
 		}
 		else
 		{
 			body_path = executor.buildBodyPath(config);
-			response.searchForBody(executor.getStatusCode(), body_path, response.getFileExtension(body_path));
+			response.searchForBody(executor.getStatusCode(), body_path,
+									response.getFileExtension(body_path));
 		}
 		response.buildPreResponse(executor.getStatusCode());
 		tickets.front().getConnection() << response.serialize_response();
@@ -278,7 +295,8 @@ void signalHandler( int signum )
    throw std::runtime_error("CTRL-C capture");
 }
 
-void clearTickets(TicketsType &tickets)
+void
+clearTickets(TicketsType &tickets)
 {
 	while (!tickets.empty())
 	{
@@ -287,21 +305,29 @@ void clearTickets(TicketsType &tickets)
 	}
 }
 
-void clearRhs(ReqHandlersType &request_handlers)
+void
+clearRhs(ReqHandlersType &request_handlers)
 {
-	for (ReqHandlersType::iterator it = request_handlers.begin();
-			it != request_handlers.end();
-			it++)
-		it->second.clearRequest();
-	//request_handlers.clear();
+	//for (ReqHandlersType::iterator it = request_handlers.begin();
+	//		it != request_handlers.end();
+	//		it++)
+	//	it->second.clearRequest();
+	request_handlers.clear();
 }
 
-void clearConnections(ServersType &servers)
+void
+clearConnections(ServersType &servers)
 {
 	for (ServersType::iterator it = servers.begin();
 			it != servers.end();
 			it++)
 		it->clearConnections();
+}
+
+void
+clearRequests(ReqListType &requests)
+{
+	requests.clear();
 }
 
 int
@@ -310,6 +336,7 @@ main(int ac, char **av)
 	struct timeval				tv;
 	ServersType					servers;
 	ReqHandlersType				request_handlers;
+	ReqListType					requests;
 	TicketsType					tickets;
 	Config						config;
 
@@ -350,8 +377,8 @@ main(int ac, char **av)
 			Server::setFdset();
 			select(Server::max_fd + 1, &Server::read_fds, &Server::write_fds, NULL, &tv);
 			handleConnectionRequest(servers);
-			networkInputToBuffers(servers, request_handlers);
-			handleRequestBuffers(servers, tickets, request_handlers);
+			networkInputToBuffers(servers, request_handlers, requests);
+			handleRequestBuffers(servers, tickets, request_handlers, requests);
 			processRequest(tickets);
 			sendToNetwork(servers);
 		}
@@ -361,6 +388,7 @@ main(int ac, char **av)
 		clearTickets(tickets);
 		clearRhs(request_handlers);
 		clearConnections(servers);
+		//clearRequests(requests);
 		return 0;
 	}
 	return 0;

@@ -35,7 +35,7 @@ ExecuteRequest::isAllowedMethod(std::string const &method, std::vector<std::stri
 bool
 ExecuteRequest::isMultipartProcessing(Ticket const &ticket) const
 {
-	std::string content_type = ticket.getRequest().getHeaderValue("Content-Type");
+	std::string content_type = ticket.getRequest()->getHeaderValue("Content-Type");
 	size_t xpos = content_type.find(MULTIPART);
 	if (xpos != 0)
 		return false;
@@ -84,7 +84,7 @@ ExecuteRequest::processMultipartHeaders(std::string &headers_part,
 void
 split_parts(std::vector<std::vector<char> > &v_parts, Ticket const &ticket)
 {
-	std::string content_type = ticket.getRequest().getHeaderValue("Content-Type");
+	std::string content_type = ticket.getRequest()->getHeaderValue("Content-Type");
 	size_t xpos = content_type.find(MULTIPART);
 	if (xpos != 0)
 		throw std::exception();
@@ -94,9 +94,9 @@ split_parts(std::vector<std::vector<char> > &v_parts, Ticket const &ticket)
 	std::string last_boundary = key + '-' + '-';
 
 	AHttpMessage::body_type::const_iterator body_cursor =
-		ticket.getRequest().getBody().begin();
+		ticket.getRequest()->getBody().begin();
 	AHttpMessage::body_type::const_iterator body_end =
-		ticket.getRequest().getBody().end();
+		ticket.getRequest()->getBody().end();
 	AHttpMessage::body_type::const_iterator multipart_end =
 		search(body_cursor, body_end, last_boundary.begin(), last_boundary.end());
 	AHttpMessage::body_type::const_iterator it = search(body_cursor, body_end, key.begin(), key.end());
@@ -443,7 +443,7 @@ ExecuteRequest::continueGeneration(Ticket const &ticket)
 {
 	ticket.getConnection().expectFullBodyNextRequest();
 	_continue_requests[ticket.getConnection().getSocketFd()]
-		= ticket.getRequest();
+		= *(ticket.getRequest());
 	setStatusCode(CONTINUE);
 	return std::string(EMPTY_STR);
 }
