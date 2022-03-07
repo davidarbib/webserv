@@ -132,7 +132,6 @@ operator<<(std::ostream &flux, Request const &request)
 	return flux;
 }
 
-
 bool
 Request::getValid(void) const
 {

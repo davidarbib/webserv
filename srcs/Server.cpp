@@ -21,6 +21,12 @@ Server::~Server(void)
 {
 }
 
+std::string
+Server::getPort(void)
+{
+	return _port;
+}
+
 std::map<fd_t, Connection*> &
 Server::getRefConnections(void)
 {
@@ -65,13 +71,13 @@ Server::listenSocket()
 	memset(reinterpret_cast<void*>(&sin), 0, sizeof(sockaddr_in));
 	sin.sin_addr.s_addr = inet_addr(_ip.c_str());
 	sin.sin_family = AF_INET;
-	std::cout << "port : " << _port_nb << std::endl;
 	sin.sin_port = htons(_port_nb);
 
 	if (bind(_listen_fd, reinterpret_cast<sockaddr*>(&sin), sizeof(sin)) == -1)
 		throw ListenException();
 	listen(_listen_fd, QUEUE_LIMIT);
 	addWatchedFd(_listen_fd);
+	std::cout << "listening on port : " << _port_nb << std::endl;
 	return _listen_fd;
 }
 
@@ -144,7 +150,8 @@ Server::watchInput(std::map<fd_t, RequestHandler> &request_handlers)
 			close(connection_it->first);
 			std::map<fd_t, RequestHandler>::iterator rh_to_del =
 				request_handlers.find(connection_it->second->getSocketFd());
-			rh_to_del->second.clearRequest();
+			if (rh_to_del != request_handlers.end())
+				rh_to_del->second.clearRequest();
 			request_handlers.erase(rh_to_del);
 			delete connection_it->second;
 			_connections.erase(connection_it);
