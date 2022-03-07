@@ -151,8 +151,10 @@ Server::watchInput(std::map<fd_t, RequestHandler> &request_handlers)
 			std::map<fd_t, RequestHandler>::iterator rh_to_del =
 				request_handlers.find(connection_it->second->getSocketFd());
 			if (rh_to_del != request_handlers.end())
+			{
 				rh_to_del->second.clearRequest();
-			request_handlers.erase(rh_to_del);
+				request_handlers.erase(rh_to_del);
+			}
 			delete connection_it->second;
 			_connections.erase(connection_it);
 			connection_it = _connections.begin();
